@@ -1,8 +1,9 @@
-package com.example.kafka.producer;
+package com.proto.kafka.producer;
 
-import com.example.kafka.config.AppConfig;
-import com.example.kafka.model.Payment;
 import com.google.gson.Gson;
+import com.proto.kafka.config.AppConfig;
+import com.proto.kafka.model.Payment;
+
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.StringSerializer;
 

@@ -1,4 +1,4 @@
-package com.example.kafka.transform;
+package com.proto.kafka.transform;
 
 import java.util.Properties;
 
@@ -9,7 +9,7 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 
-import com.example.kafka.config.AppConfig;
+import com.proto.kafka.config.AppConfig;
 
 public class EventTransformer {
 

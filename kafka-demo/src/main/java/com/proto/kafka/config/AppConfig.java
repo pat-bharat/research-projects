@@ -1,4 +1,4 @@
-package com.example.kafka.config;
+package com.proto.kafka.config;
 
 public class AppConfig {
     public static final String BOOTSTRAP_SERVERS = "localhost:9092";

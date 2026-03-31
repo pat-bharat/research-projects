@@ -1,10 +1,10 @@
-package com.example.kafka.db;
-
-import com.example.kafka.model.Payment;
-import com.example.kafka.ui.Dashboard;
+package com.proto.kafka.db;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.proto.kafka.model.Payment;
+import com.proto.kafka.ui.Dashboard;
 
 public class EventDatabase {
     private static final List<Payment> paymentRecords = new ArrayList<>();

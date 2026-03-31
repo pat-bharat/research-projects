@@ -1,4 +1,4 @@
-package com.example.kafka.model;
+package com.proto.kafka.model;
 
 public class Payment {
     private String id;

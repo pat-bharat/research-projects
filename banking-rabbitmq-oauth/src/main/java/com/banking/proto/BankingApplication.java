@@ -1,5 +1,5 @@
 
-package com.example.banking;
+package com.banking.proto;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

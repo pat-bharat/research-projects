@@ -1,5 +1,5 @@
 
-package com.example.banking;
+package com.banking.proto;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

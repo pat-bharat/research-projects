@@ -1,5 +1,5 @@
 
-package com.example.banking;
+package com.banking.proto;
 public class Transaction {
  public String fromAccount;
  public String toAccount;

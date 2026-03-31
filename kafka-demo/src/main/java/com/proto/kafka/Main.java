@@ -1,12 +1,11 @@
-package com.example.kafka;
+package com.proto.kafka;
 
-import com.example.kafka.consumer.PaymentConsumer;
-import com.example.kafka.consumer.PaymentCreditConsumer;
-import com.example.kafka.consumer.PaymentDebitConsumer;
-import com.example.kafka.consumer.PaymentOutboundConsumer;
-import com.example.kafka.consumer.PaymentSummaryConsumer;
-import com.example.kafka.producer.PaymentProducer;
-import com.example.kafka.transform.EventTransformer;
+import com.proto.kafka.consumer.PaymentCreditConsumer;
+import com.proto.kafka.consumer.PaymentDebitConsumer;
+import com.proto.kafka.consumer.PaymentOutboundConsumer;
+import com.proto.kafka.consumer.PaymentSummaryConsumer;
+import com.proto.kafka.producer.PaymentProducer;
+import com.proto.kafka.transform.EventTransformer;
 
 public class Main {
     public static void main(String[] args) {

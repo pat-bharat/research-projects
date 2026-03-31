@@ -1,8 +1,8 @@
-package com.example.kafka.ui;
+package com.proto.kafka.ui;
 
-import com.example.kafka.api.MetricsServer;
-import com.example.kafka.exporter.SummaryExporter;
 import com.google.common.util.concurrent.AtomicDouble;
+import com.proto.kafka.api.MetricsServer;
+import com.proto.kafka.exporter.SummaryExporter;
 
 import java.util.HashMap;
 import java.util.Map;

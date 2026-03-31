@@ -1,7 +1,7 @@
-package com.example.kafka.api;
+package com.proto.kafka.api;
 
-import com.example.kafka.ui.Dashboard;
 import com.google.gson.Gson;
+import com.proto.kafka.ui.Dashboard;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;

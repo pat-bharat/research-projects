@@ -1,4 +1,4 @@
-package com.example.kafka.exporter;
+package com.proto.kafka.exporter;
 
 import com.google.gson.Gson;
 

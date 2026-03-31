@@ -1,9 +1,10 @@
-package com.example.kafka.consumer;
+package com.proto.kafka.consumer;
 
-import com.example.kafka.config.AppConfig;
-import com.example.kafka.db.EventDatabase;
-import com.example.kafka.model.Payment;
 import com.google.gson.Gson;
+import com.proto.kafka.config.AppConfig;
+import com.proto.kafka.db.EventDatabase;
+import com.proto.kafka.model.Payment;
+
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
