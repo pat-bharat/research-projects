@@ -49,3 +49,6 @@ __pycache__/
 *.bak
 *.tmp
 
+digital-guru/firebase-data-loader/data_uploader/config-bharat.js
+digital-guru/firebase-data-loader/data_uploader/digital-guru-bharat-sa.json
+digital-guru/firebase-data-loader/data_uploader/digital-guru-service-account.json
