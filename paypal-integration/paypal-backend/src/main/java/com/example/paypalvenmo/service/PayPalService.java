@@ -49,9 +49,11 @@ public class PayPalService {
 
         if (body != null && body.get("access_token") != null) {
             cachedToken = body.get("access_token").toString();
-            Object expiresInObj = body.getOrDefault("expires_in", 3300);
+            Object expiresInObj = body.get("expires_in");
             int expiresIn;
-            if (expiresInObj instanceof Integer) {
+            if (expiresInObj == null) {
+                expiresIn = 3300;
+            } else if (expiresInObj instanceof Integer) {
                 expiresIn = (Integer) expiresInObj;
             } else if (expiresInObj instanceof String) {
                 expiresIn = Integer.parseInt((String) expiresInObj);
