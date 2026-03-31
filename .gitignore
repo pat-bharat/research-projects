@@ -1,0 +1,50 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+/logs/
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+*.sw?
+.vscode/
+
+# Logs
+*.log
+
+# Misc
+.env
+.env.*
+*.local
+
+# VS Code
+.history/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Others
+*.bak
+*.tmp
