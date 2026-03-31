@@ -1,0 +1,15 @@
+server:
+  port: 8080
+
+paypal:
+  mode: sandbox
+  client-id: AXcZCutDa5xYGNidZNjT81Jm9SE-1GHTqN5y5N-L2seZlky65irs4nFE41Y-4XVeNVya66b_V5q3-Ljv
+  client-secret: EBvpPg_BA10yEXgs6MM79ixERqu16RhZ9UoF-qAb9MXjqcuGTZYoqXOTRBJwwU1ea_PHDe6srKYlnP38
+  oauth-url: https://api-m.sandbox.paypal.com/v1/oauth2/token
+  payout-url: https://api-m.sandbox.paypal.com/v1/payments/payouts
+
+
+paypal2:
+  redirect-uri: ${PAYPAL_REDIRECT_URI:http://localhost:8080/api/oauth/callback}
+  authorize-base-sandbox: https://www.sandbox.paypal.com/connect
+  authorize-base-live: https://www.paypal.com/connect
