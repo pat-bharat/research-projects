@@ -1,0 +1,43 @@
+{
+    "ids": [
+        {
+            "collection": "user",
+            "value": 2
+        },
+        {
+            "collection": "class",
+            "value": 0
+        },
+        {
+            "collection": "module",
+            "value": 0
+        },
+        {
+            "collection": "lesson",
+            "value": 0
+        },
+        {
+            "collection": "group",
+            "value": 0
+        },
+        {
+            "collection": "business",
+            "value": 0
+        },
+        {
+            "collection": "billing_item",
+            "value": 0
+        },
+        {
+            "collection": "instructor",
+            "value": 0
+        },
+        {
+            "collection": "media",
+            "value": 0
+        },
+        
+
+       
+    ]   
+}

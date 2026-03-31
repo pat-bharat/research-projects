@@ -1,0 +1,34 @@
+{
+"billing": [
+    {
+		
+		"id":1,
+		"business_id":"1",
+		"invoice_id":"1",
+		"item_type":"user_count",
+		"description":"Total no of active users",
+		"quantity":100,
+		"rate":"2",		
+		"amount":"200",		
+		"created_timestamp":"",
+		"updated_timestamp":"",
+		"deleted_timestamp":"",
+		"modify_by":""
+		},
+        {
+		
+		"id":2,
+		"business_id":"1",
+		"invoice_id":"1",
+		"item_type":"setup",
+		"description":"Initial setup fees",
+		"quantity":1,
+		"rate":"50",		
+		"amount":"50",		
+		"created_timestamp":"",
+		"updated_timestamp":"",
+		"deleted_timestamp":"",
+		"modify_by":""
+		}
+]
+}

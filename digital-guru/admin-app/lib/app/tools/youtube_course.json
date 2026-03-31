@@ -1,0 +1,12 @@
+{
+   "channel_id":"",
+   "instructor_name":"",
+   "language":"",
+   "playlists":[{
+      "id":"",
+      "filter_video_ids":["video_id"],
+      "name_pattern":"",
+      "max_videos":1
+   }],   
+   "max_video_count":10
+}

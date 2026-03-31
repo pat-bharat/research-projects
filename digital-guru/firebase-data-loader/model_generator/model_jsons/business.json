@@ -1,0 +1,30 @@
+{        
+        "name": "Demo Besiness",
+        "punch_line": "Exploere your Creativity",
+        "description": "We offer wide veriaty of music cources suiatable for begginners to advance level",
+        "splash_screen": "/url",
+        "logo_link": "/logo.png",
+        "banner_link": "/link to banner",
+        "url": "http://digitalgur.com",
+        "contact_email": "digitalguru.lms@gmail.com",
+        "address": "5905 NW 103rd st",
+        "city": "Jjhnston",
+        "zip_code": "50131",
+        "state": "IA",
+        "country": "USA",
+        "email_id": "pat.bharat@gmail.com",
+        "mobile_phone": 15153602106,
+        "locked": 0,
+        "deleted": 0,
+        "created_timestamp": "",
+        "updated_timestamp": "",
+        "deleted_timestamp": "",
+        "modified_by": "",       
+        "business_legal": [
+            {                 
+                "legal_id":"",
+                "title":""
+            }          
+        ]
+        
+    }

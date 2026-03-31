@@ -1,0 +1,32 @@
+
+     {        
+        "business_id":"",
+        "invoice_date":"",
+        "Invoice_amount":"",
+        "currancy_code":"",
+        "start_date":"",
+        "end_date":"",
+        "due_date":"",
+        "paid_date":"",
+        "paid_by":"",
+        "paid_via":"",
+        "created_timestamp":"",
+        "updated_timestamp":"",
+        "deleted_timestamp":"",
+        "modify_by":"",
+        "billing_items": [
+            {
+                "item_type":"",
+                "description":"",
+                "quantity":"",
+                "rate":"",		
+                "amount":"",		
+                "created_timestamp":"",
+                "updated_timestamp":"",
+                "deleted_timestamp":"",
+                "modify_by":""
+            }
+        ]
+        
+    }	
+   

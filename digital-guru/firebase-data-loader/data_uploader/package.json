@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "firebase": "^8.2.7",
+    "firestore-export-import": "^0.10.0"
+  }
+}

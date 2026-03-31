@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "400261745422",
+    "project_id": "digital-guru-bharat",
+    "storage_bucket": "digital-guru-bharat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400261745422:android:1ec7ee55289aba2cc7255f",
+        "android_client_info": {
+          "package_name": "com.example.firestore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400261745422-00hvm6048fdphl11i0crvce2gkvb87r8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsd5hxXVhKkzKnW8_YWwwDVRRaKUqPh40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400261745422-00hvm6048fdphl11i0crvce2gkvb87r8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

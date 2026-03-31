@@ -1,0 +1,25 @@
+{
+"instructor": [
+    {
+        "id": 1,
+        "full_name": "Bharat Patel",
+        "Introduction": "I have 50 years of experience teacing Piano. you can visit my personal website at https://google.com/",
+        "profile_pic": "/pic",
+        "created_timestamp": "",
+        "updated_timestamp": "",
+        "deleted_timestamp": "",
+        "modified_by": ""
+    },
+
+      {
+        "id": 2,
+        "full_name": "Kittu Damodaran",
+        "Introduction": "I have 50 years of experience teacing FLute. you can visit my personal website at https://google.com/",
+        "profile_pic": "/pic",
+        "created_timestamp": "",
+        "updated_timestamp": "",
+        "deleted_timestamp": "",
+        "modified_by": ""
+    }
+]
+}

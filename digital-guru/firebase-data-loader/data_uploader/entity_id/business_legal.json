@@ -1,0 +1,10 @@
+{
+"business_legal": [
+     {
+        "business_id": 1,
+        "legal_id": 1,
+        "accapted_timestamp": "",
+        "accapted_by": "login_id"
+    }
+]
+}

@@ -1,0 +1,26 @@
+	{
+	"user_device": [
+        {
+        "user_id": 1,
+        "business_id": "1",
+        "device_type": "Apple",
+        "app_version": "1.0",
+        "os_version": "13.2",
+        "created_timestamp": "",
+        "updated_timestamp": "",
+        "deleted_timestamp": "",
+        "modified_by": "system"
+    },
+    {
+        "user_id": 2,
+        "business_id": "1",
+        "device_type": "Android",
+        "app_version": "1.0",
+        "os_version": "13",
+        "created_timestamp": "",
+        "updated_timestamp": "",
+        "deleted_timestamp": "",
+        "modified_by": "system"
+    }
+    ]
+	}

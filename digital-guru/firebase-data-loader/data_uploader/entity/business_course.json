@@ -1,0 +1,17 @@
+{
+    "business_id":"1",
+    "course": [
+        {
+            "course_id" : "",
+            "course_title": "",
+            
+            "module": [
+                {
+                    "module_id" : "",
+                    "module_name":"",
+                    "total_lessons": 10
+                } 
+            ]
+        }
+    ]
+}

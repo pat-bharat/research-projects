@@ -1,0 +1,20 @@
+{
+    "business_id":"",    
+    "title": "",
+    "description": "",
+    "instructor_id": "",
+    "background_image": "",
+    "deleted": 0,
+    "display_order":1,   
+    "created_timestamp": "",
+    "updated_timestamp": "",
+    "deleted_timestamp": "",
+    "modified_by": "",
+    "course_module": [
+      {
+        "module_id":"",
+        "module_name":"",
+        "lesson_count":""
+      }
+     ]
+}

@@ -1,0 +1,25 @@
+{	
+    "module_id": "",
+	"title": "",
+	"description": "",
+	"instructor_notes": "",		
+	"locked": 0,
+	"deleted": 0,
+	"created_timestamp": "",
+	"updated_timestamp": "",
+	"deleted_timestamp": "",
+	"modified_by": "",
+    "lesson_media": [
+         {    
+            "title": "",
+            "media_type": "",
+            "media_path": "",
+            "media_size":"",
+            "media_length":"",                    
+            "created_timestamp": "",
+            "updated_timestamp": "",
+            "deleted_timestamp": "",
+            "modify_by": ""
+         }
+      ]	
+}

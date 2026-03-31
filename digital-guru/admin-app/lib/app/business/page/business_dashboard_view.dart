@@ -1,0 +1,318 @@
+import 'package:digiguru/app/business/model/bisuness_dashboard_view_model.dart';
+import 'package:digiguru/app/business/model/business.dart';
+import 'package:digiguru/app/business/model/business_legal.dart';
+import 'package:digiguru/app/common/constants/shared_styles.dart';
+import 'package:digiguru/app/common/constants/strings.dart';
+import 'package:digiguru/app/common/util/ui_helpers.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
+import 'package:digiguru/app/business/model/business_profille.dart';
+import 'package:digiguru/app/system/model/business_setting.dart';
+import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+
+class BusinessDashBoardView extends StatefulWidget {
+  final Business business;
+
+  BusinessDashBoardView({Key key, this.business}) : super(key: key);
+
+  @override
+  _BusinessDashBoardViewState createState() => _BusinessDashBoardViewState();
+}
+
+class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
+  List<BusinessLegal> _legals = List.empty(growable: true);
+  BusinessProfile profile;
+  BusinessDashBoardViewModel model;
+  @override
+  void initState() {
+    super.initState();
+    model = BusinessDashBoardViewModel();
+    getBusinessProfile();
+  }
+
+  Future getBusinessProfile() async {
+    BusinessProfile _profile = BusinessProfile();
+    List<BusinessLegal> lgls = List.empty(growable: true);
+    await model.getBusinessProfile().then((value) => {_profile = value});
+    // await model.getConsumerLegals().then((value) => {lgls.addAll(value)});
+    setState(() {
+      profile = _profile;
+      // _legals = lgls;
+    });
+    return "Success";
+  }
+
+  Future getConsumerLegals() async {
+    _legals = [];
+    List<BusinessLegal> lgls = List.empty(growable: true);
+    await model.getConsumerLegals().then((value) => {lgls.addAll(value)});
+
+    setState(() {
+      _legals = lgls;
+    });
+    return "Success";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<BusinessDashBoardViewModel>.reactive(
+        viewModelBuilder: () => model,
+        onModelReady: (model) {},
+        builder: (context, model, child) => SafeArea(
+              child: CommonScaffold(
+                  appTitle: Strings.businessViewTtile,
+                  model: model,
+                  bottomNavBarIndex: 0,
+                  bodyData: SingleChildScrollView(
+                      padding: viewPadding,
+                      child: Column(
+                        children: [
+                          _buildBusinessProfile(context, profile),
+                          verticalSpaceSmall,
+                          _buildBusinessPublication(context, profile),
+                          verticalSpaceSmall,
+                          _buildFinanlcial(context, profile),
+                          _buildBusinessBranding(context, model),
+                          verticalSpaceSmall,
+                          _buildBusinessSettings(context, profile),
+                          _buildBusinessLegals(context, profile),
+                          verticalSpaceSmall,
+                        ],
+                      ))),
+            ));
+  }
+
+  _buildBusinessProfile(BuildContext context, BusinessProfile profile) {
+    if (profile == null) {
+      return Container();
+    }
+    var status = (model.currentBusiness.locked != null)
+        ? (model.currentBusiness.locked
+            ? Text("Locked", style: TextStyle(color: Colors.red))
+            : Text("Active", style: TextStyle(color: Colors.green)))
+        : Text("Unavailable", style: TextStyle(color: Colors.red));
+    var nonPurchassedUsers = profile.userCounts.trialUsers;
+    var purchasedUsers = profile.userCounts.purchasedUsers;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(
+            model.currentBusiness.name,
+            style: Theme.of(context).textTheme.headline2,
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            iconSize: 25,
+            onPressed: () {
+              model.editBusiness();
+            },
+          )
+        ]),
+        commonContainer(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildWrappedText(
+                    context, 'Mobile # ' + model.currentBusiness.mobilePhone,
+                    style: Theme.of(context).textTheme.headline4),
+                buildWrappedText(
+                    context, 'Email: ' + model.currentBusiness.contactEmail,
+                    style: Theme.of(context).textTheme.headline4),
+                Row(
+                  children: [Text("Status:"), status],
+                ),
+                Text("Users:", style: TextStyle(fontWeight: FontWeight.bold)),
+                Text("Users who still evaluating:" +
+                    nonPurchassedUsers.toString()),
+                Text("Users who purchased:" + purchasedUsers.toString()),
+              ],
+            ))
+      ],
+    );
+  }
+
+  _buildBusinessLegals(BuildContext context, BusinessProfile profile) {
+    if (profile == null) {
+      return Container();
+    }
+    List<Widget> legals = List.empty(growable: true);
+    profile.businessLegal.forEach((legal) {
+      legals.add(Row(
+        children: [
+          buildWrappedText(context, legal.title),
+        ],
+      ));
+    });
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(
+            "Published Legals",
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            iconSize: 25,
+            onPressed: () {
+              model.editBusinessLegals();
+            },
+          )
+        ]),
+        commonContainer(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: legals,
+            ))
+      ],
+    );
+  }
+
+  _buildBusinessSettings(BuildContext context, BusinessProfile profile) {
+    if (profile == null) {
+      return Container();
+    }
+    BusinessSetting businessSetting = profile.businessSetting;
+    if (businessSetting == null) {
+      return Container();
+    }
+
+    return Column(
+      children: [
+        Row(children: [
+          Text(
+            "Business Settings",
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ]),
+        commonContainer(
+          context,
+          Column(children: [
+            Row(
+              children: [
+                Text("Maximum Courses :" +
+                    businessSetting.maxCourses.toString()),
+              ],
+            ),
+            verticalSpaceSmall,
+            Row(
+              children: [
+                Text("Maximum modules:" +
+                    businessSetting.maxModulePerCourse.toString()),
+              ],
+            ),
+            verticalSpaceSmall,
+            Row(
+              children: [
+                Text("Max Lessons :" +
+                    businessSetting.lessonsPerModule.toString()),
+              ],
+            ),
+            verticalSpaceSmall,
+            Row(
+              children: [
+                Text("Maximum Video Duration :" +
+                    businessSetting.maxVideoDuration.toString()),
+              ],
+            ),
+          ]),
+        )
+      ],
+    );
+  }
+
+  _buildBusinessPublication(BuildContext context, BusinessProfile profile) {
+    if (profile == null) {
+      return Container();
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(
+            "Publications",
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ]),
+        commonContainer(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Courses:" + profile.publication.courseCounts.toString(),
+                ),
+                Text(
+                  "Modules (trial):" +
+                      (profile.publication.totalModuleCounts -
+                              profile.publication.purchasedModuleCounts)
+                          .toString(),
+                ),
+                Text(
+                  "Modules (purchased):" +
+                      profile.publication.purchasedModuleCounts.toString(),
+                ),
+                Text(
+                  "Lessons:" + profile.publication.lessonCounts.toString(),
+                ),
+              ],
+            ))
+      ],
+    );
+  }
+
+  _buildFinanlcial(BuildContext context, BusinessProfile model) {
+    if (model == null) return Container();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(
+            "Financial",
+            style: Theme.of(context).textTheme.headline3,
+          ),
+        ]),
+        commonContainer(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    "Collected Revenue :" + profile.collectedRevenue.toString())
+              ],
+            ))
+      ],
+    );
+  }
+
+  _buildBusinessBranding(
+      BuildContext context, BusinessDashBoardViewModel model) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Text(
+            "Branding & Theming",
+            style: Theme.of(context).textTheme.headline3,
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            iconSize: 25,
+            onPressed: () {
+              model.editBusiness();
+            },
+          )
+        ]),
+        commonContainer(
+            context,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [Text("Comming Soon!")],
+            ))
+      ],
+    );
+  }
+}

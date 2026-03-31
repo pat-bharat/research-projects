@@ -1,0 +1,14 @@
+{
+"user_preferance":  [
+     {
+        "user_id":1 ,
+        "download_lessons?": 0,
+        "wifi_download_only": 1
+    },
+    {
+        "user_id":2 ,
+        "download_lessons?": 0,
+        "wifi_download_only": 1
+    }
+ ]
+}

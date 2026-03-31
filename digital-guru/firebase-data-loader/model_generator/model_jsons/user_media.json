@@ -1,0 +1,19 @@
+{
+        "user_id": "",
+        "module_id": "",
+        "user_media": [
+         {    
+            "title": "",
+            "description": "",
+            "media_type": "",
+            "media_path": "",
+            "nedia_url":"",
+            "media_size":"",
+            "media_length":"",                    
+            "created_timestamp": "",
+            "updated_timestamp": "",
+            "deleted_timestamp": "",
+            "modify_by": ""
+         }
+      ]
+ }

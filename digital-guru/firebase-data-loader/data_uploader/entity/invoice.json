@@ -1,0 +1,23 @@
+
+{
+    "invoice": [
+        {
+        "id":1,
+        "business_id":1,
+        "invoice_date":"2021-01-01",
+        "Invoice_amount":"",
+        "currancy_code":"",
+        "start_date":"2021-01-01",
+        "end_date":"2021-01-01",
+        "due_date":"2021-01-01",
+        "paid_date":"",
+        "paid_by":"",
+        "paid_via":"",
+        "created_timestamp":"",
+        "updated_timestamp":"",
+        "deleted_timestamp":"",
+        "modify_by":""
+
+    }	
+    ]
+}

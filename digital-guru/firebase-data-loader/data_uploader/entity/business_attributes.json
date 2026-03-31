@@ -1,0 +1,10 @@
+{
+"business_attributes": [
+    {
+        "business_id": 1,
+        "wifi_download_only": "",
+        "min_storage_size": "",
+        "max_lessons_per_module": ""
+    }
+  ]
+}

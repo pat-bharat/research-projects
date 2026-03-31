@@ -1,0 +1,34 @@
+{
+"lesson_media": [
+    {
+        "lesson_id": "1",
+        "media_id":"5",
+        "title": "Inroduction to Piano",
+        "description": "You will learn key layout and fingureing exercises",
+        "instructor_notes": "you need minimum one week to practice this exercises daily hour",
+        "media_title": "Piano Key Layout",
+        "media_type": "pdf",                    
+        "media_path":"/1/1/1/1_keys.mk4"							
+    },
+    {
+        "lesson_id": "2",
+        "media_id":"6",
+        "title": "Piano Notes Exercise",
+        "description": "You will learn key layout and fingureing exercises",
+        "instructor_notes": "you need minimum one week to practice this exercises daily hour",							
+        "media_title": "Piano Key Layout",
+                    "media_type": "pdf",                    
+                    "media_path":"/1/1/1/keys.mk4"
+    },
+    {
+        "lesson_id": "3",
+        "media_id":"7",
+        "title": "Piano Notes Exercise",
+        "description": "You will learn key layout and fingureing exercises",
+        "instructor_notes": "you need minimum one week to practice this exercises daily hour",							
+        "media_title": "Piano Key Layout",
+                    "media_type": "pdf",                    
+                    "media_path":"/1/1/1/keys.mk4"
+    }
+]
+}

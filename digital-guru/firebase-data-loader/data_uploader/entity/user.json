@@ -1,0 +1,46 @@
+{
+    "user": [
+         {
+            "id": 1,
+            "login_id": "pat.bharat@gmail.com",
+            "user_type": 0,
+            "full_name": "Bharat Patel",
+            "address": "5905 NW 103rd St",
+            "city": "Johnston",
+            "zip_code": "50131",
+            "state": "IA",
+            "country": "USA",
+            "birth_date": "",
+            "email_id": "pat.bharat@gmail.com",
+            "mobile_phone": "15153602106",
+            "locked": 0,
+            "deleted": 0,
+            "created_timestamp": "",
+            "updated_timestamp": "",
+            "deleted_timestamp": "",
+            "modified_by": "bpatel",
+            "last_login_timestamp": ""
+        },
+         {
+            "id": 2,
+            "login_id": "digitalguru.lms@gmail.com",
+            "user_type": 0,
+            "full_name": "Littu Damodaran",
+            "address": "5905 NW 103rd St",
+            "city": "Johnston",
+            "zip_code": "50131",
+            "state": "IA",
+            "country": "USA",
+            "birth_date": "",
+            "email_id": "pat.bharat@gmail.com",
+            "mobile_phone": "15153602106",
+            "locked": 0,
+            "deleted": 0,
+            "created_timestamp": "",
+            "updated_timestamp": "",
+            "deleted_timestamp": "",
+            "modified_by": "bpatel",
+            "last_login_timestamp": ""
+        }		
+    ]
+}

@@ -1,0 +1,14 @@
+{
+"business_user": [
+    {
+        "business_id": 1,
+        "user_id": 1,
+        "login_id":"pat.bharat@gmail.com"        
+    },
+    {
+        "business_id": 1,
+        "user_id": 2,  
+        "login_id":"kittu@gmail.com"      
+    }
+]
+}

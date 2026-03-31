@@ -1,0 +1,12 @@
+{
+"user_media": [
+        {
+        "user_id": 1,
+        "module_id": 1,
+        "media_id":1,
+        "description": "Sample Upload",
+        "upload_data": "",
+        "upload_link": "/link"
+ }
+]
+ }

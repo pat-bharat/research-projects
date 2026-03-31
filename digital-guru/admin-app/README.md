@@ -1,0 +1,103 @@
+- Firebase project setup
+    - [ ] Rest api for security
+    - [ ] Cloud Messaging
+    - [ ] Cloud functions for rest API
+- Tools
+    - [ ] Invoice generator
+    - [ ] Remove stale cloud store media 
+- Bugs:
+    - [x] Refresh drawer when switching from Admin to consumer suer
+    - [ ] Video upload is not 100% working
+    - [x] Pdf Viewier with custom widget at bottom for accepting legal check boxes
+    - [x] Pdf Viewier with top navigation with back button and logo
+    - [x] buy button should only appear for user role and if it is not already purchased
+    - [ ] remove refresh iconButton from user appbar once purchased package list refresh issue is fixed
+    - [x] course play video url is not playing video
+- Roadmap / TODO list
+    - General
+        - [x] drawer in app bar for admin and consumer user
+        - [x] Date parse and format
+        - [ ] Add PDF Generator for Reporting
+        - [ ] Add Connectivity integration to check cell vs wifi connected
+        - [x] add video duration in MediaTile
+        - [x] identify data length for key fields which are displayed in UI // replace with autotext to wrap text in available lines
+            - [x] Course Title, Module Name and Title, instructor name
+        - UI Enhancement
+            - [ ] Add page transition animation
+        - Network Connectivity management
+            - [ ] configure firebase for offline mode
+            - [ ] if youtube course lessons can't be played off line.
+            - [ ] before download/upload check user settings and decide accordingly.
+    - Business
+        - General 
+            - [ ] Broadcasting messages via in app messaging 
+            - [ ] About us view
+            - [ ] Separate  admin  app required?
+        - Dashboard
+            - [ ] Profile view with business settings
+            - [ ] Total finance view
+            - [ ] Consumer User list sorted by country -> detect through mobile country code
+            - [ ] Theming view
+        - Business Onboarding Process
+            - [ ] Step 1 - Signup view screen with email/googleId/Facebook login 
+                - [ ] Check max business users count for business do not exceed. - phase II
+            - [ ] Step 2 - add Business Details with BusinessView Screen with TOC and privacy policy
+            - [ ] Step 3 - optional additional data screen like address
+            - [ ] Step 4 - Add business Images
+            - [x] once business is successfully created 
+                - [x] copy system legals docs to business legals folder
+                - [x] create business legal collection record.
+        - Auth
+            - [ ] Goggle/Facebook login with profile data populated
+            - [ ] Business Sign up workflow
+            - [ ] Phone authentication
+            - [ ] signup with url link for multi business app
+            - [ ] add update last_login_timestamp after fresh login
+        - Billing
+            - [x] Invoices management
+            - [ ] Improvise Invoice list view design and add view capability to invoice PDF by adding icon at accordion title.
+        - Branding
+            - [ ] Branding management and preview view
+            - [ ] json to ThemeData management
+            - [ ] make Panche work on android to create new themes
+            - [ ] identify branding image list and size
+                - [ ]  logo
+                - [ ]  Splash screen
+                - [ ]  drawer Image
+        - Youtube Integration
+            - [x] Generate course from Youtube Channel
+            - [x] Each Playlist into course module
+                - [x] Configurations
+                    - [x] playlist within channel are selectable
+                    - [x] video name can be adjusted from original name
+                    - [x] video duration should be captured
+            - [x] limit restriction of number of videos converted into lesson.
+            - [x] integrate with iframe based youtube player if lesson video is youtube link. 
+            - [x] display your tube modules under trial packages
+            - [x] add back button on player
+            - [ ] allow downloading video for offline viewing                   
+    - End User Interface
+        - Purchase
+            - [x] Integration with app store and Play store for purchases by adding buy button
+            - [ ] Add support for buy options 1. subscription 2. one time buy
+            - [ ] Create play store developer account and configure products
+            - [x] Add Purchase module simulation without actual play store or app store connection
+        - [x] Trial LessonsListview
+        - [x] Purchased Lesson view( bug as it it is not refreshed)
+        - [ ] Profile view    
+        - [ ] About us view
+        - [ ] add user interaction with instructor
+    - System
+        - Dashboard
+            - [ ] Finance View
+            - [ ] Business View
+        - [x] Manage All business settings view
+        - [x] System legal Management
+        - [ ] System maintenance broadcasting via in app messaging
+        - Analytics
+            - [ ] User login activities
+            - [ ] User lesson view
+            - [ ] User navigation pattern
+    
+
+

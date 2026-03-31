@@ -1,0 +1,16 @@
+{
+    "group": [
+        {
+            "id":"1",
+            "name":"basic"
+        },
+        {
+            "id":"2",
+            "name":"Intermidiate"
+        },
+        {
+            "id":"3",
+            "name":"Advance"
+        }
+    ]    
+}

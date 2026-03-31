@@ -1,0 +1,38 @@
+{
+    "course_id":"",
+    "title": "",
+     "description": "",     
+     "discount_percentage": "",
+     "locked": 0,
+     "deleted": 0,
+     "display_order": 1,
+     "created_timestamp": "",
+     "updated_timestamp": "",
+     "deleted_timestamp": "",
+     "modified_by": "",
+     "tags" :[
+         {    
+            "name":""            
+         }
+      ],
+      "price_plan" :[
+         {    
+            "name":"",
+            "price":""            
+         }
+      ],
+     "module_media" :[
+         {    
+            "title": "",
+            "media_type": "",
+            "media_path": "",
+            "media_size":"",
+            "media_length":"",                    
+            "created_timestamp": "",
+            "updated_timestamp": "",
+            "deleted_timestamp": "",
+            "modify_by": ""
+         }
+      ],      
+      "lesson_count":""
+}

@@ -1,0 +1,25 @@
+{   
+    "business_id":"",
+    "login_id": "",
+    "user_type": 0,
+    "full_name": "",
+    "address": "",
+    "city": "",
+    "zip_code": "",
+     "state": "",
+    "country": "",
+     "birth_date": "",
+    "email": "",
+     "mobile_phone": "",
+     "locked": 0,
+    "deleted": 0,
+     "created_timestamp": "",
+     "updated_timestamp": "",
+     "deleted_timestamp": "",
+     "modified_by": "",
+    "last_login_timestamp": "" ,
+    "preferances": {               
+        "download_lessons": 0,
+        "wifi_download_only": 0   
+       }   
+}

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "digital-guru-bharat",
+  "private_key_id": "3e14c9ed71d17c72db1e4e41cca849ba40e46f56",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDuMhHlo4nneFB4\nUAoMV/3BGhTzVxBTeFc1b+sGi77l9IyNzOnWUUS+Zghh4qy8QO8byp5JlaTqXds+\nKdDK1mpNIZABtX8+qRb9Bh2jZhvj/u6N2nTA9js4vBrW7VC6DKMp8jRDJEuvjv7Z\nSt57lGkNEHJFUCHqfVy6h3Y1fXz0S+9sCyayvPgRry2hcMMFL9VTWpkyE9xxP4fU\n4f9CcMCdoB8loKg6KRAmWusew+kdLbonwf3fKWQtBEaRWek1HrrMNxX/0I5z6uvD\nntv4dIX5MS5230B5txLGBBVxpRCL2JOAs1SWF8twQR6bLgJG03ej4Ta+Cb3jwTTY\n4ifM2xC3AgMBAAECggEABY+5YkAMwWZKPrI5DIEQxYLwjUlG8iP4/qA+f7h15xRB\ned1tx5loflI54jXdgZxkg3oaHa628IVA0AqVkOmBBuGrOpb8bGqcmktxGAu+HUx/\npmPniPUsJyQhM6EhMDmI+mWTec6C+TY2AL3M7wa6jdmzSVIDJgtHmyVRib3Z09xX\nJ7BKdsroOmU0btaaWzWNVpssV7ZBsU6FourWT2gYWLOf5q91YLxhnmCsqjgYFEdl\nlGfLu/PHmuw8LwqTrijCrIWqMfsXOUHHGQBQiUwQzKnJbdmQaDOTB1YzYIFUCz+u\nPcY44ryw8+qmcH1lMuZAGcR1A7VkQs92bslvCOxg7QKBgQD591gUU4Ky1+I8jS5E\nhaEdom40/nrdTQ+5PTe2cs3zfsf1/QSOkqpHoZyF4jd0PZ0qcda24+gxOJC+rgjf\n+suhGmsG7HvaRH0nHuEMbal0qaclhDPK4p31dagJ3lLWXwgn0QnR5dOO2Ynir3fn\n8/Cx4MBP7tP0m4B8X/nwTUsVhQKBgQDz8f1pd3PDWUrdf2H/fd81sua2MuJKePHx\nUVjTdrPvbGvtUv0RrMcVBBE7EPqaV6LD4txHxsZ5MBfjIgLecVI1R6vC2FZCTlLb\nWZTtTaCVqgHdEGUX/v7rzrCi6+azF/mwrYyRgGfBr/YNXAbLZDzroBGvi00aI5OF\ntcyrb0PUCwKBgAjEx383Cr+xWQtcvIHE2kkK2KjdQHwg5utNnXW2A0mGagdUD+Pc\ne0K2BaKgs+dM/gVuJuUVi6CmZlV6D2+kAZ6uKZD9nL6kZmuH5scj1az1ApsLTzHP\nz1C8BuAJv4grn0KeT6TgVhKNyQt9skwdv5TN2JE1RJQxHEnAqCjo3ThtAoGBANMj\nKJVnGSAEIeMSRKyQsmfU3xDle6y/f5DBOqNUQyq/6a3wPS9WHr1W1t8LtAtwPGVU\n7hmFtvTfJl2la1xCMsgAr24mNoqPJfHKWDcIECxZh+FhNk6NmvBX5dQtX3C1GJzN\nqTOqMqOWe91WQF878+pwkb4hUGuGTUHWdz4OQGO/AoGAGWAap0+88bi3mCs9YifN\nTU6f967GeeN6ciXUFktEQfZeI0Sjotc6w6pmcBNvph1To2wmwAzjJrAblhcjSJ7N\n7v5gpIBZLWMDVUa0LNr1L/aOIeiaPl3cLrEL3cq+kvjxpBXZInYYDucFMNcPsPyv\nPO8iJ4VoH5xvs+mXnqU8Yv0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-f4hsq@digital-guru-bharat.iam.gserviceaccount.com",
+  "client_id": "115003169369692712802",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-f4hsq%40digital-guru-bharat.iam.gserviceaccount.com"
+}
