@@ -1,11 +1,10 @@
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/service/analytics_service.dart';
+import 'package:digiguru/app/firebase_services/service/analytics_service.dart';
 import 'package:digiguru/app/auth/service/authentication_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/user/service/user_service.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../common/model/base_model.dart';
 
@@ -22,14 +21,14 @@ class LoginViewModel extends BaseModel {
   }
 
   Future loginWithEmail({
-    @required String email,
-    @required String password,
+    required String email,
+    required String password,
   }) async {
     setBusy(true);
-    String businessId;
-    if (appConfig != null) {
-      businessId = appConfig.businessId;
-    }
+    String? businessId;
+    
+    businessId = appConfig.businessId;
+  
     var result = await _authenticationService.loginWithEmail(
       email: email,
       password: password,
@@ -76,7 +75,7 @@ class LoginViewModel extends BaseModel {
     }
   }
 
-  Future sendForgotPasswordLinkEmail({@required String email}) async {
+  Future sendForgotPasswordLinkEmail({required String email}) async {
     setBusy(true);
 
     await _authenticationService.sendPasswordEmail(email: email);

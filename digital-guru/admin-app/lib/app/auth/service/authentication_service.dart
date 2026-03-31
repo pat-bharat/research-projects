@@ -22,51 +22,53 @@ class AuthenticationService extends BaseService {
   final CollectionReference _businessProfileCollectionReference =
       FirebaseFirestore.instance.collection('business_profile');
 
-  String businessId;
+  String? businessId;
   Future loginWithEmail(
-      {@required String email,
-      @required String password,
-      String businessId}) async {
+      {required String email,
+      required String password,
+      String? businessId}) async {
     this.businessId = businessId;
     try {
       var authResult = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      await _populateCurrentUser(authResult.user);
-      if (BaseService.currentUser != null) {
-        BaseService.currentUser.lastLoginTimestamp =
-            DateTime.now().toIso8601String();
-        if (businessId != null) {
-          BaseService.currentUser.businessId = businessId;
-        }
-        _userService.updateUser(
-            BaseService.currentUser.documentId, BaseService.currentUser);
+      if (authResult.user != null) {
+        await _populateCurrentUser(authResult.user!);
       }
-      await _populateCurrentBusiness(authResult.user);
+      BaseService.currentUser.lastLoginTimestamp =
+          DateTime.now().toIso8601String();
+      if (businessId != null) {
+        BaseService.currentUser.businessId = businessId;
+      }
+      _userService.updateUser(
+          BaseService.currentUser.documentId, BaseService.currentUser);
+      if (authResult.user != null) {
+        await _populateCurrentBusiness(authResult.user!);
+      }
       return authResult.user != null;
     } catch (e) {
-      return handleException(e);
+      return handleException(e is Exception ? e : Exception(e.toString()));
     }
   }
 
   Future singOut() async {
     try {
       await _firebaseAuth.signOut();
-      BaseService.currentUserToken = null;
-      BaseService.currentUser = null;
-      BaseService.currentBusiness = null;
+      BaseService.currentUserToken = "";
+      BaseService.currentUser = u.User();
+      BaseService.currentBusiness = Business();
     } catch (e) {
-      return handleException(e);
+      return handleException(e is Exception ? e : Exception(e.toString()));
     }
   }
 
   Future signUpWithEmail({
-    @required String email,
-    @required String password,
-    @required String fullName,
-    @required String role,
-    String businessId,
+    required String email,
+    required String password,
+    required String fullName,
+    required String role,
+    required String businessId,
   }) async {
     this.businessId = businessId;
     try {
@@ -78,11 +80,11 @@ class AuthenticationService extends BaseService {
       // create a new user profile on firestore
 
       u.User _cUser =
-          buildNewUser(authResult.user, fullName: fullName, role: role);
+          buildNewUser(authResult.user!, fullName: fullName, role: role);
 
       await _userService.createUser(_cUser);
       await _analyticsService.setUserProperties(
-        userId: authResult.user.uid,
+        userId: authResult.user!.uid,
         userRole: _cUser.userRole,
       );
       BaseService.currentUser = _cUser;
@@ -94,37 +96,42 @@ class AuthenticationService extends BaseService {
     }
   }
 
-  u.User buildNewUser(User firebaseUser, {String fullName, String role}) {
+  u.User buildNewUser(User firebaseUser, {required String fullName, required String role}) {
     return u.User(
-        userId: firebaseUser.uid,
-        email: firebaseUser.email,
-        fullName: fullName != null ? fullName : firebaseUser.displayName,
-        userRole: role,
-        mobileNo: firebaseUser.phoneNumber,
-        profilePic: firebaseUser.photoURL,
-        lastLoginTimestamp: DateTime.now().toIso8601String());
+      userId: firebaseUser.uid,
+      email: firebaseUser.email ?? '',
+      fullName: fullName.isNotEmpty ? fullName : (firebaseUser.displayName ?? ''),
+      userRole: role,
+      mobileNo: firebaseUser.phoneNumber ?? '',
+      profilePic: firebaseUser.photoURL ?? '',
+      lastLoginTimestamp: DateTime.now().toIso8601String());
   }
 
-  Future signUpWithGoogle({@required String role, String businessId}) async {
-     this.businessId = businessId;
+  Future signUpWithGoogle({required String role,  String? businessId}) async {
+    this.businessId = businessId;
     try {
-      final GoogleSignIn _googleSignIn = GoogleSignIn(
-        scopes: ['email'],
-      );
+      final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
       final FirebaseAuth _auth = FirebaseAuth.instance;
 
-      final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.authenticate();
+      if (googleUser == null) {
+        throw Exception('Google sign in aborted');
+      }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
+        accessToken: googleAuth.idToken,
         idToken: googleAuth.idToken,
       );
 
-      final User user = (await _auth.signInWithCredential(credential)).user;
-      print("signed in " + user.displayName);
-      u.User _cUser = buildNewUser(user, role: role);
+      final UserCredential userCredential = await _auth.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user == null) {
+        throw Exception('Google sign in failed');
+      }
+      print("signed in ${user.displayName}");
+      u.User _cUser = buildNewUser(user, fullName: user.displayName ?? '', role: role);
       await _userService.createUser(_cUser);
       await _analyticsService.setUserProperties(
         userId: user.uid,
@@ -134,13 +141,13 @@ class AuthenticationService extends BaseService {
       BaseService.currentFirebaseUser = user;
       //updateUserCount
       _updateUserCount(businessId, BaseService.isAdmin());
-      return user != null;
+      return true;
     } catch (e) {
       return handleException(e);
     }
   }
 
-  Future signUpWithFacebook({@required String role}) async {
+  Future signUpWithFacebook({required String role}) async {
     /*try {
       final AccessToken result = await FacebookAuth.instance.login();
       /*if(result.status == FacebookLoginStatus.loggedIn) {
@@ -171,8 +178,8 @@ class AuthenticationService extends BaseService {
     }*/
   }
 
-  Future<bool> isUserLoggedIn({String businessId}) async {
-    User user = _firebaseAuth.currentUser;
+  Future<bool> isUserLoggedIn({required String businessId}) async {
+    User? user = _firebaseAuth.currentUser;
     this.businessId = businessId;
     if (user != null) {
       await _populateCurrentUser(user);
@@ -182,16 +189,14 @@ class AuthenticationService extends BaseService {
   }
 
   Future _populateCurrentUser(User user) async {
-    if (user != null) {
-      BaseService.currentUserToken = await user.getIdToken();
-      BaseService.currentUser = await _userService.getUser(user.uid);
-      BaseService.currentFirebaseUser = user;
-      await _analyticsService.setUserProperties(
-        userId: user.uid,
-        userRole: BaseService.currentUser.userRole,
-      );
+    BaseService.currentUserToken = (await user.getIdToken())!;
+    BaseService.currentUser = await _userService.getUser(user.uid);
+    BaseService.currentFirebaseUser = user;
+    await _analyticsService.setUserProperties(
+      userId: user.uid,
+      userRole: BaseService.currentUser.userRole,
+    );
     }
-  }
 
   Future getBusinessByEmail() async {
     if (BaseService.currentUser != null) {
@@ -204,17 +209,15 @@ class AuthenticationService extends BaseService {
   }
 
   Future _populateCurrentBusiness(User user) async {
-    if (user != null && BaseService.currentUser != null) {
-      if (BaseService.currentUser.userRole == UserRole.admin) {
-        BaseService.currentBusiness =
-            await _businessService.getBusinessByEmail(user.email);
-      } else if (BaseService.currentUser.userRole == UserRole.user) {
-        BaseService.currentBusiness = Business();
-        BaseService.currentBusiness.documentId = businessId;
-      }
-      //TODo analytics
+    if (BaseService.currentUser.userRole == UserRole.admin) {
+      BaseService.currentBusiness =
+          await _businessService.getBusinessByEmail(user.email!);
+    } else if (BaseService.currentUser.userRole == UserRole.user) {
+      BaseService.currentBusiness = Business();
+      BaseService.currentBusiness.documentId = businessId;
     }
-  }
+    //TODo analytics
+    }
 
   void _updateUserCount(String businessId, bool isAdmin) async {
     BusinessProfile profile =

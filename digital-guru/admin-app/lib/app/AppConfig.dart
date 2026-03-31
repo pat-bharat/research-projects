@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 class AppConfig {
   final String businessId;
 
-  AppConfig({this.businessId});
+  AppConfig({required this.businessId});
 
   static Future<AppConfig> forEnvironment(String env) async {
     // set default to dev if nothing was passed

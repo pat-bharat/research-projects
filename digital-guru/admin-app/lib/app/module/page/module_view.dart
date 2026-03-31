@@ -19,7 +19,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getwidget/components/toggle/gf_toggle.dart';
 import 'package:getwidget/types/gf_toggle_type.dart';
 import 'package:stacked/stacked.dart';
-import 'package:spinner_input/spinner_input.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 
 class ModuleView extends StatefulWidget {
   final Module editingModule;
@@ -71,15 +71,17 @@ class _ModuleViewState extends State<ModuleView> {
           nameController.text = editingModule?.name ?? '';
           //discountController.text = editingModule?.discountPercentage ?? '';
           _discount = editingModule?.discountPercentage ?? 0;
-          tagController.text =
-              editingModule.tags != null ? editingModule.tags.join(',') : '';
+          tagController.text = editingModule.tags != null
+              ? editingModule.tags.join(',')
+              : '';
           priceController.text = editingModule?.purchaseAmount.toString() ?? '';
           background =
               editingModule?.moduleBackground ?? new ModuleBackground();
           moduleDetailDoc =
               editingModule?.moduleDetailDoc ?? new ModuleDetailDoc();
           moduleVideo = editingModule?.moduleVideo ?? new ModuleVideo();
-          pricePlans = editingModule?.pricePlan ??
+          pricePlans =
+              editingModule?.pricePlan ??
               new List<PricePlan>.empty(growable: true);
           _published = editingModule?.published ?? false;
           model.setEditingModule(editingModule);
@@ -87,18 +89,19 @@ class _ModuleViewState extends State<ModuleView> {
       },
       builder: (context, model, child) => SafeArea(
         child: CommonScaffold(
-            appTitle: Strings.moduleViewTitle,
-            showDrawer: false,
-            model: model,
-            bottomNavBarIndex: 0,
-            bodyData: SingleChildScrollView(
-              padding: viewPadding,
-              child: Form(
-                key: _moduleViewKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: _buildFields(context, model),
-              ),
-            )),
+          appTitle: Strings.moduleViewTitle,
+          showDrawer: false,
+          model: model,
+          bottomNavBarIndex: 0,
+          bodyData: SingleChildScrollView(
+            padding: viewPadding,
+            child: Form(
+              key: _moduleViewKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: _buildFields(context, model),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -137,27 +140,22 @@ class _ModuleViewState extends State<ModuleView> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
             horizontalSpaceMedium,
-            SpinnerInput(
-                spinnerValue: _discount.toDouble(),
-                minValue: 0,
-                maxValue: 100,
-                fractionDigits: 0,
-                plusButton: SpinnerButtonStyle(
-                    elevation: 0,
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(15)),
-                minusButton: SpinnerButtonStyle(
-                    elevation: 0,
-                    color: Theme.of(context).accentColor,
-                    borderRadius: BorderRadius.circular(15)),
-                middleNumberWidth: 60,
-                middleNumberStyle: Theme.of(context).textTheme.bodyText1,
-                middleNumberBackground: Colors.grey[200].withOpacity(0.7),
-                onChange: (newValue) {
-                  setState(() {
-                    _discount = newValue.toInt();
-                  });
-                }),
+            SpinBox(
+              min: 0,
+              max: 100,
+              value: _discount.toDouble(),
+              decimals: 0,
+              step: 1,
+              onChanged: (value) {
+                setState(() {
+                  _discount = value.toInt();
+                });
+              },
+              decoration: InputDecoration(
+                labelText: Strings.moduleDiscount,
+                border: OutlineInputBorder(),
+              ),
+            ),
             horizontalSpaceMedium,
             buildToolTip(context, Tooltips.moduleDiscountOffer),
           ],
@@ -200,101 +198,104 @@ class _ModuleViewState extends State<ModuleView> {
           controller: tagController,
         ),
         Container(
-            decoration: boxDecoration(context),
-            child: Row(
-              //mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                horizontalSpaceSmall,
-                MediaTile(
-                  label: Strings.background,
-                  mediaType: MediaTypes.IMAGE,
-                  isEditing: editingModule != null,
-                  height: 70,
-                  width: 100,
-                  localFile: model.backgroundImage,
-                  mediaLink: background.imageUrl,
-                  onTap: () => {
-                    model
-                        .selectBannerImage()
-                        .then((v) => {model.setBackgroundImage(v)})
-                  },
-                  onDelete: () => {
-                    setState(() {
-                      if (editingModule != null)
-                        editingModule.moduleBackground.imageUrl = "";
-                    })
-                  },
-                ),
-                horizontalSpaceMedium,
-                MediaTile(
-                  label: Strings.document,
-                  mediaType: MediaTypes.DOCUMENT,
-                  isEditing: editingModule != null,
-                  height: 70,
-                  width: 100,
-                  localFile: model.moduleDetailDocument,
-                  mediaLink: moduleDetailDoc.docUrl,
-                  onTap: () => {
-                    model
-                        .selectModuleDocument()
-                        .then((v) => {model.setModuleDetailDocument(v)})
-                  },
-                  onDelete: () => {
-                    setState(() {
-                      if (editingModule != null)
-                        editingModule.moduleDetailDoc = null;
-                    })
-                  },
-                ),
-                horizontalSpaceMedium,
-                MediaTile(
-                  label: Strings.video,
-                  mediaType: MediaTypes.VIDEO,
-                  isEditing: editingModule != null,
-                  height: 70,
-                  width: 100,
-                  localFile: model.moduleVideo,
-                  mediaLink: moduleVideo.videoUrl,
-                  onTap: () => {
-                    model
-                        .selectModuleVideo()
-                        .then((v) => {model.setModuleVideo(v)})
-                  },
-                  onDelete: () => {
-                    setState(() {
-                      if (editingModule != null)
-                        editingModule.moduleVideo.videoUrl = "";
-                    })
-                  },
-                ),
-              ],
-            )),
+          decoration: boxDecoration(context),
+          child: Row(
+            //mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              horizontalSpaceSmall,
+              MediaTile(
+                label: Strings.background,
+                mediaType: MediaTypes.IMAGE,
+                isEditing: editingModule != null,
+                height: 70,
+                width: 100,
+                localFile: model.backgroundImage,
+                mediaLink: background.imageUrl,
+                onTap: () => {
+                  model.selectBannerImage().then(
+                    (v) => {model.setBackgroundImage(v)},
+                  ),
+                },
+                onDelete: () => {
+                  setState(() {
+                    if (editingModule != null)
+                      editingModule.moduleBackground.imageUrl = "";
+                  }),
+                },
+              ),
+              horizontalSpaceMedium,
+              MediaTile(
+                label: Strings.document,
+                mediaType: MediaTypes.DOCUMENT,
+                isEditing: editingModule != null,
+                height: 70,
+                width: 100,
+                localFile: model.moduleDetailDocument,
+                mediaLink: moduleDetailDoc.docUrl,
+                onTap: () => {
+                  model.selectModuleDocument().then(
+                    (v) => {model.setModuleDetailDocument(v)},
+                  ),
+                },
+                onDelete: () => {
+                  setState(() {
+                    if (editingModule != null)
+                      editingModule.moduleDetailDoc = null;
+                  }),
+                },
+              ),
+              horizontalSpaceMedium,
+              MediaTile(
+                label: Strings.video,
+                mediaType: MediaTypes.VIDEO,
+                isEditing: editingModule != null,
+                height: 70,
+                width: 100,
+                localFile: model.moduleVideo,
+                mediaLink: moduleVideo.videoUrl,
+                onTap: () => {
+                  model.selectModuleVideo().then(
+                    (v) => {model.setModuleVideo(v)},
+                  ),
+                },
+                onDelete: () => {
+                  setState(() {
+                    if (editingModule != null)
+                      editingModule.moduleVideo.videoUrl = "";
+                  }),
+                },
+              ),
+            ],
+          ),
+        ),
         verticalSpaceSmall,
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BusyButton(
-                title: Strings.save,
-                busy: model.busy,
-                onPressed: () {
-                  if (_moduleViewKey.currentState.validate()) {
-                    model.save(
-                        courseId: course.documentId,
-                        name: nameController.text,
-                        title: titleController.text,
-                        purchaseAmount: double.tryParse(priceController.text),
-                        discountPercentage: _discount,
-                        published: _published,
-                        tagData: tagController.text,
-                        pricePlan: pricePlans,
-                        background: background,
-                        moduleDetailDoc: moduleDetailDoc,
-                        moduleVideo: moduleVideo);
-                  }
-                }),
+              title: Strings.save,
+              busy: model.busy,
+              onPressed: () {
+                if (_moduleViewKey.currentState.validate()) {
+                  model.save(
+                    courseId: course.documentId,
+                    name: nameController.text,
+                    title: titleController.text,
+                    purchaseAmount: double.tryParse(priceController.text),
+                    discountPercentage: _discount,
+                    published: _published,
+                    tagData: tagController.text,
+                    pricePlan: pricePlans,
+                    background: background,
+                    moduleDetailDoc: moduleDetailDoc,
+                    moduleVideo: moduleVideo,
+                  );
+                }
+              },
+            ),
             horizontalSpaceMedium,
             BusyButton(
               title: Strings.cancel,

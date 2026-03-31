@@ -8,7 +8,7 @@ import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 import 'package:digiguru/app/system/model/system_dashboard_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:spinner_input/spinner_input.dart';
+import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:stacked/stacked.dart';
 
 class SystemBusinessManagementView extends StatefulWidget {
@@ -57,57 +57,68 @@ class _SystemBusinessManagementViewState
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SystemDashBoardViewModel>.reactive(
-        viewModelBuilder: () => model,
-        onModelReady: (model) {},
-        builder: (context, model, child) => SafeArea(
-              child: CommonScaffold(
-                  appTitle: Strings.systemBusinessManagement,
-                  model: model,
-                  bottomNavBarIndex: 1,
-                  bodyData: SingleChildScrollView(
-                      padding: viewPadding,
-                      child: Column(
-                        children: [
-                          buildBusinessProfileView(context, model),
-                        ],
-                      ))),
-            ));
+      viewModelBuilder: () => model,
+      onModelReady: (model) {},
+      builder: (context, model, child) => SafeArea(
+        child: CommonScaffold(
+          appTitle: Strings.systemBusinessManagement,
+          model: model,
+          bottomNavBarIndex: 1,
+          bodyData: SingleChildScrollView(
+            padding: viewPadding,
+            child: Column(children: [buildBusinessProfileView(context, model)]),
+          ),
+        ),
+      ),
+    );
   }
 
   buildBusinessProfileView(
-      BuildContext context, SystemDashBoardViewModel model) {
+    BuildContext context,
+    SystemDashBoardViewModel model,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          horizontalSpaceSmall,
-          Text(Strings.selectBusiness),
-          horizontalSpaceSmall,
-          businessList.isNotEmpty
-              ? DropdownButton<Business>(
-                  items: businessList.map((e) {
-                    return DropdownMenuItem(
-                        child: Text('${e.name}',
-                            style: Theme.of(context).textTheme.headline4),
-                        value: e);
-                  }).toList(),
-                  onChanged: (newBehavior) {
-                    setState(() => {
+        Row(
+          children: [
+            horizontalSpaceSmall,
+            Text(Strings.selectBusiness),
+            horizontalSpaceSmall,
+            businessList.isNotEmpty
+                ? DropdownButton<Business>(
+                    items: businessList.map((e) {
+                      return DropdownMenuItem(
+                        child: Text(
+                          '${e.name}',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                        value: e,
+                      );
+                    }).toList(),
+                    onChanged: (newBehavior) {
+                      setState(
+                        () => {
                           business = newBehavior,
-                          getBusinessProfile(business.documentId)
-                        });
-                  },
-                  value: business,
-                  //dropdownColor: Colors.grey,
-                )
-              : Text("Nobusiness Found"),
-        ]),
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          //businessSettings
-          _buildUserCounts(context, currentBusinessProfile),
-          _buildPublication(context, currentBusinessProfile),
-          buildBusinessSettings(context, currentBusinessProfile),
-        ]),
+                          getBusinessProfile(business.documentId),
+                        },
+                      );
+                    },
+                    value: business,
+                    //dropdownColor: Colors.grey,
+                  )
+                : Text("Nobusiness Found"),
+          ],
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //businessSettings
+            _buildUserCounts(context, currentBusinessProfile),
+            _buildPublication(context, currentBusinessProfile),
+            buildBusinessSettings(context, currentBusinessProfile),
+          ],
+        ),
       ],
     );
   }
@@ -119,29 +130,30 @@ class _SystemBusinessManagementViewState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Text(
-            "General Stats",
-            style: Theme.of(context).textTheme.headline3,
-          ),
-        ]),
+        Row(
+          children: [
+            Text("General Stats", style: Theme.of(context).textTheme.headline3),
+          ],
+        ),
         Container(
-            decoration: boxDecoration(context),
-            width: screenWidth(context),
-            padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Admin Users:" + profile.userCounts.adminUsers.toString(),
-                ),
-                Text("ConsumerUsers:" +
-                    profile.userCounts.consumerUsers.toString()),
-                Text("Trial Users:" + profile.userCounts.trialUsers.toString()),
-                Text("Purchased Users:" +
-                    profile.userCounts.purchasedUsers.toString()),
-              ],
-            ))
+          decoration: boxDecoration(context),
+          width: screenWidth(context),
+          padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Admin Users:" + profile.userCounts.adminUsers.toString()),
+              Text(
+                "ConsumerUsers:" + profile.userCounts.consumerUsers.toString(),
+              ),
+              Text("Trial Users:" + profile.userCounts.trialUsers.toString()),
+              Text(
+                "Purchased Users:" +
+                    profile.userCounts.purchasedUsers.toString(),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -153,37 +165,33 @@ class _SystemBusinessManagementViewState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Text(
-            "Publications",
-            style: Theme.of(context).textTheme.headline3,
-          ),
-        ]),
+        Row(
+          children: [
+            Text("Publications", style: Theme.of(context).textTheme.headline3),
+          ],
+        ),
         Container(
-            decoration: boxDecoration(context),
-            width: screenWidth(context),
-            padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Courses:" + profile.publication.courseCounts.toString(),
-                ),
-                Text(
-                  "Modules (trial):" +
-                      (profile.publication.totalModuleCounts -
-                              profile.publication.purchasedModuleCounts)
-                          .toString(),
-                ),
-                Text(
-                  "Modules (purchased):" +
-                      profile.publication.purchasedModuleCounts.toString(),
-                ),
-                Text(
-                  "Lessons:" + profile.publication.lessonCounts.toString(),
-                ),
-              ],
-            ))
+          decoration: boxDecoration(context),
+          width: screenWidth(context),
+          padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Courses:" + profile.publication.courseCounts.toString()),
+              Text(
+                "Modules (trial):" +
+                    (profile.publication.totalModuleCounts -
+                            profile.publication.purchasedModuleCounts)
+                        .toString(),
+              ),
+              Text(
+                "Modules (purchased):" +
+                    profile.publication.purchasedModuleCounts.toString(),
+              ),
+              Text("Lessons:" + profile.publication.lessonCounts.toString()),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -199,131 +207,130 @@ class _SystemBusinessManagementViewState
 
     return Column(
       children: [
-        Row(children: [
-          Text(
-            "Business Settings",
-            style: Theme.of(context).textTheme.headline3,
-          ),
-        ]),
+        Row(
+          children: [
+            Text(
+              "Business Settings",
+              style: Theme.of(context).textTheme.headline3,
+            ),
+          ],
+        ),
         Container(
           decoration: boxDecoration(context),
           width: screenWidth(context),
           padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
-          child: Column(children: [
-            Row(
-              children: [
-                Text("Maximum Courses"),
-                SpinnerInput(
-                    spinnerValue: businessSetting.maxCourses.toDouble(),
-                    minValue: 0,
-                    maxValue: 10,
-                    fractionDigits: 0,
-                    plusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    minusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    middleNumberWidth: 60,
-                    middleNumberStyle: Theme.of(context).textTheme.bodyText1,
-                    middleNumberBackground: Colors.grey[200].withOpacity(0.7),
-                    onChange: (newValue) {
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text("Maximum Courses"),
+                  SpinBox(
+                    min: 0,
+                    max: 10,
+                    value: businessSetting.maxCourses.toDouble(),
+                    decimals: 0,
+                    step: 1,
+                    onChanged: (value) {
                       setState(() {
-                        businessSetting.maxCourses = newValue.toInt();
+                        businessSetting.maxCourses = value.toInt();
                       });
-                    }),
-              ],
-            ),
-            verticalSpaceSmall,
-            Row(
-              children: [
-                Text("Maximum modules"),
-                SpinnerInput(
-                    spinnerValue: businessSetting.maxModulePerCourse.toDouble(),
-                    minValue: 0,
-                    maxValue: 10,
-                    fractionDigits: 0,
-                    plusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    minusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    middleNumberWidth: 60,
-                    middleNumberStyle: Theme.of(context).textTheme.bodyText1,
-                    middleNumberBackground: Colors.grey[200].withOpacity(0.7),
-                    onChange: (newValue) {
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Maximum Courses",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpaceSmall,
+              Row(
+                children: [
+                  Text("Maximum modules"),
+                  SpinBox(
+                    min: 0,
+                    max: 10,
+                    value: businessSetting.maxModulePerCourse.toDouble(),
+                    decimals: 0,
+                    step: 1,
+                    onChanged: (value) {
                       setState(() {
-                        businessSetting.maxModulePerCourse = newValue.toInt();
+                        businessSetting.maxModulePerCourse = value.toInt();
                       });
-                    }),
-              ],
-            ),
-            verticalSpaceSmall,
-            Row(
-              children: [
-                Text("Max Lessons "),
-                SpinnerInput(
-                    spinnerValue: businessSetting.lessonsPerModule.toDouble(),
-                    minValue: 0,
-                    maxValue: 10,
-                    fractionDigits: 0,
-                    plusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    minusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    middleNumberWidth: 60,
-                    middleNumberStyle: Theme.of(context).textTheme.bodyText1,
-                    middleNumberBackground: Colors.grey[200].withOpacity(0.7),
-                    onChange: (newValue) {
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Maximum modules",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpaceSmall,
+              Row(
+                children: [
+                  Text("Max Lessons "),
+                  SpinBox(
+                    min: 0,
+                    max: 10,
+                    value: businessSetting.lessonsPerModule.toDouble(),
+                    decimals: 0,
+                    step: 1,
+                    onChanged: (value) {
                       setState(() {
-                        businessSetting.lessonsPerModule = newValue.toInt();
+                        businessSetting.lessonsPerModule = value.toInt();
                       });
-                    }),
-              ],
-            ),
-            verticalSpaceSmall,
-            Row(
-              children: [
-                Text("Maximum Video Duration"),
-                SpinnerInput(
-                    spinnerValue: businessSetting.maxVideoDuration.toDouble(),
-                    minValue: 0,
-                    maxValue: 60,
-                    fractionDigits: 0,
-                    plusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    minusButton: SpinnerButtonStyle(
-                        color: Theme.of(context).accentColor,
-                        borderRadius: BorderRadius.circular(15)),
-                    middleNumberWidth: 60,
-                    middleNumberStyle: Theme.of(context).textTheme.bodyText1,
-                    middleNumberBackground: Colors.grey[200].withOpacity(0.7),
-                    onChange: (newValue) {
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Max Lessons",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              verticalSpaceSmall,
+              Row(
+                children: [
+                  Text("Maximum Video Duration"),
+                  SpinBox(
+                    min: 0,
+                    max: 60,
+                    value: businessSetting.maxVideoDuration.toDouble(),
+                    decimals: 0,
+                    step: 1,
+                    onChanged: (value) {
                       setState(() {
-                        businessSetting.maxVideoDuration = newValue.toInt();
+                        businessSetting.maxVideoDuration = value.toInt();
                       });
-                    }),
-              ],
-            ),
-            Row(children: [
-              BusyButton(
-                  title: "update",
-                  onPressed: () {
-                    setState(() {
-                      model.updateSystemBusinessSetting(businessSetting);
-                    });
+                    },
+                    decoration: InputDecoration(
+                      labelText: "Maximum Video Duration",
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  BusyButton(
+                    title: "update",
+                    onPressed: () {
+                      setState(() {
+                        model.updateSystemBusinessSetting(businessSetting);
+                      });
 
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text("Business Settings successfully Updated!")));
-                  })
-            ]),
-          ]),
-        )
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "Business Settings successfully Updated!",
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

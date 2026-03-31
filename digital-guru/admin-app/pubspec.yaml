@@ -24,83 +24,83 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   # http request
-  http: ^0.12.1
+  http: ^1.6.0
   # async package to add additional Cancellable operations
   async: ^2.4.1
   # get it
-  get_it: ^4.0.2
+  get_it: ^8.3.0
   # provider
-  provider: ^4.1.3
+  provider: ^6.1.5+1
   # Stacked Arch
-  stacked: ^1.6.0
-  stacked_services: ^0.4.3  
-  image_picker: ^0.6.7+2
-  cached_network_image: ^2.5.0
+  stacked: ^3.5.0
+  stacked_services: ^1.6.0  
+  image_picker: ^1.2.1
+  cached_network_image: ^3.4.1
   #xml: ^4.2.0
-  file_picker: ^2.1.6
-  filesize: ^1.0.4
+  file_picker: ^10.3.10
+  filesize: ^2.0.1
   # general purpose media Utils
   #media_utils: ^1.1.1
-  video_player: ^0.11.1+2
-  flutter_uploader: ^2.0.0-beta.3
+  video_player: ^2.11.1
+  flutter_uploader: ^3.0.0-beta.4
   #downloading files
   flutter_downloader: ^1.5.2
-  path_provider: ^1.6.11
-  permission_handler: ^5.0.1+1
+  path_provider: ^2.1.5
+  permission_handler: ^12.0.1
   #video compression
-  light_compressor: ^0.1.0
-  video_compress: ^2.1.1
+  light_compressor: ^2.2.0
+  video_compress: ^3.1.4
   #video player
   better_player: ^0.0.61
   # for non video doc thumbnail
   #thumbnailer: ^1.1.0
   #video_thumbnail: ^0.2.5+1
   #transparent_image: ^1.0.0
-  shared_preferences: ^0.5.12+4
-  flutter_local_notifications: ^1.4.4+2
+  shared_preferences: ^2.5.5
+  flutter_local_notifications: ^21.0.0
 
-  firebase_core: ^0.7.0
-  firebase_storage: ^7.0.0
-  firebase_auth: ^0.20.1
+  firebase_core: ^3.15.2
+  firebase_storage: ^12.4.10
+  firebase_auth: ^5.7.0
   #firebase_in_app_messaging: ^0.3.0+1
-  firebase_remote_config: ^0.6.0
-  firebase_messaging: ^8.0.0-dev.14
-  firebase_analytics: ^7.0.1
-  cloud_firestore: ^0.16.0+1
-  firebase_dynamic_links: ^0.7.0+1
+  firebase_remote_config: ^5.5.0
+  firebase_messaging: ^15.2.10
+  firebase_analytics: ^11.6.0
+  cloud_firestore: ^5.6.12
+  firebase_dynamic_links: ^6.1.10
 
   form_field_validator: ^1.0.1
-  convex_bottom_bar: ^2.7.1+2
+  convex_bottom_bar: ^3.2.0
   #intl_phone_number_input: ^0.6.0
   #flutter_facebook_auth: ^2.0.2+1
-  google_sign_in: ^4.5.9
+  google_sign_in: ^7.2.0
   #Pdf Viewer
-  advance_pdf_viewer: ^1.2.2
+  advance_pdf_viewer: ^2.0.1
   # numberinput
-  spinner_input: ^0.1.2
+  flutter_spinbox: ^0.13.1
   #getting deviceinfo
   device_info: ^2.0.0
   #phone number
-  intl_phone_field: ^1.4.2
+  intl_phone_field: ^3.2.0
   #check network connectivity
   connectivity: ^3.0.2
   #widget libraries
-  getwidget: ^1.2.4
+  getwidget: ^7.0.0
   expandable: ^5.0.1
   #icon pack
-  flutter_icons: ^1.1.0
-  auto_size_text: ^2.1.0
+  flutter_vector_icons: ^2.0.0
+  auto_size_text: ^3.0.0
   #request user permission on device  this has dependency issue
   #permission_handler: ^6.0.1+1
   #logging
   #logger: ^0.9.4
   #localization  
-  intl: ^0.16.1
+  intl: ^0.20.2
   #app purchase
-  flutter_inapp_purchase: ^4.0.2
+  flutter_inapp_purchase: ^8.2.8
   #youtube
-  youtube_player_flutter: ^7.0.0+7
-  page_transition: "^1.1.7+6"
+  youtube_player_flutter: ^9.1.3
+  page_transition: ^2.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

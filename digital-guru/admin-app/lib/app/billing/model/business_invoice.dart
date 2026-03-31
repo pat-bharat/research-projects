@@ -16,44 +16,43 @@ class BusinessInvoice {
   String modifiedBy;
   List<BillingItem> billingItems;
   String documentId;
-  BusinessInvoice(
-      {this.businessId,
-      this.invoiceDate,
-      this.invoiceAmount,
-      this.currancyCode,
-      this.startDate,
-      this.endDate,
-      this.dueDate,
-      this.paidDate,
-      this.paidBy,
-      this.paidVia,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.modifiedBy,
-      this.billingItems});
+    BusinessInvoice({
+      required this.businessId,
+      required this.invoiceDate,
+      required this.invoiceAmount,
+      required this.currancyCode,
+      required this.startDate,
+      required this.endDate,
+      required this.dueDate,
+      required this.paidDate,
+      required this.paidBy,
+      required this.paidVia,
+      required this.createdTimestamp,
+      required this.updatedTimestamp,
+      required this.modifiedBy,
+      required this.billingItems,
+      this.documentId = '',
+    });
 
-  BusinessInvoice.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
-    businessId = json['business_id'];
-    invoiceDate = DateFormat.yMMMMd().parse(json['invoice_date']);
-    invoiceAmount = json['Invoice_amount'];
-    currancyCode = json['currancy_code'];
-    startDate = DateFormat.yMMMMd().parse(json['start_date']);
-    endDate = DateFormat.yMMMMd().parse(json['end_date']);
-    dueDate = DateFormat.yMMMMd().parse(json['due_date']);
-    paidDate = DateFormat.yMMMMd().parse(json['paid_date']);
-    paidBy = json['paid_by'];
-    paidVia = json['paid_via'];
-    createdTimestamp = json['created_timestamp'];
-    updatedTimestamp = json['updated_timestamp'];
-    modifiedBy = json['modif_by'];
-    if (json['billing_items'] != null) {
-      billingItems = new List.empty(growable: true);
-      json['billing_items'].forEach((v) {
-        billingItems.add(new BillingItem.fromJson(v));
-      });
-    }
-  }
+  BusinessInvoice.fromJson(String docId, Map<String, dynamic> json)
+      : documentId = docId,
+        businessId = json['business_id'],
+        invoiceDate = DateFormat.yMMMMd().parse(json['invoice_date']),
+        invoiceAmount = json['Invoice_amount'],
+        currancyCode = json['currancy_code'],
+        startDate = DateFormat.yMMMMd().parse(json['start_date']),
+        endDate = DateFormat.yMMMMd().parse(json['end_date']),
+        dueDate = DateFormat.yMMMMd().parse(json['due_date']),
+        paidDate = DateFormat.yMMMMd().parse(json['paid_date']),
+        paidBy = json['paid_by'],
+        paidVia = json['paid_via'],
+        createdTimestamp = json['created_timestamp'],
+        updatedTimestamp = json['updated_timestamp'],
+        modifiedBy = json['modified_by'] ?? json['modif_by'] ?? '',
+        billingItems = json['billing_items'] != null
+            ? List<BillingItem>.from(
+                (json['billing_items'] as List).map((v) => BillingItem.fromJson(v)))
+            : <BillingItem>[];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -70,10 +69,8 @@ class BusinessInvoice {
     data['created_timestamp'] = this.createdTimestamp;
     data['updated_timestamp'] = this.updatedTimestamp;
     data['modified_by'] = this.modifiedBy;
-    if (this.billingItems != null) {
-      data['billing_items'] = this.billingItems.map((v) => v.toJson()).toList();
-    }
-    return data;
+    data['billing_items'] = this.billingItems.map((v) => v.toJson()).toList();
+      return data;
   }
 }
 
@@ -89,26 +86,28 @@ class BillingItem {
 
   String documentId;
 
-  BillingItem(
-      {this.itemType,
-      this.description,
-      this.quantity,
-      this.rate,
-      this.amount,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.modifyBy});
+  BillingItem({
+    required this.itemType,
+    required this.description,
+    required this.quantity,
+    required this.rate,
+    required this.amount,
+    required this.createdTimestamp,
+    required this.updatedTimestamp,
+    required this.modifyBy,
+    this.documentId = '',
+  });
 
-  BillingItem.fromJson(Map<String, dynamic> json) {
-    itemType = json['item_type'];
-    description = json['description'];
-    quantity = json['quantity'];
-    rate = json['rate'];
-    amount = json['amount'];
-    createdTimestamp = json['created_timestamp'];
-    updatedTimestamp = json['updated_timestamp'];
-    modifyBy = json['modify_by'];
-  }
+  BillingItem.fromJson(Map<String, dynamic> json)
+      : itemType = json['item_type'],
+        description = json['description'],
+        quantity = json['quantity'],
+        rate = json['rate'],
+        amount = json['amount'],
+        createdTimestamp = json['created_timestamp'],
+        updatedTimestamp = json['updated_timestamp'],
+        modifyBy = json['modify_by'],
+        documentId = '';
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
