@@ -57,7 +57,7 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
     downloadService = DownloadService.instance;
     downloadService?.initDownloadDirectory();
     // _bindBackgroundIsolate();
-    downloadService?.registerCallBack(downloadCallback);
+    downloadService?.registerCallBack(downloadCallback as DownloadCallback);
     // FlutterDownloader.registerCallback(downloadCallback);
     _prepare(); // load tasks
     downloadService?.listenToBackgroundIsolate((dynamic data) {

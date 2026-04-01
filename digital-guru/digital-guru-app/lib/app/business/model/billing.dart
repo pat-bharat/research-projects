@@ -1,15 +1,15 @@
 class Billing {
-  int id;
-  int inviceId;
-  String itemType;
-  String description;
-  int quantity;
-  String rate;
-  String amount;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  int? id;
+  int? inviceId;
+  String? itemType;
+  String? description;
+  int? quantity;
+  String? rate;
+  String? amount;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
   Billing(
       {this.id,

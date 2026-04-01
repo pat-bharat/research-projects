@@ -15,7 +15,7 @@ class LessonItem extends StatelessWidget {
   final Function? onPlayVideo;
   final bool isAdmin;
   const LessonItem(
-      {required Key key,
+      { Key? key,
       required this.lesson,
       this.onDeleteItem,
       this.onEditItem,

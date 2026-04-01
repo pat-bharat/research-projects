@@ -206,7 +206,7 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: DownloadQueueView(platform: platform),
+        viewToShow: DownloadQueueView(platform: platform, title: 'Downloads'),
       );
     case ViewUploadQueueRoute:
       return _getPageRoute(

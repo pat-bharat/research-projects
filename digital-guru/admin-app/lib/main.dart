@@ -63,13 +63,13 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) => Navigator(
         key: locator<DialogService>().dialogNavigationKey,
         onGenerateRoute: (settings) => MaterialPageRoute(
-            builder: (context) => DialogManager(child: child)),
+            builder: (context) => DialogManager(child: child!)),
       ),
       navigatorKey: locator<NavigationService>().navigationKey,
       navigatorObservers: [locator<AnalyticsService>().getAnalyticsObserver()],
       theme: ThemeService().getTheme(context, ThemeColor.red),
       home: StartUpView(appConfig: appConfig),
-      onGenerateRoute: generateRoute,
+      onGenerateRoute: (settins) => generateRoute(settings: settins),
     );
   }
 }

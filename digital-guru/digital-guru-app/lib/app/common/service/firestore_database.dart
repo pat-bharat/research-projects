@@ -4,11 +4,10 @@ import 'package:meta/meta.dart';
 String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase {
-  FirestoreDatabase({@required this.uid})
-      : assert(uid != null, 'Cannot create FirestoreDatabase with null uid');
+  FirestoreDatabase({required this.uid});
   final String uid;
 
-  final _service = FirestoreService.instance;
+  late final FirestoreService _service = FirestoreService.instance;
 
   FirestoreService get service => _service;
 }

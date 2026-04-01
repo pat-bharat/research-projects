@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/course/model/course.dart';
@@ -144,7 +143,7 @@ class ModuleListModel extends BaseModel {
     }
   }
 
-  IAPItem buildIAPItem(UserModule module) {
+  dynamic buildIAPItem(UserModule module) {
     /*
 productId = json['productId'] as String,
         price = json['price'] as String,
@@ -178,7 +177,7 @@ productId = json['productId'] as String,
     String localizedPrice =
         NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(2.99);
     var amount = module.purchaseAmount;
-    return IAPItem.fromJSON({
+    return {
       'productId': 'digigure_module',
       'price': '$amount',
       'currency': 'USD',
@@ -187,7 +186,7 @@ productId = json['productId'] as String,
       'name': '$module.moduleName',
       'title': '$module.moduleTitle',
       'user': '$module.userId',
-    });
+    };
   }
 
   dynamic isModuleAlreadyPurchased(String moduleId) async {

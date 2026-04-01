@@ -1,12 +1,12 @@
 class Media {
-  int id;
-  String title;
-  String mediaType;
-  String mediaContent;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  int? id;
+  String? title;
+  String? mediaType;
+  String? mediaContent;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
   Media(
       {this.id,

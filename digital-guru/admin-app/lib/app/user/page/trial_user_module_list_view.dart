@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 class TrialUserModuleListView extends StatefulWidget {
   //final List<Course> courses = new List();
   final bool isFree;
-  TrialUserModuleListView({Key key, this.isFree}) : super(key: key);
+  TrialUserModuleListView({Key? key, this.isFree = true}) : super(key: key);
 
   @override
   _TrialUserModuleListViewState createState() =>
@@ -23,7 +23,7 @@ class TrialUserModuleListView extends StatefulWidget {
 
 class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
   LessonService _lessonService = locator<LessonService>();
-  TrialUserModuleListModel model;
+  late TrialUserModuleListModel model;
   List<UserModule> userModules = List.empty(growable: true);
   bool isFree = false;
   @override
@@ -80,14 +80,14 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
                         : Center(
                             child: Text(
                               Strings.noFreeLessonsOffered,
-                              style: Theme.of(context).textTheme.headline2,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                   ),
                   // buildBottomActionBar(model)
                 ],
               ),
-            )));
+            body: Center(),)));
   }
 
   _buildUserModules(BuildContext context, TrialUserModuleListModel model) {
@@ -98,7 +98,7 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
       // for (final ci in um.courseInfo) {
       // lessons.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: []));
       if (um.lessons != null) {
-        for (final lesson in um.lessons) {
+        for (final lesson in um.lessons!) {
           lessons.add(_buildLessonCard(lesson, model));
           lessons.add(verticalSpaceTiny);
         }
@@ -108,12 +108,12 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
           headChildren: [
             buildWrappedText(
               context,
-              um.moduleTitle,
-              style: Theme.of(context).textTheme.subtitle2,
+              um.moduleTitle ?? '',
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             buildWrappedText(
-                context, um.courseName + " By " + um.instructorName,
-                lines: 2, style: Theme.of(context).textTheme.headline4),
+                context, um.courseName! + " By " + um.instructorName!,
+                lines: 2, style: Theme.of(context).textTheme.bodySmall),
           ],
           bodyChildren: lessons));
 
@@ -162,8 +162,8 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
         child: LessonItem(
           isAdmin: model.isAdmin,
           lesson: item,
-          onPlayVideo: () => model.viewVideo(item.videoInfo),
-          onViewDoc: () => model.viewPdf(item.instructionDoc.docUrl),
+          onPlayVideo: () => model.viewVideo(item.videoInfo!),
+          onViewDoc: () => model.viewPdf(item.instructionDoc!.docUrl!),
         ),
       ),
     );

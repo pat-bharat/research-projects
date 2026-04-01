@@ -1,19 +1,19 @@
 class Invoice {
-  int id;
-  int businessId;
-  String invoiceDate;
-  String invoiceAmount;
-  String currancyCode;
-  String startDate;
-  String endDate;
-  String dueDate;
-  String paidDate;
-  String paidBy;
-  String paidVia;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  int? id;
+  int? businessId;
+  String? invoiceDate;
+  String? invoiceAmount;
+  String? currancyCode;
+  String? startDate;
+  String? endDate;
+  String? dueDate;
+  String? paidDate;
+  String? paidBy;
+  String? paidVia;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
   Invoice(
       {this.id,

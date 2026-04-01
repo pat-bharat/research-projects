@@ -15,7 +15,6 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getwidget/components/toggle/gf_toggle.dart';
 import 'package:getwidget/types/gf_toggle_type.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:intl_phone_field/models/phone_number.dart';
 import 'package:stacked/stacked.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -117,7 +116,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                   initialValue: mobileController.text,
                   initialCountryCode: _country,
                   style: Theme.of(context).textTheme.bodyMedium,
-                  validator: (PhoneNumber? phone) {
+                  validator: (phone) {
                     if (phone == null || phone.number.isEmpty) {
                       return Strings.invalidMobileNumber;
                     }

@@ -6,13 +6,13 @@ import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:flutter/material.dart';
 
 class LessonItem extends StatelessWidget {
-  final Lesson lesson;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final Function onView;
-  final bool isAdmin;
+  final Lesson? lesson;
+  final Function? onDeleteItem;
+  final Function? onEditItem;
+  final Function? onView;
+  final bool? isAdmin;
   const LessonItem(
-      {Key key,
+      {Key? key,
       this.lesson,
       this.onDeleteItem,
       this.onEditItem,
@@ -23,18 +23,18 @@ class LessonItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: lesson.videoInfo != null ? null : 60,
+      height: lesson?.videoInfo != null ? null : 60,
       margin: const EdgeInsets.only(top: 20),
       alignment: Alignment.center,
       child: _buildLessonPanel(context, lesson),
     );
   }
 
-  _buildLessonPanel(BuildContext context, Lesson lesson) {
+  _buildLessonPanel(BuildContext context, Lesson? lesson) {
     return GestureDetector(
       onTap: () {
         if (onView != null) {
-          onView();
+          onView!();
         }
       },
       child: Container(
@@ -45,7 +45,7 @@ class LessonItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            lesson.videoInfo.thumbUrl != null
+            lesson?.videoInfo?.thumbUrl != null
                 ? Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
@@ -53,7 +53,7 @@ class LessonItem extends StatelessWidget {
                         height: 70,
                         width: 70,
                         child: buildCachedNetworkCacheImage(
-                            context, lesson.videoInfo.thumbUrl),
+                            context, lesson!.videoInfo!.thumbUrl!),
                         /*CachedNetworkImage(
                       imageUrl: lesson.videoInfo.thumbUrl,
                       placeholder: (context, url) =>
@@ -62,8 +62,8 @@ class LessonItem extends StatelessWidget {
                     ),*/
                       ),
                       Text(
-                        computeDuration(lesson.videoInfo.duration),
-                        style: Theme.of(context).textTheme.headline5,
+                        computeDuration(lesson!.videoInfo!.duration!),
+                        style: Theme.of(context).textTheme.bodySmall,
                       )
                     ],
                   )
@@ -78,14 +78,14 @@ class LessonItem extends StatelessWidget {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Expanded(
                 child: Text(
-                  lesson.title,
-                  style: Theme.of(context).textTheme.headline4,
+                  lesson?.title ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               Expanded(
                 child: Text(
-                  lesson.instructorNotes,
-                  style: Theme.of(context).textTheme.headline5,
+                  lesson?.instructorNotes ?? '',
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               )
             ]),
@@ -100,7 +100,7 @@ class LessonItem extends StatelessWidget {
                       iconSize: 15,
                       onPressed: () {
                         if (onDeleteItem != null) {
-                          onDeleteItem();
+                          onDeleteItem!();
                         }
                       },
                     ),
@@ -109,7 +109,7 @@ class LessonItem extends StatelessWidget {
                       iconSize: 15,
                       onPressed: () {
                         if (onEditItem != null) {
-                          onEditItem();
+                          onEditItem!();
                         }
                       },
                     )

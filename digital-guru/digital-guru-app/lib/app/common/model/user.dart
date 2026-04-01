@@ -1,23 +1,23 @@
 class User {
-  int id;
-  String loginId;
-  int userType;
-  String fullName;
-  String address;
-  String city;
-  String zipCode;
-  String state;
-  String country;
-  String birthDate;
-  String emailId;
-  String mobilePhone;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  String lastLoginTimestamp;
+  int? id;
+  String? loginId;
+  int? userType;
+  String? fullName;
+  String? address;
+  String? city;
+  String? zipCode;
+  String? state;
+  String? country;
+  String? birthDate;
+  String? emailId;
+  String? mobilePhone;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  String? lastLoginTimestamp;
 
   User(
       {this.id,

@@ -43,8 +43,8 @@ class YoutubeCourseBuilderService extends BaseService {
           Instructor(
               businessId: info.businessId,
               fullName: info.instructorName,
-              profilePic: channel.profilePictureUrl!));
-      instructor = Instructor.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>);
+              profilePic: channel.profilePictureUrl!, documentId: channel.id!));
+      instructor = Instructor.fromJson(docId: snapshot.id, json: snapshot.data() as Map<String, dynamic>);
     }
 
     Course course = Course(
@@ -72,7 +72,7 @@ class YoutubeCourseBuilderService extends BaseService {
         title: pl.title!,
         published: true,
         lessonCount: pl.videoCount!,
-        displayOrder: index,
+        displayOrder: index, tags: [],
       );
       _moduleDocRef = await _moduleService.addModule(m);
       index++;

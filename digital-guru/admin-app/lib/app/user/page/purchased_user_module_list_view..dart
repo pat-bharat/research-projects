@@ -88,7 +88,7 @@ class _PurchasedUserModuleListViewState
                                   child: Text(
                                     Strings.noFreeLessonsOffered,
                                     style:
-                                        Theme.of(context).textTheme.headline2,
+                                        Theme.of(context).textTheme.bodyMedium,
                                   ),
                                 ),
                         ),
@@ -143,7 +143,7 @@ class _PurchasedUserModuleListViewState
           isAdmin: model.isAdmin,
           lesson: item,
           onPlayVideo: () => model.viewVideo(item.videoInfo!),
-          onViewDoc: () => model.viewPdf(item.instructionDoc!.docUrl!), key: null,
+          onViewDoc: () => model.viewPdf(item.instructionDoc!.docUrl!),
         ),
       ),
     );

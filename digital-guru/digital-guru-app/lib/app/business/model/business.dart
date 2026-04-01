@@ -1,23 +1,23 @@
 class Business {
-  int id;
-  String name;
-  String punchLine;
-  String description;
-  String splashScreen;
-  String logoLink;
-  String address;
-  String city;
-  String zipCode;
-  String state;
-  String country;
-  String emailId;
-  int mobilePhone;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? name;
+  String? punchLine;
+  String? description;
+  String? splashScreen;
+  String? logoLink;
+  String? address;
+  String? city;
+  String? zipCode;
+  String? state;
+  String? country;
+  String? emailId;
+  int? mobilePhone;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Business(
       {this.id,
