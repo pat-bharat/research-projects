@@ -11,7 +11,7 @@ class APIService {
   final String _baseUrl = 'www.googleapis.com';
   String _nextPageToken = '';
 
-  Future<Channel> fetchChannel({String channelId, String playlist}) async {
+  Future<Channel> fetchChannel({required String channelId, required String? playlist}) async {
     Map<String, String> parameters = {
       'part': 'snippet, contentDetails, statistics, contentOwnerDetails',
       'id': channelId,
@@ -35,7 +35,7 @@ class APIService {
 
       // Fetch first batch of videos from uploads playlist
       channel.playLists =
-          await fetchChannelPlaylist(channelId: channel.id, playlist: playlist);
+          await fetchChannelPlaylist(channelId: channel.id!, playlist: playlist as String);
       return channel;
     } else {
       throw json.decode(response.body)['error']['message'];
@@ -43,7 +43,7 @@ class APIService {
   }
 
   Future<List<PlayList>> fetchChannelPlaylist(
-      {String channelId, String playlist}) async {
+      {required String channelId, required String playlist}) async {
     Map<String, String> parameters = {
       'part': 'snippet, contentDetails',
       'id': playlist,
@@ -77,7 +77,7 @@ class APIService {
   }
 
   Future<List<Video>> fetchVideosFromPlaylist(
-      {int nameIndex, String playlistId}) async {
+      {required int nameIndex, required String playlistId}) async {
     Map<String, String> parameters = {
       'part': 'snippet',
       'playlistId': playlistId,
@@ -150,6 +150,6 @@ class APIService {
 
 void main() async {
   var service = APIService();
-  Channel c = await service.fetchChannel(channelId: 'UC6T85gyXT_WqvsEYNUWTSJA');
+  Channel c = await service.fetchChannel(channelId: 'UC6T85gyXT_WqvsEYNUWTSJA', playlist: '');
   print(c);
 }

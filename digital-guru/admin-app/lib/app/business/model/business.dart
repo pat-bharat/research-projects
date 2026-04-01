@@ -1,27 +1,27 @@
 class Business {
-  String name;
-  String punchLine;
+  String? name;
+  String? punchLine;
   //String description;
-  String splashScreen;
-  String logoLink;
-  String bannerLink;
-  String url;
-  String contactEmail;
-  String address;
-  String city;
-  String zipCode;
-  String state;
-  String country;
-  String emailId;
-  String mobilePhone;
-  bool locked;
-  bool deleted;
-  String themeId;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  String documentId;
+  String? splashScreen;
+  String? logoLink;
+  String? bannerLink;
+  String? url;
+  String? contactEmail;
+  String? address;
+  String? city;
+  String? zipCode;
+  String? state;
+  String? country;
+  String? emailId;
+  String? mobilePhone;
+  bool? locked;
+  bool? deleted;
+  String? themeId;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  String? documentId;
   Business(
       {this.name,
       this.punchLine,

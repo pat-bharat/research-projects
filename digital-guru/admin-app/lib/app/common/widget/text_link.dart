@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class TextLink extends StatelessWidget {
   final String text;
-  final Function onPressed;
-  final TextStyle style;
+  final Function()? onPressed;
+  final TextStyle? style;
   const TextLink(this.text, {this.onPressed, this.style});
 
   @override
@@ -11,8 +11,7 @@ class TextLink extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Text(text,
-          style: style ??
-              TextStyle(
+          style: style != null ? style : TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 15,
                 color: Theme.of(context).primaryColor,

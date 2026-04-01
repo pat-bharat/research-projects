@@ -32,7 +32,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  AppConfig appConfig;
+  late AppConfig appConfig;
   @override
   initState() {
     super.initState();

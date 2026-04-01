@@ -15,8 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Channel _channel;
-  bool _isLoading = false;
+  late Channel _channel;
   YoutubeCourseBuilderService _utubeService =
       locator<YoutubeCourseBuilderService>();
   APIService _apiService = locator<APIService>();
@@ -29,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
 //Flute GURU --> UC6T85gyXT_WqvsEYNUWTSJA // UC6Dy0rQ6zDnQuHQ1EeErGUA
   _initChannel() async {
     Channel channel =
-        await _apiService.fetchChannel(channelId: 'UC6T85gyXT_WqvsEYNUWTSJA');
+        await _apiService.fetchChannel(channelId: 'UC6T85gyXT_WqvsEYNUWTSJA', playlist: 'true');
     setState(() {
       _channel = channel;
     });
@@ -63,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildChannelPlayList(BuildContext context) {
     List<Widget> widgets = List.empty(growable: true);
-    _channel.playLists.forEach((element) {
+    _channel.playLists?.forEach((element) {
       widgets.add(PlaylistScreen(playList: element));
     });
     return widgets;
@@ -89,7 +88,9 @@ class _HomeScreenState extends State<HomeScreen> {
           CircleAvatar(
             backgroundColor: Colors.white,
             radius: 35.0,
-            backgroundImage: NetworkImage(_channel.profilePictureUrl),
+            backgroundImage: _channel.profilePictureUrl != null
+                ? NetworkImage(_channel.profilePictureUrl!)
+                : null,
           ),
           SizedBox(width: 12.0),
           Expanded(
@@ -98,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _channel.title,
+                  _channel.title ?? '',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20.0,

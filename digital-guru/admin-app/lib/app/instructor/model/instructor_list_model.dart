@@ -16,7 +16,7 @@ class InstructorListModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  static List<Instructor> _Instructors;
+  static List<Instructor> _Instructors = [];
 
   //Business _business;
   //Business get business => _business;
@@ -26,10 +26,10 @@ class InstructorListModel extends BaseModel {
   void listenToInstructors() async {
     setBusy(true);
     _instructorService
-        .listenToInstructoresRealTime(currentBusiness.documentId)
+        .listenToInstructoresRealTime(currentBusiness.documentId!)
         .listen((instructor) {
       List<Instructor> instructors = instructor;
-      if (instructors != null && instructors.length > 0) {
+      if (instructors.isNotEmpty) {
         _Instructors = instructors;
         notifyListeners();
       }
@@ -45,12 +45,12 @@ class InstructorListModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       setBusy(true);
       try {
         await _instructorService.deleteInstructor(instructor);
         // Delete the image after the post is deleted
-        await _cloudStorageService.deleteFile(instructor.profilePic);
+        await _cloudStorageService.deleteFile(instructor.profilePic!);
       } catch (e) {
         await _dialogService.showDialog(
             title: "Failed Todelete Instructor", description: e.toString());
@@ -67,7 +67,7 @@ class InstructorListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _instructorService.requestMoreData(currentBusiness.documentId);
+      _instructorService.requestMoreData(currentBusiness.documentId!);
 
   Future navigateToAddInstructorToBusiness() async {
     _navigationService.navigateTo(AddEditInstructorViewRoute);
@@ -80,6 +80,6 @@ class InstructorListModel extends BaseModel {
 
 class BusinessInstructorArgs {
   final Business business;
-  final Instructor instructor;
-  BusinessInstructorArgs({@required this.business, this.instructor});
+  final Instructor? instructor;
+  BusinessInstructorArgs({required this.business, this.instructor});
 }

@@ -8,16 +8,16 @@ class Publication {
   Publication(
       {this.courseCounts = 0,
       this.totalModuleCounts = 0,
+      this.purchasedModuleCounts = 0,
       this.lessonCounts = 0,
       this.businessCounts = 0});
 
-  Publication.fromJson(Map<String, dynamic> json) {
-    courseCounts = json['course_counts'] ??= 0;
-    totalModuleCounts = json['total_module_counts'] ??= 0;
-    purchasedModuleCounts = json['purchased_module_counts'] ??= 0;
-    lessonCounts = json['lesson_counts'] ??= 0;
-    businessCounts = json['business_counts'] ??= 0;
-  }
+  Publication.fromJson(Map<String, dynamic> json)
+      : courseCounts = json['course_counts'] ?? 0,
+        totalModuleCounts = json['total_module_counts'] ?? 0,
+        purchasedModuleCounts = json['purchased_module_counts'] ?? 0,
+        lessonCounts = json['lesson_counts'] ?? 0,
+        businessCounts = json['business_counts'] ?? 0;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

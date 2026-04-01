@@ -26,7 +26,7 @@ import 'package:stacked/stacked.dart';
 class CourseView extends StatefulWidget {
   final Course editingCourse;
 
-  CourseView({Key key, this.editingCourse}) : super(key: key);
+  CourseView({Key key = const ValueKey('CourseView'), required this.editingCourse}) : super(key: key);
 
   @override
   _CourseViewState createState() => _CourseViewState();
@@ -42,12 +42,12 @@ class _CourseViewState extends State<CourseView> {
   CourseBackground background = new CourseBackground();
   CourseDetailDoc courseDetailDoc = new CourseDetailDoc();
   VideoInfo courseVideo = new VideoInfo();
-  File backgroundImageFile, courseDetailDocFile, videoFile;
+  late File backgroundImageFile, courseDetailDocFile, videoFile;
   // List<CourseMedia> medias = List.empty(growable: true);
-  bool _published = false;
-  String _language = Language.english;
-  String _instructor;
-  Course editingCourse;
+  bool? _published = false;
+  String? _language = Language.english;
+  String? _instructor;
+  Course? editingCourse;
   final AuthenticationService _authenticationService =
       locator<AuthenticationService>();
   final BusinessService _businessService = locator<BusinessService>();
@@ -59,7 +59,7 @@ class _CourseViewState extends State<CourseView> {
   Future getInstructors() async {
     List<String> _instructors = List.empty(growable: true);
     await _businessService
-        .getAllInstructors(BaseService.currentBusiness.documentId)
+        .getAllInstructors(BaseService.currentBusiness.documentId ?? '')
         .then((instructor) => {_instructors.addAll(instructor)});
 
     setState(() {
@@ -97,7 +97,9 @@ class _CourseViewState extends State<CourseView> {
 
             courseTitleController.text = editingCourse?.title ?? '';
             _instructor = editingCourse?.instructorName ?? '';
-            model.setEditingCourse(editingCourse);
+            if (editingCourse != null) {
+              model.setEditingCourse(editingCourse!);
+            }
           }
         },
         builder: (context, model, child) => SafeArea(
@@ -115,7 +117,8 @@ class _CourseViewState extends State<CourseView> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       child: _buildFields(context, model),
                     ),
-                  )),
+                  ),
+                  body: Center(),)
             ));
   }
 
@@ -151,7 +154,7 @@ class _CourseViewState extends State<CourseView> {
                   items: instructors.map((e) {
                     return DropdownMenuItem(
                         child: Text('${e}',
-                            style: Theme.of(context).textTheme.headline4),
+                            style: Theme.of(context).textTheme.headlineSmall),
                         value: e);
                   }).toList(),
                   // hint: Text("Select Instructor"),
@@ -171,7 +174,7 @@ class _CourseViewState extends State<CourseView> {
             items: Language.values.map((e) {
               return DropdownMenuItem(
                   child: Text('${e}',
-                      style: Theme.of(context).textTheme.headline4),
+                      style: Theme.of(context).textTheme.headlineSmall),
                   value: e);
             }).toList(),
             onChanged: (newBehavior) {
@@ -196,9 +199,9 @@ class _CourseViewState extends State<CourseView> {
                 value: _published,
                 // activeColor: Theme.of(context).primaryColor,
                 // checkColor: Theme.of(context).accentColor,
-                onChanged: (bool newValue) {
+                onChanged: (bool? newValue) {
                   setState(() {
-                    _published = newValue;
+                    _published = newValue ?? false;
                   });
                 }),
             new Text("Publish"),
@@ -220,10 +223,10 @@ class _CourseViewState extends State<CourseView> {
           title: 'Save',
           busy: model.busy,
           onPressed: () {
-            if (_courseFormKey.currentState.validate()) {
+            if (_courseFormKey.currentState!.validate()) {
               model.save(
                   title: courseTitleController.text,
-                  instructorName: _instructor,
+                  instructorName: _instructor ?? '',
                   description: descriptionController.text,
                   language: _language.toString(),
                   instructorEmail: emailController.text,
@@ -273,15 +276,16 @@ class _CourseViewState extends State<CourseView> {
                 onView: () => {
                   setState(() {
                     if (editingCourse != null &&
-                        editingCourse.background.imageUrl != null)
-                      model.viewImage(editingCourse.background.imageUrl);
-                    print("viewing: " + editingCourse.background.imageUrl);
+                        editingCourse!.background?.imageUrl != null)
+                      model.viewImage(editingCourse!.background!.imageUrl!);
+                    if (editingCourse?.background?.imageUrl != null)
+                      print("viewing: " + (editingCourse!.background!.imageUrl ?? ""));
                   })
                 },
                 onDelete: () => {
                   setState(() {
                     if (editingCourse != null)
-                      editingCourse.background.imageUrl = "";
+                      editingCourse!.background!.imageUrl = "";
                   })
                 },
               ),
@@ -302,15 +306,15 @@ class _CourseViewState extends State<CourseView> {
                 onView: () => {
                   setState(() {
                     if (editingCourse != null &&
-                        editingCourse.courseDetailDoc.docUrl != null)
-                      model.viewPdf(editingCourse.courseDetailDoc.docUrl);
-                    print("viewing: " + editingCourse.background.imageUrl);
+                        editingCourse!.courseDetailDoc?.docUrl != null)
+                      model.viewPdf(editingCourse!.courseDetailDoc!.docUrl!);
+                    print("viewing: " + (editingCourse?.background?.imageUrl ?? ""));
                   })
                 },
                 onDelete: () => {
                   setState(() {
                     if (editingCourse != null)
-                      editingCourse.courseDetailDoc.docUrl = "";
+                      editingCourse!.courseDetailDoc!.docUrl = "";
                   })
                 },
               ),
@@ -331,15 +335,15 @@ class _CourseViewState extends State<CourseView> {
                 onView: () => {
                   setState(() {
                     if (editingCourse != null &&
-                        editingCourse.courseVideo.videoUrl != null)
-                      model.viewVideo(editingCourse.courseVideo);
-                    print("viewing: " + editingCourse.courseVideo.videoUrl);
+                        editingCourse!.courseVideo!.videoUrl != null)
+                      model.viewVideo(editingCourse!.courseVideo!);
+                    print("viewing: " + (editingCourse!.courseVideo!.videoUrl ?? ""));
                   })
                 },
                 onDelete: () => {
                   setState(() {
                     if (editingCourse != null)
-                      editingCourse.courseVideo.videoUrl = "";
+                      editingCourse!.courseVideo!.videoUrl = "";
                   })
                 },
               ),

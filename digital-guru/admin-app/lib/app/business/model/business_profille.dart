@@ -4,20 +4,20 @@ import 'package:digiguru/app/common/model/user_count.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 
 class BusinessProfile {
-  String businessId;
-  String businessName;
-  String businessPhone;
-  String businessEmail;
-  bool locked;
-  String createdTimestamp;
-  UserCount userCounts;
-  double collectedRevenue;
-  Publication publication;
+  String? businessId;
+  String? businessName;
+  String? businessPhone;
+  String? businessEmail;
+  bool? locked;
+  String? createdTimestamp;
+  UserCount? userCounts;
+  double? collectedRevenue;
+  Publication? publication;
 
-  BusinessSetting businessSetting = BusinessSetting();
-  List<BusinessLegal> businessLegal;
+  BusinessSetting? businessSetting = BusinessSetting();
+  List<BusinessLegal>? businessLegal;
 
-  String documentId;
+  String? documentId;
 
   BusinessProfile(
       {this.businessId,
@@ -58,11 +58,11 @@ class BusinessProfile {
     data['locked'] = this.locked;
     data['created_timestamp'] = this.createdTimestamp;
     if (this.userCounts != null) {
-      data['user_counts'] = this.userCounts.toJson();
+      data['user_counts'] = this.userCounts?.toJson();
     }
     data['collected_revenue'] = this.collectedRevenue;
     if (this.publication != null) {
-      data['publication'] = this.publication.toJson();
+      data['publication'] = this.publication?.toJson();
     }
     return data;
   }

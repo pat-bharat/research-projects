@@ -33,15 +33,15 @@ class LessonService extends BaseService {
   ModuleService _modeuleService = locator<ModuleService>();
   static const int LessonsLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+  late DocumentSnapshot _lastDocument;
   bool _hasMoreLessons = true;
 
   Future getLesson(String lessonId) async {
     try {
       var userData = await _lessonCollectionReference.doc(lessonId).get();
-      return new Lesson.fromJson(lessonId, userData.data());
+      return new Lesson.fromJson(lessonId, userData.data() as Map<String, dynamic>);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -54,12 +54,12 @@ class LessonService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data())))
+                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
               });
       Map<String, bool> modules = {};
       await _modeuleService
           .getAllBusinessPublishedModules(
-              BaseService.currentBusiness.documentId)
+              BaseService.currentBusiness.documentId!)
           .then((mods) => mods.forEach((m) {
                 modules.putIfAbsent(m.documentId, () => m.published);
               }));
@@ -78,7 +78,7 @@ class LessonService extends BaseService {
       });
       return publishedLessons;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -90,11 +90,11 @@ class LessonService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data())))
+                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
               });
       return lessons;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -106,11 +106,11 @@ class LessonService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data())))
+                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
               });
       return lessons;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -120,20 +120,20 @@ class LessonService extends BaseService {
       //update module lesson count,
 
       var batch = FirebaseFirestore.instance.batch();
-      Module mod = await _moduleService.getModule(lesson.moduleId);
-      mod.lessonCount = mod.lessonCount + 1;
+      Module mod = await _moduleService.getModule(lesson.moduleId!);
+      mod.lessonCount = mod.lessonCount! + 1;
       DocumentReference mRef = _moduleCollectionReference.doc(mod.documentId);
       batch.update(mRef, mod.toJson());
 //update Course Lesson count
-      Course course = await _courseService.getCourse(lesson.courseId);
-      course.lessonCount = course.lessonCount + 1;
+      Course course = await _courseService.getCourse(lesson.courseId!);
+      course.lessonCount = (course.lessonCount! + 1);
       DocumentReference cRef =
           _courseCollectionReference.doc(course.documentId);
       batch.update(cRef, course.toJson());
 //update business lesson count
       BusinessProfile profile =
-          await _businessService.getBusinessProfile(lesson.businessId);
-      profile.publication.lessonCounts = profile.publication.lessonCounts + 1;
+          await _businessService.getBusinessProfile(lesson.businessId!);
+      profile.publication!.lessonCounts = (profile.publication!.lessonCounts) + 1;
       DocumentReference bpRef =
           _businessProfileCollectionReference.doc(profile.documentId);
       batch.update(bpRef, profile.toJson());
@@ -143,7 +143,7 @@ class LessonService extends BaseService {
       batch.commit();
       return ref;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -153,12 +153,13 @@ class LessonService extends BaseService {
           await _lessonCollectionReference.limit(LessonsLimit).get();
       if (lessonDocumentSnapshot.docs.isNotEmpty) {
         return lessonDocumentSnapshot.docs
-            .map((snapshot) => Module.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Module.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
+            // ignore: unnecessary_null_comparison
             .where((mappedItem) => mappedItem.title != null)
             .toList();
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -190,7 +191,7 @@ class LessonService extends BaseService {
     pageModulesQuery.snapshots().listen((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         var modules = snapshot.docs
-            .map((snapshot) => Lesson.fromJson(snapshot.id, snapshot.data()))
+            .map((snapshot) => Lesson.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
 /*
@@ -235,7 +236,7 @@ class LessonService extends BaseService {
       populateCommonFields(object: lesson);
       await _lessonCollectionReference.doc(lessonId).update(lesson.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 

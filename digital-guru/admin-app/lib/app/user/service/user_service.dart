@@ -20,7 +20,7 @@ class UserService extends BaseService {
 
   static const int PostsLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+ late DocumentSnapshot _lastDocument;
   bool _hasMorePosts = true;
 
   Future createUser(User user) async {
@@ -32,16 +32,16 @@ class UserService extends BaseService {
       populateCommonFields(object: user, created: true);
       await _usersCollectionReference.doc(user.userId).set(user.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
   Future getUser(String uid) async {
     try {
       var userData = await _usersCollectionReference.doc(uid).get();
-      return User.fromJson(uid, userData.data());
+      return User.fromJson(uid, userData.data() as Map<String, dynamic>);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -53,7 +53,7 @@ class UserService extends BaseService {
           .get();
       return snapshot.docs.length == 2;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -85,7 +85,7 @@ class UserService extends BaseService {
     pagePostsQuery.snapshots().listen((postsSnapshot) {
       if (postsSnapshot.docs.isNotEmpty) {
         var posts = postsSnapshot.docs
-            .map((snapshot) => User.fromJson(snapshot.id, snapshot.data()))
+            .map((snapshot) => User.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
 
@@ -102,7 +102,7 @@ class UserService extends BaseService {
         }
 
         // #11: Concatenate the full list to be shown
-        var allPosts = _allPagedResults.fold<List<User>>(List<User>(),
+        var allPosts = _allPagedResults.fold<List<User>>(<User>[],
             (initialValue, pageItems) => initialValue..addAll(pageItems));
 
         // #12: Broadcase all posts
@@ -128,11 +128,11 @@ class UserService extends BaseService {
     try {
       BaseService.currentUser = user;
       if (BaseService.isPreviewAsUser)
-        BaseService.currentUser.userRole = UserRole.admin;
+        BaseService.currentUser?.userRole = UserRole.admin;
 
       await _usersCollectionReference.doc(uid).update(user.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 

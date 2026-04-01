@@ -20,19 +20,19 @@ class BusinessInvoiceListModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  List<BusinessInvoice> _businessInvoice;
+  late List<BusinessInvoice> _businessInvoice;
 
   List<BusinessInvoice> get businessInvoices => _businessInvoice;
   final DataLoaderService _dataLoader = locator<DataLoaderService>();
 
   BusinessInvoiceListModel() {
-    // _dataLoader.loadBusinessInvoice();
+    _businessInvoice = [];
   }
   void listenToBusinessInvoices() {
     setBusy(true);
 
     _businessBillinService
-        .listenToInvoiceesRealTime(currentBusiness.documentId)
+        .listenToInvoiceesRealTime(currentBusiness.documentId!)
         .listen((invocies) {
       List<BusinessInvoice> invoiceList = invocies;
       if (invoiceList != null && invoiceList.length > 0) {
@@ -60,7 +60,7 @@ class BusinessInvoiceListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _businessBillinService.requestMoreData(currentBusiness.documentId);
+      _businessBillinService.requestMoreData(currentBusiness.documentId!);
 
   void navigateToBusiness() {
     _navigationService.navigateTo(CreateBusinessViewRoute,

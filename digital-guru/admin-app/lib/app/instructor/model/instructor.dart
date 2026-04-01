@@ -1,22 +1,22 @@
 class Instructor {
-  String businessId;
-  String fullName;
-  String introduction;
-  String email;
-  String mobileNumber;
-  String country;
-  String profilePic;
-  String url;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  bool deleted;
+  late String businessId;
+  String? fullName;
+  String? introduction;
+  String? email;
+  String? mobileNumber;
+  String? country;
+  String? profilePic;
+  String? url;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  bool? deleted;
 
-  String documentId;
+  late String documentId;
 
   Instructor(
-      {this.businessId,
+      {required this.businessId,
       this.fullName,
       this.introduction,
       this.email,
@@ -28,10 +28,10 @@ class Instructor {
       this.updatedTimestamp,
       this.deletedTimestamp,
       this.modifiedBy,
-      this.documentId,
+      required this.documentId,
       this.deleted});
 
-  Instructor.fromJson(String docId, Map<String, dynamic> json) {
+  Instructor.fromJson({required String docId, required Map<String, dynamic> json}) {
     this.documentId = docId;
     businessId = json['business_id'];
     fullName = json['full_name'];

@@ -15,9 +15,7 @@ class BusinessSettingViewModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  static List<SystemLegal> _businessLegals;
-
-  BusinessSetting _businessSetting;
+  late BusinessSetting _businessSetting;
   BusinessSetting get business => _businessSetting;
 
   BusinessSettingViewModel();
@@ -30,12 +28,12 @@ class BusinessSettingViewModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       setBusy(true);
       try {
         await _systemService.deleteSystemLegal(businessLegal);
         // Delete the image after the post is deleted
-        await _cloudStorageService.deleteFile(businessLegal.pdfDoc);
+        await _cloudStorageService.deleteFile(businessLegal.pdfDoc!);
       } catch (e) {
         await _dialogService.showDialog(
             title: "Failed Todelete SystemLegal", description: e.toString());

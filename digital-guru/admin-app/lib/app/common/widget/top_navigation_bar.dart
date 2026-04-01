@@ -16,9 +16,9 @@ class TopNavigationBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
   final bool showDrawer;
   TopNavigationBar({
-    Key key,
-    @required this.model,
-    @required this.text,
+    Key? key,
+    required this.model,
+    required this.text,
     this.showDrawer = false,
     this.height = 45,
   }) : super(key: key);
@@ -55,7 +55,7 @@ class TopNavigationBar extends StatelessWidget implements PreferredSizeWidget {
               Text(
                 text,
                 style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headline3.fontSize,
+                    fontSize: Theme.of(context).textTheme.headlineMedium?.fontSize,
                     color: Theme.of(context).appBarTheme.foregroundColor),
               )
             ])),

@@ -5,26 +5,26 @@ import 'package:flutter/material.dart';
 
 class MediaTile extends StatelessWidget {
   //final bool isReadOnly;
-  final String label;
-  final File localFile;
-  final String mediaLink;
-  final bool isEditing;
-  final double height;
-  final double width;
-  final Function onTap;
-  final Function onDelete;
-  final Function onView;
-  final String mediaType;
+  final String? label;
+  final File? localFile;
+  final String? mediaLink;
+  final bool? isEditing;
+  final double? height;
+  final double? width;
+  final Function? onTap;
+  final Function? onDelete;
+  final Function? onView;
+  final String? mediaType;
 
   MediaTile(
       {this.label,
       this.localFile,
       this.mediaLink,
-      @required this.mediaType,
-      @required this.isEditing,
+      required this.mediaType,
+      required this.isEditing,
       this.height = 100,
       this.width = 100,
-      @required this.onTap,
+      required this.onTap,
       this.onDelete,
       this.onView});
 
@@ -33,12 +33,12 @@ class MediaTile extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (label != null && label.length > 0) Text(label),
+        if (label != null && label!.length > 0) Text(label!),
         GestureDetector(
           // When we tap we call selectImage
           onTap: () {
             if (onTap != null) {
-              onTap();
+              onTap!();
             }
           },
           child: Container(
@@ -53,25 +53,24 @@ class MediaTile extends StatelessWidget {
         ),
         Row(
           children: [
-            if (onDelete != null && (mediaLink != null && mediaLink.length > 0))
+            if (onDelete != null && (mediaLink?.length ?? 0) > 0)
               IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  if (mediaLink != null &&
-                      mediaLink.length > 0 &&
+                  if ((mediaLink?.length ?? 0) > 0 &&
                       onDelete != null) {
-                    onDelete();
+                    onDelete!();
                   }
                 },
               ),
-            if ((mediaLink != null && mediaLink.length > 0))
+            if ((mediaLink?.length ?? 0) > 0)
               IconButton(
                 icon: Icon(Icons.visibility),
                 onPressed: () {
                   if (mediaLink != null &&
-                      mediaLink.length > 0 &&
+                      mediaLink!.length > 0 &&
                       onView != null) {
-                    onView();
+                    onView!();
                   }
                 },
               ),
@@ -82,12 +81,12 @@ class MediaTile extends StatelessWidget {
   }
 
   Widget computeWidget(BuildContext context) {
-    if (isEditing) {
+    if (isEditing ?? false) {
       // editing but not changedimage
       if (localFile != null) {
         // picked new file
         if (mediaType == MediaTypes.IMAGE) {
-          return Container(child: Image.file(localFile));
+          return Container(child: Image.file(localFile!));
         } else if (mediaType == MediaTypes.VIDEO) {
           // if ((mediaLink != null && mediaLink.length > 0)) {
           return Container(
@@ -107,11 +106,11 @@ class MediaTile extends StatelessWidget {
             fit: BoxFit.fill,
           ));
         }
-      } else if ((mediaLink != null && mediaLink.length > 0)) {
+      } else if ((mediaLink != null && mediaLink!.length > 0)) {
         if (mediaType == MediaTypes.IMAGE || mediaType == MediaTypes.VIDEO) {
           return SizedBox(
               //height: 80,
-              child: buildCachedNetworkCacheImage(context, mediaLink)
+              child: buildCachedNetworkCacheImage(context, mediaLink!)
               /*  CachedNetworkImage(
             imageUrl: mediaLink,
             fit: BoxFit.fill,
@@ -128,7 +127,7 @@ class MediaTile extends StatelessWidget {
         }
       } else {
         return Text(
-          'Tap to Add ' + (label != null ? label : ""),
+          'Tap to Add ' + (label ?? ""),
           style: TextStyle(color: Colors.black87, fontSize: 12),
         );
       }
@@ -136,13 +135,13 @@ class MediaTile extends StatelessWidget {
       if (localFile != null) {
         // picked new file
         if (mediaType == MediaTypes.IMAGE) {
-          return Container(child: Image.file(localFile));
+          return Container(child: Image.file(localFile!));
         } else {
           return Container(child: Text(localFile.toString()));
         }
       } else {
         return Text(
-          'Tap to Add ' + label,
+          'Tap to Add ' + (label ?? ""),
           style: TextStyle(color: Colors.grey[400], fontSize: 15),
         );
       }

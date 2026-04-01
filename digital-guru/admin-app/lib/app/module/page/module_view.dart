@@ -25,7 +25,7 @@ class ModuleView extends StatefulWidget {
   final Module editingModule;
   final Course course;
 
-  ModuleView({Key key, this.editingModule, this.course}) : super(key: key);
+  ModuleView({Key? key, required this.editingModule, required this.course}) : super(key: key);
 
   @override
   _ModuleViewState createState() => _ModuleViewState();
@@ -47,8 +47,8 @@ class _ModuleViewState extends State<ModuleView> {
   VideoInfo moduleVideo = new VideoInfo();
   List<String> tags = new List<String>.empty(growable: true);
   List<PricePlan> pricePlans = List<PricePlan>.empty(growable: true);
-  Course course;
-  Module editingModule;
+  late Course course;
+  late Module editingModule;
 
   final _moduleViewKey = GlobalKey<FormState>();
 
@@ -76,14 +76,15 @@ class _ModuleViewState extends State<ModuleView> {
               : '';
           priceController.text = editingModule?.purchaseAmount.toString() ?? '';
           background =
-              editingModule?.moduleBackground ?? new ModuleBackground();
+              editingModule.moduleBackground ?? new ModuleBackground();
           moduleDetailDoc =
-              editingModule?.moduleDetailDoc ?? new ModuleDetailDoc();
-          moduleVideo = editingModule?.moduleVideo ?? new ModuleVideo();
+              editingModule.moduleDetailDoc ?? new ModuleDetailDoc();
+          moduleVideo =
+              editingModule.moduleVideo ?? new VideoInfo();
           pricePlans =
               editingModule?.pricePlan ??
               new List<PricePlan>.empty(growable: true);
-          _published = editingModule?.published ?? false;
+          _published = editingModule.published ?? false;
           model.setEditingModule(editingModule);
         }
       },
@@ -101,7 +102,7 @@ class _ModuleViewState extends State<ModuleView> {
               child: _buildFields(context, model),
             ),
           ),
-        ),
+        body: Center(),),
       ),
     );
   }
@@ -137,7 +138,7 @@ class _ModuleViewState extends State<ModuleView> {
             horizontalSpaceSmall,
             Text(
               Strings.moduleDiscount,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             horizontalSpaceMedium,
             SpinBox(
@@ -166,7 +167,7 @@ class _ModuleViewState extends State<ModuleView> {
             GFToggle(
               onChanged: (val) {
                 setState(() {
-                  _published = val;
+                  _published = val!;
                 });
               },
               value: _published,
@@ -177,7 +178,7 @@ class _ModuleViewState extends State<ModuleView> {
                 activeColor: Colors.grey,
                 onChanged: (value) {
                   setState(() {
-                    _published = value;
+                    _published = value!;
                   });
                 }),*/
             new Text(Strings.publish),
@@ -208,7 +209,7 @@ class _ModuleViewState extends State<ModuleView> {
               MediaTile(
                 label: Strings.background,
                 mediaType: MediaTypes.IMAGE,
-                isEditing: editingModule != null,
+                isEditing: true,
                 height: 70,
                 width: 100,
                 localFile: model.backgroundImage,
@@ -220,8 +221,7 @@ class _ModuleViewState extends State<ModuleView> {
                 },
                 onDelete: () => {
                   setState(() {
-                    if (editingModule != null)
-                      editingModule.moduleBackground.imageUrl = "";
+                    editingModule.moduleBackground?.imageUrl = "";
                   }),
                 },
               ),
@@ -229,7 +229,7 @@ class _ModuleViewState extends State<ModuleView> {
               MediaTile(
                 label: Strings.document,
                 mediaType: MediaTypes.DOCUMENT,
-                isEditing: editingModule != null,
+                isEditing: true,
                 height: 70,
                 width: 100,
                 localFile: model.moduleDetailDocument,
@@ -262,8 +262,7 @@ class _ModuleViewState extends State<ModuleView> {
                 },
                 onDelete: () => {
                   setState(() {
-                    if (editingModule != null)
-                      editingModule.moduleVideo.videoUrl = "";
+                    editingModule.moduleVideo?.videoUrl = "";
                   }),
                 },
               ),
@@ -279,10 +278,9 @@ class _ModuleViewState extends State<ModuleView> {
               title: Strings.save,
               busy: model.busy,
               onPressed: () {
-                if (_moduleViewKey.currentState.validate()) {
+                if (_moduleViewKey.currentState!.validate()) {
                   model.save(
-                    courseId: course.documentId,
-                    name: nameController.text,
+                    courseId: course.documentId!,
                     title: titleController.text,
                     purchaseAmount: double.tryParse(priceController.text),
                     discountPercentage: _discount,

@@ -2,19 +2,19 @@ class BusinessLegal {
   String businessId;
   String title;
   String legalId;
-  String pdfDoc;
-  String legalType;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  String? pdfDoc;
+  String? legalType;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
-  String documentId;
+  String? documentId;
 
   BusinessLegal(
-      {this.businessId,
-      this.title,
-      this.legalId,
+      {required this.businessId,
+      required this.title,
+      required this.legalId,
       this.pdfDoc,
       this.legalType,
       this.createdTimestamp,
@@ -22,18 +22,17 @@ class BusinessLegal {
       this.deletedTimestamp,
       this.modifiedBy});
 
-  BusinessLegal.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
-    businessId = json['business_id'];
-    title = json['title'];
-    legalId = json['legal_id'];
-    pdfDoc = json['pdf_doc'];
-    legalType = json['legal_type'];
-    createdTimestamp = json['created_timestamp'];
-    updatedTimestamp = json['updated_timestamp'];
-    deletedTimestamp = json['deleted_timestamp'];
-    modifiedBy = json['modified_by'];
-  }
+  BusinessLegal.fromJson(String docId, Map<String, dynamic> json)
+      : businessId = json['business_id'],
+        title = json['title'],
+        legalId = json['legal_id'],
+        documentId = docId,
+        pdfDoc = json['pdf_doc'],
+        legalType = json['legal_type'],
+        createdTimestamp = json['created_timestamp'],
+        updatedTimestamp = json['updated_timestamp'],
+        deletedTimestamp = json['deleted_timestamp'],
+        modifiedBy = json['modified_by'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

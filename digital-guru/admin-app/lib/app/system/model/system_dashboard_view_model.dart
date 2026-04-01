@@ -25,9 +25,11 @@ class SystemDashBoardViewModel extends BaseModel {
   final BusinessBillingService _businessBillingService =
       locator<BusinessBillingService>();
   final CloudStorageService _cloudStoreService = locator<CloudStorageService>();
-  List<BusinessInvoice> _businessInvoices;
+  late List<BusinessInvoice> _businessInvoices;
 
-  Future<List<User>> getBusinessUsers(String businessId) async {}
+  Future<List<User>> getBusinessUsers(String businessId) async {
+    return [];
+  }
 
   Future getBusinessSettings(String businessId) async {
     return await _systemService.getBusinessSettings(businessId);
@@ -56,12 +58,12 @@ class SystemDashBoardViewModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       setBusy(true);
       try {
         await _systemService.deleteSystemLegal(businessLegal);
         // Delete the image after the post is deleted
-        await _cloudStoreService.deleteFile(businessLegal.pdfDoc);
+        await _cloudStoreService.deleteFile(businessLegal.pdfDoc!);
       } catch (e) {
         await _dialogService.showDialog(
             title: "Failed Todelete SystemLegal", description: e.toString());
@@ -74,10 +76,10 @@ class SystemDashBoardViewModel extends BaseModel {
   void listenToBusinessInvoices() async {
     setBusy(true);
     _businessBillingService
-        .listenToInvoiceesRealTime(currentBusiness.documentId)
+        .listenToInvoiceesRealTime(currentBusiness.documentId!)
         .listen((invoices) {
       List<BusinessInvoice> bInvoices = invoices;
-      if (bInvoices != null && bInvoices.length > 0) {
+      if (bInvoices.isNotEmpty) {
         _businessInvoices = bInvoices;
         notifyListeners();
       }
@@ -100,7 +102,7 @@ class SystemDashBoardViewModel extends BaseModel {
 
   Future getSystemProfile() async {
     setBusy(true);
-    SystemProfile profile;
+    late SystemProfile profile;
     await _systemService.getSystemProfile().then((value) => profile = value);
     notifyListeners();
     setBusy(false);
@@ -108,8 +110,7 @@ class SystemDashBoardViewModel extends BaseModel {
   }
 
   Future getBusinessProfile(String bid) async {
-    assert(bid != null);
-    BusinessProfile businessProfile = BusinessProfile();
+    late BusinessProfile businessProfile;
     setBusy(true);
     await _systemService
         .getBusinessProfile(bid)

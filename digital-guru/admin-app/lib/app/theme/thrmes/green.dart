@@ -3,18 +3,15 @@ import 'package:digiguru/app/theme/thrmes/base_theme.dart';
 import 'package:flutter/material.dart';
 
 class GreenTheme extends BaseTheme {
-  var primaryColor = ThemeColor.greenColor;
-  var accentColor = Colors.green[400];
-  var backgroundColor = Colors.white;
-  var hintColor = Colors.green[600];
-  var scaffoldBackgroundColor = Colors.white;
+  late final Color primaryColor = ThemeColor.greenColor;
+  late final Color accentColor = Colors.green[400]!;
+  late final Color backgroundColor = Colors.white;
+  late final Color hintColor = Colors.green[600]!;
+  late final Color scaffoldBackgroundColor = Colors.white;
   ThemeData data(BuildContext context) {
     return ThemeData(
       primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      accentColor: accentColor,
-      buttonColor: primaryColor,
       hintColor: hintColor,
       canvasColor: backgroundColor,
       fontFamily: 'Open Sans',
@@ -25,8 +22,8 @@ class GreenTheme extends BaseTheme {
       ),
       textTheme: textTheme(primaryColor, accentColor, backgroundColor),
       appBarTheme:
-          AppBarTheme(color: primaryColor, foregroundColor: backgroundColor),
-      bottomAppBarTheme: BottomAppBarTheme(color: primaryColor),
+          AppBarTheme(backgroundColor: primaryColor, foregroundColor: backgroundColor),
+      bottomAppBarTheme: BottomAppBarThemeData(color: primaryColor),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: primaryColor,
           selectedIconTheme: IconThemeData(color: backgroundColor)),
@@ -42,7 +39,7 @@ class GreenTheme extends BaseTheme {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient:
-                LinearGradient(colors: [Colors.green[50], backgroundColor])),
+                LinearGradient(colors: [const Color.fromARGB(255, 122, 237, 132), backgroundColor])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -51,12 +48,13 @@ class GreenTheme extends BaseTheme {
         padding: EdgeInsets.all(8.0),
       ),
       //dialog
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         contentTextStyle: TextStyle(
             fontSize: 15, fontWeight: FontWeight.normal, color: primaryColor),
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
       ),
+      colorScheme: ColorScheme(surface: backgroundColor, brightness: Brightness.light, primary: primaryColor, onPrimary: backgroundColor, secondary: accentColor, onSecondary: backgroundColor, error: Colors.red, onError: Colors.white, onSurface: primaryColor),
     );
   }
 }

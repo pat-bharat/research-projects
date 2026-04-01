@@ -22,7 +22,7 @@ businessBottomNavBar(BuildContext context, int index) {
     top: 0,
     height: 55,
     backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme.color,
+    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme?.color,
     initialActiveIndex: index,
     //optional, default as 0
     onTap: ((int index) => {
@@ -53,7 +53,7 @@ systemBottomNavBar(BuildContext context, int index) {
     top: 0,
     height: 55,
     backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme.color,
+    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme?.color,
     initialActiveIndex: index,
     //optional, default as 0
     onTap: ((int index) => {
@@ -84,7 +84,7 @@ consumerBottomNavBar(BuildContext context, int index) {
     top: -15,
     height: 55,
     backgroundColor: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme.color,
+    color: Theme.of(context).bottomNavigationBarTheme.selectedIconTheme?.color,
     initialActiveIndex: index,
     //optional, default as 0
     onTap: ((int index) => {

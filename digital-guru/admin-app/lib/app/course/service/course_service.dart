@@ -27,15 +27,15 @@ class CourseService extends BaseService {
 
   static const int CoursesLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+  late DocumentSnapshot _lastDocument;
   bool _hasMorePosts = true;
 
   Future getCourse(String documentId) async {
     try {
       var userData = await _courseCollectionReference.doc(documentId).get();
-      return new Course.fromJson(userData.data(), documentId);
+      return new Course.fromJson(userData.data() as Map<String, dynamic>, documentId);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -44,8 +44,8 @@ class CourseService extends BaseService {
       super.populateCommonFields(object: course, created: true);
       //update business lesson count
       BusinessProfile profile =
-          await _businessService.getBusinessProfile(course.businessId);
-      profile.publication.courseCounts = profile.publication.courseCounts + 1;
+          await _businessService.getBusinessProfile(course.businessId!);
+      profile.publication!.courseCounts = (profile.publication!.courseCounts ?? 0) + 1;
       DocumentReference bpRef =
           _businessProfileCollectionReference.doc(profile.documentId);
 
@@ -53,7 +53,7 @@ class CourseService extends BaseService {
 
       return await _courseCollectionReference.add(course.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -65,12 +65,12 @@ class CourseService extends BaseService {
           .get();
       if (courseDocumentSnapshot.docs.isNotEmpty) {
         return courseDocumentSnapshot.docs
-            .map((snapshot) => Course.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Course.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -94,7 +94,7 @@ class CourseService extends BaseService {
     pageCourseesQuery.snapshots().listen((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         var courses = snapshot.docs
-            .map((snapshot) => Course.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Course.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
         _courseController.add(courses);
@@ -102,7 +102,7 @@ class CourseService extends BaseService {
     });
   }
 
-  Future deleteCourse({@required Course course}) async {
+  Future deleteCourse({required Course course}) async {
     super.populateCommonFields(object: course, deleted: true);
     await _courseCollectionReference.doc(course.documentId).delete();
   }
@@ -112,7 +112,7 @@ class CourseService extends BaseService {
       super.populateCommonFields(object: course, created: false);
       await _courseCollectionReference.doc(courseId).update(course.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -127,7 +127,7 @@ class CourseService extends BaseService {
           .then((snap) => {count = snap.docs.length});
       return count;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 

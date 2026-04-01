@@ -4,17 +4,14 @@ import 'package:flutter/material.dart';
 
 class RedTheme extends BaseTheme {
   var primaryColor = ThemeColor.redColor;
-  var accentColor = Colors.red[600];
+  var accentColor = Colors.red[600]!;
   var backgroundColor = Colors.white;
-  var hintColor = Colors.red[600];
+  var hintColor = Colors.red[600]!;
   var scaffoldBackgroundColor = Colors.white;
   ThemeData data(BuildContext context) {
     return ThemeData(
       primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      accentColor: accentColor,
-      buttonColor: primaryColor,
       hintColor: hintColor,
       canvasColor: backgroundColor,
       fontFamily: 'Open Sans',
@@ -26,7 +23,7 @@ class RedTheme extends BaseTheme {
       textTheme: textTheme(primaryColor, accentColor, backgroundColor),
       appBarTheme:
           AppBarTheme(color: primaryColor, foregroundColor: backgroundColor),
-      bottomAppBarTheme: BottomAppBarTheme(color: primaryColor),
+      bottomAppBarTheme: BottomAppBarThemeData(color: primaryColor),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: primaryColor,
           selectedIconTheme: IconThemeData(color: backgroundColor)),
@@ -37,8 +34,8 @@ class RedTheme extends BaseTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          primary: primaryColor,
-          onPrimary: Colors.white,
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
         ),
       ),
       // checkboxTheme: CheckboxThemeData(checkColor: MaterialStateProperty(backgroundColor)),
@@ -47,7 +44,7 @@ class RedTheme extends BaseTheme {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient:
-                LinearGradient(colors: [Colors.green[50], backgroundColor])),
+                LinearGradient(colors: [const Color.fromARGB(255, 131, 219, 139), backgroundColor])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -56,12 +53,13 @@ class RedTheme extends BaseTheme {
         padding: EdgeInsets.all(8.0),
       ),
       //dialog
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         contentTextStyle: TextStyle(
             fontSize: 15, fontWeight: FontWeight.normal, color: primaryColor),
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
       ),
+      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor).copyWith(background: backgroundColor),
     );
   }
 }

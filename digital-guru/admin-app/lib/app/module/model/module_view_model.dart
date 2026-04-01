@@ -26,13 +26,14 @@ class ModuleViewModel extends BaseModel {
       locator<CloudStorageService>();
   final MediaSelector _mediaSelector = locator<MediaSelector>();
 
-  File _backgroundImage, _moduleDetailDocument, _moduleVideo;
+  late File _backgroundImage, _moduleDetailDocument, _moduleVideo;
 
   File get backgroundImage => _backgroundImage;
   File get moduleDetailDocument => _moduleDetailDocument;
   File get moduleVideo => _moduleVideo;
 
-  Module _edittingModule;
+  late Module _edittingModule;
+  // ignore: unnecessary_null_comparison
   bool get _editting => _edittingModule != null;
 
   Course course;
@@ -66,7 +67,7 @@ class ModuleViewModel extends BaseModel {
   Future selectModuleDocument() async {
     var tempdoc = await _mediaSelector.selectDocument();
     if (tempdoc != null) {
-      _moduleDetailDocument = File(tempdoc.files.single.path);
+      _moduleDetailDocument = File(tempdoc.files.single.path ?? '');
       notifyListeners();
     }
     return _moduleDetailDocument;
@@ -75,7 +76,7 @@ class ModuleViewModel extends BaseModel {
   Future selectModuleVideo() async {
     var tempdoc = await _mediaSelector.selectVideo();
     if (tempdoc != null) {
-      _moduleVideo = File(tempdoc.files.single.path);
+      _moduleVideo = File(tempdoc.files.single.path ?? '');
       notifyListeners();
     }
     return _moduleVideo;
@@ -126,35 +127,35 @@ class ModuleViewModel extends BaseModel {
   }
 
   Future save(
-      {@required String courseId,
-      String businessId,
-      @required String title,
-      name,
-      double purchaseAmount,
-      int discountPercentage,
-      bool published,
-      String tagData,
-      List<PricePlan> pricePlan,
-      ModuleBackground background,
-      ModuleDetailDoc moduleDetailDoc,
-      VideoInfo moduleVideo}) async {
+      {required String courseId,
+      String? businessId,
+      required String title,
+      String? moduleName,
+      double? purchaseAmount,
+      int? discountPercentage,
+      bool? published,
+      String? tagData,
+      List<PricePlan>?  pricePlan,
+      ModuleBackground? background,
+      ModuleDetailDoc? moduleDetailDoc,
+      VideoInfo? moduleVideo}) async {
     setBusy(true);
 
     var result;
     Module module = Module(
-        courseId: course.documentId,
-        businessId: currentBusiness.documentId,
-        name: name,
-        title: title,
-        purchaseAmount: purchaseAmount,
+        courseId: course.documentId ?? '',
+        businessId: currentBusiness.documentId ?? '',
+        name: moduleName ?? '',
+        title: title ?? '',
+        purchaseAmount: purchaseAmount ?? 0.0,
         lessonCount: 0,
-        discountPercentage: discountPercentage,
-        published: published,
-        tags: populateTags(tagData),
-        pricePlan: pricePlan,
-        moduleBackground: background,
-        moduleDetailDoc: moduleDetailDoc,
-        moduleVideo: moduleVideo);
+        discountPercentage: discountPercentage ?? 0,
+        published: published ?? false,
+        tags: populateTags(tagData!),
+        pricePlan: pricePlan ?? [],
+        moduleBackground: background?? ModuleBackground(),
+        moduleDetailDoc: moduleDetailDoc ?? ModuleDetailDoc(),
+        moduleVideo: moduleVideo ?? VideoInfo());
     if (!_editting) {
       result = await _moduleService.addModule(module);
       module.documentId = result.userId;
@@ -163,12 +164,12 @@ class ModuleViewModel extends BaseModel {
       module.documentId = _edittingModule.documentId;
       await _moduleService.updateModule(_edittingModule.documentId, module);
     }
-    CloudStorageResult backgroundResult, documentDetailResult, vodeoResult;
+    CloudStorageResult? backgroundResult, documentDetailResult, vodeoResult;
 
     if (_backgroundImage != null) {
       backgroundResult = await _cloudStorageService.uploadFile(
         fileToUpload: _backgroundImage,
-        title: super.currentBusiness.documentId +
+        title: super.currentBusiness.documentId! +
             "/" +
             courseId +
             "/" +
@@ -180,7 +181,7 @@ class ModuleViewModel extends BaseModel {
     if (_moduleDetailDocument != null) {
       documentDetailResult = await _cloudStorageService.uploadFile(
         fileToUpload: _moduleDetailDocument,
-        title: super.currentBusiness.documentId +
+        title: super.currentBusiness.documentId! +
             "/" +
             (_editting ? _edittingModule.documentId : result.userId) +
             "/" +
@@ -192,29 +193,25 @@ class ModuleViewModel extends BaseModel {
     if (backgroundResult != null) {
       module.moduleBackground = new ModuleBackground(
           title: "background",
-          imageUrl: backgroundResult.mediaUrl,
+          imageUrl: backgroundResult.mediaUrl!,
           imageSize: backgroundResult.size);
     } else if (_editting && module.moduleBackground != null) {
-      module.moduleBackground.imageUrl =
-          _edittingModule.moduleBackground.imageUrl;
-      module.moduleBackground.imageSize =
-          _edittingModule.moduleBackground.imageSize;
+      module.moduleBackground!.imageUrl =
+          _edittingModule.moduleBackground!.imageUrl;
+      module.moduleBackground!.imageSize =
+          _edittingModule.moduleBackground!.imageSize;
     }
     if (documentDetailResult != null) {
       module.moduleDetailDoc = new ModuleDetailDoc(
           title: "Module Document",
-          docUrl: documentDetailResult.mediaUrl,
+          docUrl: documentDetailResult.mediaUrl!,
           docSize: documentDetailResult.size);
     } else if (_editting && course.courseDetailDoc != null) {
-      module.moduleDetailDoc.docSize = _edittingModule.moduleDetailDoc.docSize;
-      module.moduleDetailDoc.docUrl = _edittingModule.moduleDetailDoc.docUrl;
+      module.moduleDetailDoc!.docSize = _edittingModule.moduleDetailDoc!.docSize;
+      module.moduleDetailDoc!.docUrl = _edittingModule.moduleDetailDoc!.docUrl;
     }
-    if (_moduleVideo != null) {
-      await handleVideoUpload(_moduleVideo, module);
-    } else {
-      result = await _moduleService.updateModule(module.documentId, module);
-    }
-
+    await handleVideoUpload(_moduleVideo, module);
+  
     setBusy(false);
 
     if (result is String) {
@@ -245,7 +242,7 @@ class ModuleViewModel extends BaseModel {
         CloudStorageResult videoThumbnailResult =
             await _cloudStorageService.uploadFile(
           fileToUpload: thumbnailFile,
-          title: super.currentBusiness.documentId +
+          title: super.currentBusiness.documentId! +
               "/" +
               module.courseId +
               "/" +
@@ -253,39 +250,39 @@ class ModuleViewModel extends BaseModel {
               "/" +
               p.basename(thumbnailFile.path),
         );
-        module.moduleVideo.thumbUrl = videoThumbnailResult.mediaUrl;
+        module.moduleVideo!.thumbUrl = videoThumbnailResult.mediaUrl;
       }
 
       //compress video
       MediaInfo mediaInfo = await mediaService.getMediaInfo(videoFile.path);
-      module.moduleVideo.videoSize = filesize(mediaInfo.filesize);
-      module.moduleVideo.title = mediaInfo.title;
-      module.moduleVideo.duration =
+      module.moduleVideo!.videoSize = filesize(mediaInfo.filesize);
+      module.moduleVideo!.title = mediaInfo.title!;
+      module.moduleVideo!.duration =
           computeDuration(mediaInfo.duration.toString());
-      module.moduleVideo.rawVideoPath = mediaInfo.path;
+      module.moduleVideo!.rawVideoPath = mediaInfo.path!;
 
       //upload video
       /* CloudStorageResult videofileResult =
           await _cloudStorageService.uploadFile(
         fileToUpload: videoFile,
-        title: super.currentBusiness.documentId +
+        title: super.currentBusiness.documentId! +
             "/" +
             module.documentId +
             "/" +
             p.basename(videoFile.path),
       );*/
-      String uploadPath = super.currentBusiness.documentId +
+      String uploadPath = super.currentBusiness.documentId! +
           "/" +
           module.courseId +
           "/" +
           module.documentId +
           "/";
-      mediaService.uploadVideo(module.moduleVideo, uploadPath,
+      mediaService.uploadVideo(module.moduleVideo!, uploadPath,
           onComplete: () async {
         String downloadURL = await FirebaseStorage.instance
-            .ref(uploadPath + '/' + module.moduleVideo.title)
+            .ref(uploadPath + '/' + module.moduleVideo!.title!)
             .getDownloadURL();
-        module.moduleVideo.videoUrl = downloadURL;
+        module.moduleVideo! .videoUrl = downloadURL;
         // module.moduleVideo.videoUrl = videofileResult.mediaUrl;
         _moduleService.updateModule(module.documentId, module);
       });

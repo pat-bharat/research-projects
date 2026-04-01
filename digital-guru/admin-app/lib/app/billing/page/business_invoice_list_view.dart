@@ -7,13 +7,12 @@ import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/accordian/gf_accordian.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
 class BusinessInvoiceListView extends StatefulWidget {
-  List<BusinessInvoice> businessInvoice;
-  BusinessInvoiceListView({Key key}) : super(key: key);
+  List<BusinessInvoice>? businessInvoice;
+  BusinessInvoiceListView({Key? key}) : super(key: key);
 
   @override
   _BusinessInvoiceListViewState createState() =>
@@ -22,7 +21,7 @@ class BusinessInvoiceListView extends StatefulWidget {
 
 class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
   // List<BusinessInvoice> invoices;
-  BusinessInvoiceListModel model;
+  late BusinessInvoiceListModel model;
   @override
   void initState() {
     super.initState();
@@ -62,7 +61,7 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
                                             Strings.noInvoiceFound,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline2,
+                                                .headlineMedium,
                                           ),
                                         ),
                                 ),
@@ -83,7 +82,7 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
                   Strings.amount +
                   NumberFormat.currency(symbol: '\$', decimalDigits: 2)
                       .format(invoice.invoiceAmount),
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headlineSmall,
             )
           ],
           bodyChildren: buildInvoiceDetails(invoice)));
@@ -115,7 +114,7 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
             invoice.paidBy +
             " On:" +
             DateFormat.yMMMMd().format(invoice.paidDate),
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodySmall,
       ),
     ]));
     invoice.billingItems.forEach((bi) {
@@ -132,7 +131,7 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
             ' ' +
             NumberFormat.currency(symbol: '\$', decimalDigits: 2)
                 .format(bi.quantity.toDouble() * bi.rate),
-        style: Theme.of(context).textTheme.bodyText1,
+        style: Theme.of(context).textTheme.bodySmall,
       ));
     });
     return billingItems;

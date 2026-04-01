@@ -1,25 +1,25 @@
 import 'package:digiguru/app/video/model/video_info.dart';
 
 class Lesson {
-  String moduleId;
-  String businessId;
-  String moduleTitle;
-  String courseId;
-  String courseTitle;
-  String title;
-  String instructorName;
-  String instructorNotes;
+  String? moduleId;
+  String? businessId;
+  String? moduleTitle;
+  String? courseId;
+  String? courseTitle;
+  String? title;
+  String? instructorName;
+  String? instructorNotes;
   bool locked = true;
-  bool deleted;
-  bool freeTrial;
-  int displayOrder;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  InstructionDoc instructionDoc;
-  VideoInfo videoInfo;
-  String documentId;
+  bool? deleted;
+  bool? freeTrial;
+  int? displayOrder;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  InstructionDoc? instructionDoc;
+  VideoInfo? videoInfo;
+  String? documentId;
   Lesson(
       {this.moduleId,
       this.businessId,
@@ -87,19 +87,19 @@ class Lesson {
     data['deleted_timestamp'] = this.deletedTimestamp;
     data['modified_by'] = this.modifiedBy;
     if (this.instructionDoc != null) {
-      data['instruction_doc'] = this.instructionDoc.toJson();
+      data['instruction_doc'] = this.instructionDoc?.toJson();
     }
     if (this.videoInfo != null) {
-      data['video_info'] = this.videoInfo.toJson();
+      data['video_info'] = this.videoInfo?.toJson();
     }
     return data;
   }
 }
 
 class InstructionDoc {
-  String title;
-  String docUrl;
-  String docSize;
+  String? title;
+  String? docUrl;
+  String? docSize;
 
   InstructionDoc({this.title, this.docUrl, this.docSize});
 

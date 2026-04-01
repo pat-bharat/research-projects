@@ -58,13 +58,13 @@ class BusinessService extends BaseService {
 
   static const int PostsLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+  late DocumentSnapshot _lastDocument;
   bool _hasMorePosts = true;
 
   Future getBusines(String id) async {
     try {
       var userData = await _businessesCollectionReference.doc(id).get();
-      return new Business.fromJson(userData.data(), id);
+      return new Business.fromJson(userData.data() as Map<String, dynamic>, id);
     } catch (e) {
       return handleException(e);
     }
@@ -85,7 +85,7 @@ class BusinessService extends BaseService {
             Strings.contactSystemAdmin);
       } else {
         return new Business.fromJson(
-            userData.docs.single.data(), userData.docs.single.id);
+            userData.docs.single.data() as Map<String, dynamic>, userData.docs.single.id);
       }
     } catch (e) {
       return handleException(e);
@@ -102,7 +102,7 @@ class BusinessService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach((business) => businesses
-                    .add(Business.fromJson(business.data(), business.id)))
+                    .add(Business.fromJson(business.data() as Map<String, dynamic>, business.id)))
               });
       return businesses;
     } catch (e) {
@@ -118,7 +118,7 @@ class BusinessService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach((business) => businesses
-                    .add(Business.fromJson(business.data(), business.id)))
+                    .add(Business.fromJson(business.data() as Map<String, dynamic>, business.id)))
               });
       return businesses;
     } catch (e) {
@@ -130,47 +130,43 @@ class BusinessService extends BaseService {
     try {
       super.populateCommonFields(object: business, created: true);
       var result = await _businessesCollectionReference.add(business.toJson());
-      if (result is DocumentReference) {
-        //add business legals
-        List<SystemLegal> consLegals =
-            await _systemService.getConsumerOnlyLegals();
-        consLegals.forEach((legal) async {
-          await _downloadService.requestDownload(legal.pdfDoc, legal.title);
-          String toUpload = business.documentId +
-              "/legals/" +
-              _downloadService.localDir +
-              Platform.pathSeparator +
-              legal.title;
+      //add business legals
+      List<SystemLegal> consLegals =
+          await _systemService.getConsumerOnlyLegals();
+      consLegals.forEach((legal) async {
+        await _downloadService.requestDownload(legal.pdfDoc, legal.title);
+        String toUpload = business.documentId! +
+            "/legals/" +
+            _downloadService.localDir +
+            Platform.pathSeparator +
+            legal.title;
 
-          CloudStorageResult storageResult =
-              await _cloudStorageService.uploadFile(
-            fileToUpload: File(toUpload),
-            title: toUpload,
-          );
+        CloudStorageResult storageResult =
+            await _cloudStorageService.uploadFile(
+          fileToUpload: File(toUpload),
+          title: toUpload,
+        );
 
-          if (storageResult != null) {
-            //add business legal
-            await addBusinessLegal(
-                business,
-                BusinessLegal(
-                    businessId: business.documentId,
-                    legalId: legal.documentId,
-                    pdfDoc: storageResult.mediaUrl,
-                    title: legal.title));
-          }
-          //now add default besiness settings
-          BusinessSetting settings = BusinessSetting(businessId: result.id);
-          populateCommonFields(object: settings, created: true);
-          await _businessSettingsCollectionReference.add(settings.toJson());
-          //now add businessProfile
-          BusinessProfile profile = BusinessProfile(
-              businessId: result.id,
-              userCounts: UserCount(adminUsers: 1),
-              publication: Publication());
-          await _businessProfileCollectionReference.add(profile.toJson());
-        });
-      }
-    } catch (e) {
+        //add business legal
+        await addBusinessLegal(
+            business,
+            BusinessLegal(
+                businessId: business.documentId!,
+                legalId: legal.documentId,
+                pdfDoc: storageResult.mediaUrl,
+                title: legal.title));
+              //now add default besiness settings
+        BusinessSetting settings = BusinessSetting(businessId: result.id);
+        populateCommonFields(object: settings, created: true);
+        await _businessSettingsCollectionReference.add(settings.toJson());
+        //now add businessProfile
+        BusinessProfile profile = BusinessProfile(
+            businessId: result.id,
+            userCounts: UserCount(adminUsers: 1),
+            publication: Publication());
+        await _businessProfileCollectionReference.add(profile.toJson());
+      });
+        } catch (e) {
       return handleException(e);
     }
   }
@@ -181,12 +177,12 @@ class BusinessService extends BaseService {
           await _businessesCollectionReference.limit(PostsLimit).get();
       if (postDocumentSnapshot.docs.isNotEmpty) {
         return postDocumentSnapshot.docs
-            .map((snapshot) => Business.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Business.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.name != null)
             .toList();
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -218,7 +214,7 @@ class BusinessService extends BaseService {
     pageBusinessesQuery.snapshots().listen((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         var businesses = snapshot.docs
-            .map((snapshot) => Business.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Business.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.name != null)
             .toList();
 
@@ -276,13 +272,13 @@ class BusinessService extends BaseService {
       var userData = await _instructorCollectionReference
           .where("business_id", isEqualTo: businessId)
           .get();
-      userData.docs.forEach((instructor) => {
+      userData.docs.forEach((instructor) =>
             instructors.add(
-                Instructor.fromJson(instructor.id, instructor.data()).fullName)
-          });
+                Instructor.fromJson(docId: instructor.id, json: instructor.data() as Map<String, dynamic>).fullName!)
+          );
       return instructors;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -292,11 +288,10 @@ class BusinessService extends BaseService {
       var userData = await _businessesLegalCollectionReference
           .where("business_id", isEqualTo: businessId)
           .get();
-      userData.docs.forEach((legal) =>
-          {legals.add(BusinessLegal.fromJson(legal.id, legal.data()))});
+      userData.docs.forEach((legal) {legals.add(BusinessLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>));});
       return legals;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -324,7 +319,7 @@ class BusinessService extends BaseService {
       if (snapshot.docs.isNotEmpty) {
         var businessLegal = snapshot.docs
             .map((snapshot) =>
-                BusinessLegal.fromJson(snapshot.id, snapshot.data()))
+                BusinessLegal.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
         _businessLegalController.add(businessLegal);
@@ -366,7 +361,7 @@ class BusinessService extends BaseService {
   }
 
   Future getBusinessProfile(String bid) async {
-    BusinessProfile profile;
+    BusinessProfile? profile;
     await _businessProfileCollectionReference
         .where("business_id", isEqualTo: bid)
         .get()
@@ -374,15 +369,17 @@ class BusinessService extends BaseService {
               if (snapshot.docs.isNotEmpty)
                 {
                   profile = BusinessProfile.fromJson(
-                      snapshot.docs.first.id, snapshot.docs.first.data()),
+                      snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>),
                 }
             });
 
-    await getAllBusinessLegals(bid)
-        .then((value) => profile.businessLegal = value);
+    if (profile != null) {
+      await getAllBusinessLegals(bid)
+          .then((value) => profile!.businessLegal = value);
 
-    await getBusinessSettings(bid)
-        .then((value) => profile.businessSetting = value);
+      await getBusinessSettings(bid)
+          .then((value) => profile!.businessSetting = value);
+    }
     return profile;
     /*
     Map<String, BusinessProfile> profileMap = {};

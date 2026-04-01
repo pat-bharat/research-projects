@@ -7,9 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 class PurchaseService extends BaseService {
-  StreamSubscription _purchaseUpdatedSubscription;
-  StreamSubscription _purchaseErrorSubscription;
-  StreamSubscription _conectionSubscription;
+  StreamSubscription? _purchaseUpdatedSubscription;
+  StreamSubscription? _purchaseErrorSubscription;
+  StreamSubscription? _conectionSubscription;
   final List<String> _productLists = Platform.isAndroid
       ? [
           'android.test.purchased',
@@ -20,20 +20,12 @@ class PurchaseService extends BaseService {
       : ['com.cooni.point1000', 'com.cooni.point5000'];
 
   String _platformVersion = 'Unknown';
-  List<IAPItem> _items = [];
-  List<PurchasedItem> _purchases = [];
-  List<PurchasedItem> _purchasesHistory = [];
+  List<Purchase> _items = [];
+  List<Purchase> _purchases = [];
+  List<Purchase> _purchasesHistory = [];
 
   bool simulated = true;
   Future<void> initPurchaseService() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await FlutterInappPurchase.instance.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
     // prepare
     var result = await FlutterInappPurchase.instance.initConnection;
     print('result: $result');
@@ -43,30 +35,30 @@ class PurchaseService extends BaseService {
     // setState to update our non-existent appearance.
     // refresh items for android
     try {
-      String msg = await FlutterInappPurchase.instance.consumeAllItems;
-      print('consumeAllItems: $msg');
+      var products = await FlutterInappPurchase.instance.getAvailablePurchases();
+      _items = products as List<Purchase>;
     } catch (err) {
-      print('consumeAllItems error: $err');
+      print('getProducts error: $err');
     }
 
     _conectionSubscription =
-        FlutterInappPurchase.connectionUpdated.listen((connected) {
+        FlutterInappPurchase.instance.connectionUpdated.listen((connected) {
       print('connected: $connected');
     });
 
     _purchaseUpdatedSubscription =
-        FlutterInappPurchase.purchaseUpdated.listen((productItem) {
+        FlutterInappPurchase.instance.purchaseUpdated.listen((productItem) {
       print('purchase-updated: $productItem');
     });
 
     _purchaseErrorSubscription =
-        FlutterInappPurchase.purchaseError.listen((purchaseError) {
+        FlutterInappPurchase.instance.purchaseError.listen((purchaseError) {
       print('purchase-error: $purchaseError');
     });
   }
 
-  Future requestPurchase(IAPItem item) async {
-    return await FlutterInappPurchase.instance.requestPurchase(item.productId);
+  Future requestPurchase(Purchase item) async {
+    return await FlutterInappPurchase.instance.requestPurchase(RequestPurchaseProps.inApp(item.productId));
   }
 
   Future getProducts() async {
@@ -74,7 +66,7 @@ class PurchaseService extends BaseService {
   }
 
   Future getPurchases() async {
-    List<PurchasedItem> items =
+    List<Purchase> items =
         await FlutterInappPurchase.instance.getAvailablePurchases();
     for (var item in items) {
       print('${item.toString()}');
@@ -84,8 +76,8 @@ class PurchaseService extends BaseService {
   }
 
   Future getPurchaseHistory() async {
-    List<PurchasedItem> items =
-        await FlutterInappPurchase.instance.getPurchaseHistory();
+    List<Purchase> items =
+        (await FlutterInappPurchase.instance.getAvailablePurchases() ?? []) as List<IAPItem>;
     for (var item in items) {
       print('${item.toString()}');
       this._purchasesHistory.add(item);

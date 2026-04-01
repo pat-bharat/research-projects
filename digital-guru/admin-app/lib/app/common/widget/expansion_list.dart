@@ -3,15 +3,15 @@ import 'package:digiguru/app/common/constants/shared_styles.dart'
     as sharedStyles;
 
 class ExpansionList<T> extends StatefulWidget {
-  final List<T> items;
-  final String title;
+  final List<T>? items;
+  final String? title;
   final Function(dynamic) onItemSelected;
   final bool smallVersion;
   ExpansionList({
-    Key key,
+    Key? key,
     this.items,
     this.title,
-    @required this.onItemSelected,
+    required this.onItemSelected,
     this.smallVersion = false,
   }) : super(key: key);
 
@@ -20,9 +20,9 @@ class ExpansionList<T> extends StatefulWidget {
 
 class _ExpansionListState extends State<ExpansionList> {
   final double startingHeight = sharedStyles.fieldHeight;
-  double expandedHeight;
+  double expandedHeight = 0;
   bool expanded = false;
-  String selectedValue;
+  String? selectedValue;
 
   @override
   void initState() {
@@ -52,7 +52,8 @@ class _ExpansionListState extends State<ExpansionList> {
         padding: const EdgeInsets.all(0),
         children: <Widget>[
           ExpansionListItem(
-            title: selectedValue,
+            key: UniqueKey(),
+            title: selectedValue ?? '',
             onTap: () {
               setState(() {
                 expanded = !expanded;
@@ -73,7 +74,8 @@ class _ExpansionListState extends State<ExpansionList> {
 
   List<Widget> _getDropdownListItems() {
     return widget.items
-        .map((item) => ExpansionListItem(
+        ?.map((item) => ExpansionListItem(
+            key: UniqueKey(),
             smallVersion: widget.smallVersion,
             title: item.toString(),
             onTap: () {
@@ -84,7 +86,7 @@ class _ExpansionListState extends State<ExpansionList> {
 
               widget.onItemSelected(item);
             }))
-        .toList();
+        .toList() ?? [];
   }
 
   void _calculateExpandedHeight() {
@@ -92,7 +94,7 @@ class _ExpansionListState extends State<ExpansionList> {
         (widget.smallVersion
             ? sharedStyles.smallFieldHeight
             : sharedStyles.fieldHeight) +
-        (widget.items.length *
+        ((widget.items?.length ?? 0) *
             (widget.smallVersion
                 ? sharedStyles.smallFieldHeight
                 : sharedStyles.fieldHeight));
@@ -100,14 +102,14 @@ class _ExpansionListState extends State<ExpansionList> {
 }
 
 class ExpansionListItem extends StatelessWidget {
-  final Function onTap;
+  final Function()? onTap;
   final String title;
   final bool showArrow;
   final bool smallVersion;
   const ExpansionListItem({
-    Key key,
+    required Key key,
     this.onTap,
-    this.title,
+    this.title = '',
     this.showArrow = true,
     this.smallVersion = false,
   }) : super(key: key);
@@ -129,7 +131,7 @@ class ExpansionListItem extends StatelessWidget {
             Expanded(
               child: Text(
                 title ?? '',
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ),
             showArrow

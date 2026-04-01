@@ -1,16 +1,16 @@
 class AcceptedBusinessLegal {
-  String businessId;
-  String acceptedBy;
-  String legalType;
-  String pdfDoc;
-  String acceptedTimestamp;
+  late String businessId;
+  late String acceptedBy;
+  late String legalType;
+  late String pdfDoc;
+  late String acceptedTimestamp;
 
   AcceptedBusinessLegal(
-      {this.businessId,
-      this.acceptedBy,
-      this.legalType,
-      this.pdfDoc,
-      this.acceptedTimestamp});
+      {required this.businessId,
+      required this.acceptedBy,
+      required this.legalType,
+      required this.pdfDoc,
+      required this.acceptedTimestamp});
 
   AcceptedBusinessLegal.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];

@@ -26,10 +26,10 @@ class PurchasedUserModuleListModel extends BaseModel {
     setBusy(true);
     List<UserModule> uModules = List.empty(growable: true);
     _userModuleService
-        .listenToPurchasedUserModuleRealTime(currentUser.documentId)
+        .listenToPurchasedUserModuleRealTime(currentUser!.documentId!)
         .listen((userModules) {
       uModules = userModules;
-      if (uModules != null && uModules.length > 0) {
+      if (uModules.isNotEmpty) {
         //if (uModules.toList().first.lessons.isNotEmpty) {
         _userModules = uModules;
         // notifyListeners();
@@ -40,7 +40,7 @@ class PurchasedUserModuleListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _userModuleService.requestMoreData(currentBusiness.documentId);
+      _userModuleService.requestMoreData(currentBusiness.documentId!);
 
   goBack() {
     _navigationService.pop();
@@ -61,7 +61,7 @@ class PurchasedUserModuleListModel extends BaseModel {
 
 class ModuleLessonsArgs {
   Module module;
-  Lesson lesson;
+  Lesson? lesson;
 
-  ModuleLessonsArgs({this.module, this.lesson});
+  ModuleLessonsArgs({required this.module, this.lesson});
 }

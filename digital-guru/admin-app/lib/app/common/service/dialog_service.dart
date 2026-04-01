@@ -5,8 +5,8 @@ import 'package:digiguru/app/common/model/dialog_models.dart';
 
 class DialogService {
   GlobalKey<NavigatorState> _dialogNavigationKey = GlobalKey<NavigatorState>();
-  Function(DialogRequest) _showDialogListener;
-  Completer<DialogResponse> _dialogCompleter;
+  late Function(DialogRequest) _showDialogListener;
+  Completer<DialogResponse>? _dialogCompleter;
 
   GlobalKey<NavigatorState> get dialogNavigationKey => _dialogNavigationKey;
 
@@ -17,8 +17,8 @@ class DialogService {
 
   /// Calls the dialog listener and returns a Future that will wait for dialogComplete.
   Future<DialogResponse> showDialog({
-    String title,
-    String description,
+    required String title,
+    required String description,
     String buttonTitle = 'Ok',
   }) {
     _dialogCompleter = Completer<DialogResponse>();
@@ -26,14 +26,15 @@ class DialogService {
       title: title,
       description: description,
       buttonTitle: buttonTitle,
+      cancelTitle: '',
     ));
-    return _dialogCompleter.future;
+    return _dialogCompleter!.future;
   }
 
   /// Shows a confirmation dialog
   Future<DialogResponse> showConfirmationDialog(
-      {String title,
-      String description,
+      {required String title,
+      required String description,
       String confirmationTitle = 'Ok',
       String cancelTitle = 'Cancel'}) {
     _dialogCompleter = Completer<DialogResponse>();
@@ -42,13 +43,13 @@ class DialogService {
         description: description,
         buttonTitle: confirmationTitle,
         cancelTitle: cancelTitle));
-    return _dialogCompleter.future;
+    return _dialogCompleter!.future;
   }
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void dialogComplete(DialogResponse response) {
-    _dialogNavigationKey.currentState.pop();
-    _dialogCompleter.complete(response);
+    _dialogNavigationKey.currentState?.pop();
+    _dialogCompleter?.complete(response);
     _dialogCompleter = null;
   }
 }

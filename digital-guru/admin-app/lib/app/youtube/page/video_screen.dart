@@ -6,14 +6,14 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 class VideoScreen extends StatefulWidget {
   final String id;
 
-  VideoScreen({this.id});
+  VideoScreen({required this.id});
 
   @override
   _VideoScreenState createState() => _VideoScreenState();
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
   NavigationService _navigationService = locator<NavigationService>();
 
@@ -42,7 +42,7 @@ class _VideoScreenState extends State<VideoScreen> {
           },
         ),
         IconButton(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).primaryColor,
           icon: Icon(
             Icons.arrow_back_rounded,
             size: 30,

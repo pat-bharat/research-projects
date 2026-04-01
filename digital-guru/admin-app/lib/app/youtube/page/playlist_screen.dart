@@ -5,17 +5,17 @@ import 'package:digiguru/app/youtube/model/video_model.dart';
 import 'package:digiguru/app/youtube/page/video_screen.dart';
 import 'package:digiguru/app/youtube/service/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/accordian/gf_accordian.dart';
+import 'package:getwidget/components/accordion/gf_accordion.dart';
 
 class PlaylistScreen extends StatefulWidget {
   final PlayList playList;
-  PlaylistScreen({Key key, this.playList}) : super(key: key);
+  PlaylistScreen({Key? key, required this.playList}) : super(key: key);
   @override
   _PlaylistScreenState createState() => _PlaylistScreenState();
 }
 
 class _PlaylistScreenState extends State<PlaylistScreen> {
-  PlayList _playList;
+  late PlayList _playList;
   bool _isLoading = false;
   APIService _apiService = locator<APIService>();
   @override
@@ -34,7 +34,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           ? NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollDetails) {
                 if (!_isLoading &&
-                    _playList.videos.length != _playList.videoCount &&
+                    (_playList.videos?.length ?? 0) != _playList.videoCount &&
                     scrollDetails.metrics.pixels ==
                         scrollDetails.metrics.maxScrollExtent) {
                   _loadMoreVideos();
@@ -61,9 +61,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 //Flute GURU --> UC6T85gyXT_WqvsEYNUWTSJA // UC6Dy0rQ6zDnQuHQ1EeErGUA
   _buildPlayList() {
     Widget videos = ListView.builder(
-      itemCount: _playList.videos.length,
+      itemCount: _playList.videos?.length ?? 0,
       itemBuilder: (BuildContext context, int index) {
-        Video video = _playList.videos[index];
+        Video video = _playList.videos![index];
         return _buildVideo(video);
       },
       shrinkWrap: true,
@@ -71,11 +71,11 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     return GFAccordion(
       showAccordion: true,
       title:
-          _playList.title + '(' + _playList.videoCount.toString() + ') videos',
+          (_playList.title ?? '') + '(' + _playList.videoCount.toString() + ') videos',
       contentPadding: const EdgeInsets.all(5),
-      textStyle: Theme.of(context).textTheme.headline3,
-      collapsedTitleBackgroundColor: Theme.of(context).backgroundColor,
-      contentBackgroundColor: Theme.of(context).backgroundColor,
+      textStyle: Theme.of(context).textTheme.headlineMedium ?? const TextStyle(),
+      collapsedTitleBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      contentBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       contentChild: videos,
     );
   }
@@ -100,7 +100,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
           CircleAvatar(
             backgroundColor: Colors.white,
             radius: 35.0,
-            backgroundImage: NetworkImage(_playList.profilePictureUrl),
+            backgroundImage: NetworkImage(_playList.profilePictureUrl ?? ''),
           ),
           SizedBox(width: 12.0),
           Expanded(
@@ -109,7 +109,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  _playList.title,
+                  _playList.title ?? '',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20.0,
@@ -181,8 +181,8 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   _loadMoreVideos() async {
     _isLoading = true;
     List<Video> moreVideos =
-        await _apiService.fetchVideosFromPlaylist(playlistId: _playList.id);
-    List<Video> allVideos = _playList.videos..addAll(moreVideos);
+        await _apiService.fetchVideosFromPlaylist(playlistId: _playList.id ?? '', nameIndex: _playList.videos?.length ?? 0);
+    List<Video> allVideos = (_playList.videos ?? [])..addAll(moreVideos);
     setState(() {
       _playList.videos = allVideos;
     });

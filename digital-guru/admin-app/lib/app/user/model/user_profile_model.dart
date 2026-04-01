@@ -9,7 +9,7 @@ class UserProfileModel extends BaseModel {
   UserService _userService = locator<UserService>();
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
-  User loadCurrentUserProfile() {
+  User? loadCurrentUserProfile() {
     return currentUser;
   }
 
@@ -19,7 +19,7 @@ class UserProfileModel extends BaseModel {
 
   void save(User profile) async {
     setBusy(true);
-    var result = await _userService.updateUser(profile.documentId, profile);
+    var result = await _userService.updateUser(profile.documentId ?? '', profile);
     notifyListeners();
     setBusy(false);
     if (result is String) {

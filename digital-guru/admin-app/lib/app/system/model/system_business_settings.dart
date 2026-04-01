@@ -1,12 +1,12 @@
 class SystemBusinessSettings {
-  String businessId;
-  int maxMediaPerLesson;
-  int maxModulePerCourse;
-  int maxVideoDuration;
-  int maxAdminUsers;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String modifiedBy;
+  String? businessId;
+  int? maxMediaPerLesson;
+  int? maxModulePerCourse;
+  int? maxVideoDuration;
+  int? maxAdminUsers;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? modifiedBy;
 
   SystemBusinessSettings(
       {this.businessId,

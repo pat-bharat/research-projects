@@ -6,8 +6,8 @@ import 'package:filesize/filesize.dart';
 
 class CloudStorageService {
   Future<CloudStorageResult> uploadFile({
-    @required File fileToUpload,
-    @required String title,
+    required File fileToUpload,
+    required String title,
   }) async {
     //var imageFileName =   title; // + DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -51,5 +51,5 @@ class CloudStorageResult {
   final String name;
   final String size;
 
-  CloudStorageResult({this.mediaUrl, this.name, this.size});
+  CloudStorageResult({required this.mediaUrl, required this.name, required this.size});
 }

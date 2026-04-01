@@ -13,7 +13,7 @@ import 'package:stacked/stacked.dart';
 class PurchasedUserModuleListView extends StatefulWidget {
   //final List<Course> courses = new List();
 
-  PurchasedUserModuleListView({Key key}) : super(key: key);
+  PurchasedUserModuleListView({Key? key}) : super(key: key);
 
   @override
   _PurchasedUserModuleListViewState createState() =>
@@ -23,7 +23,7 @@ class PurchasedUserModuleListView extends StatefulWidget {
 class _PurchasedUserModuleListViewState
     extends State<PurchasedUserModuleListView> {
   LessonService _lessonService = locator<LessonService>();
-  PurchasedUserModuleListModel model;
+  late PurchasedUserModuleListModel model;
   List<UserModule> userModules = List.empty(growable: true);
   bool isFree = false;
   @override
@@ -64,7 +64,7 @@ class _PurchasedUserModuleListViewState
     portraitModeOnly();
     return ViewModelBuilder<PurchasedUserModuleListModel>.reactive(
         viewModelBuilder: () => model,
-        onModelReady: (model) => model.listenToPurchasedUserModule(),
+        onViewModelReady: (model) => model.listenToPurchasedUserModule(),
         // widget.isFree ?  : ,
         builder: (context, model, child) => SafeArea(
                 child: CommonScaffold(
@@ -96,11 +96,11 @@ class _PurchasedUserModuleListViewState
                       ],
                     )
                   : buildCircularLoader(context),
-            )));
+            body: Center(),)));
   }
 
   _buildUserModules(BuildContext context, PurchasedUserModuleListModel model,
-      Function onTap) {
+      Function()? onTap) {
     List<Widget> widgets = List.empty(growable: true);
 
     for (final um in model.userModules) {
@@ -108,7 +108,7 @@ class _PurchasedUserModuleListViewState
       // for (final ci in um.courseInfo) {
       // lessons.add(Row(mainAxisAlignment: MainAxisAlignment.start, children: []));
       if (um.lessons != null) {
-        for (final lesson in um.lessons) {
+        for (final lesson in um.lessons!) {
           lessons.add(_buildLessonCard(lesson, model));
           lessons.add(verticalSpaceTiny);
         }
@@ -116,17 +116,17 @@ class _PurchasedUserModuleListViewState
 
       widgets.add(Container(
           child: GestureDetector(
-        onTap: onTap,
+        onTap: onTap!,
         child: buildScorabbleAccordian(context,
             headChildren: [
               buildWrappedText(
                 context,
-                um.moduleTitle,
-                style: Theme.of(context).textTheme.subtitle2,
+                um.moduleTitle ?? '',
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
               buildWrappedText(
-                  context, um.courseName + " By " + um.instructorName,
-                  lines: 2, style: Theme.of(context).textTheme.headline4),
+                  context, (um.courseName ?? '') + " By " + (um.instructorName ?? ''),
+                  lines: 2, style: Theme.of(context).textTheme.bodyMedium),
             ],
             bodyChildren: lessons),
       )));
@@ -142,8 +142,8 @@ class _PurchasedUserModuleListViewState
         child: LessonItem(
           isAdmin: model.isAdmin,
           lesson: item,
-          onPlayVideo: () => model.viewVideo(item.videoInfo),
-          onViewDoc: () => model.viewPdf(item.instructionDoc.docUrl),
+          onPlayVideo: () => model.viewVideo(item.videoInfo!),
+          onViewDoc: () => model.viewPdf(item.instructionDoc!.docUrl!), key: null,
         ),
       ),
     );

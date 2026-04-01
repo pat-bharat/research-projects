@@ -22,9 +22,9 @@ class ModuleService extends BaseService {
   Future getModule(String moduleId) async {
     try {
       var userData = await _moduleCollectionReference.doc(moduleId).get();
-      return new Module.fromJson(userData.data(), moduleId);
+      return new Module.fromJson(userData.data() as Map<String, dynamic>, moduleId);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -36,11 +36,11 @@ class ModuleService extends BaseService {
           .get()
           .then((value) => {
                 value.docs.forEach(
-                    (c) => modules.add(Module.fromJson(c.data(), c.id)))
+                    (c) => modules.add(Module.fromJson(c.data() as Map<String, dynamic>, c.id)))
               });
       return modules;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -51,15 +51,15 @@ class ModuleService extends BaseService {
       BusinessProfile profile =
           await _businessService.getBusinessProfile(module.businessId);
 
-      profile.publication.totalModuleCounts =
-          profile.publication.totalModuleCounts + 1;
+      profile.publication!.totalModuleCounts =
+          profile.publication!.totalModuleCounts + 1;
       DocumentReference bpRef =
           _businessProfileCollectionReference.doc(profile.documentId);
       await _businessService.updateBusinessProfileStats(profile);
 
       return await _moduleCollectionReference.add(module.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -68,12 +68,12 @@ class ModuleService extends BaseService {
       var moduleDocumentSnapshot = await _moduleCollectionReference.get();
       if (moduleDocumentSnapshot.docs.isNotEmpty) {
         return moduleDocumentSnapshot.docs
-            .map((snapshot) => Module.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Module.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -106,7 +106,7 @@ class ModuleService extends BaseService {
     pageModulesQuery.snapshots().listen((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         var modules = snapshot.docs
-            .map((snapshot) => Module.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Module.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
 /*
@@ -145,7 +145,7 @@ class ModuleService extends BaseService {
     try {
       return await _moduleCollectionReference.doc(documentId).delete();
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -153,7 +153,7 @@ class ModuleService extends BaseService {
     try {
       await _moduleCollectionReference.doc(id).update(module.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -168,13 +168,13 @@ class ModuleService extends BaseService {
           .get();
       if (moduleDocumentSnapshot.docs.isNotEmpty) {
         return moduleDocumentSnapshot.docs
-            .map((snapshot) => Module.fromJson(snapshot.data(), snapshot.id))
+            .map((snapshot) => Module.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
       }
       return List.empty();
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 }

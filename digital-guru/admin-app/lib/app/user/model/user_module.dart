@@ -1,22 +1,22 @@
 import 'package:digiguru/app/lesson/model/lesson.dart';
 
 class UserModule {
-  String userId;
-  String purchaseDate;
-  double purchaseAmount;
-  bool certified;
-  String courseId;
-  String courseName;
-  String instructorName;
-  String moduleId;
-  String moduleName;
-  String moduleTitle;
-  List<String> lessonIds;
-  List<Lesson> lessons;
-  String documentId;
+  String? userId;
+  String? purchaseDate;
+  double? purchaseAmount;
+  bool? certified;
+  String? courseId;
+  String? courseName;
+  String? instructorName;
+  String? moduleId;
+  String? moduleName;
+  String? moduleTitle;
+  List<String>? lessonIds;
+  List<Lesson>? lessons;
+  String? documentId;
 
   UserModule({
-    this.userId,
+    required this.userId,
     this.purchaseDate,
     this.purchaseAmount,
     this.certified,

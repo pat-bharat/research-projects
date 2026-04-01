@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class InvoiceView extends StatefulWidget {
-  InvoiceView({Key key}) : super(key: key);
+  InvoiceView({Key? key}) : super(key: key);
 
   @override
   _InvoiceViewState createState() => _InvoiceViewState();
@@ -26,7 +26,7 @@ class _InvoiceViewState extends State<InvoiceView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BusinessViewModel>.reactive(
         viewModelBuilder: () => BusinessViewModel(),
-        onModelReady: (model) {},
+        onViewModelReady: (model) {},
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
                   model: model,
@@ -56,6 +56,7 @@ class _InvoiceViewState extends State<InvoiceView> {
               contactEmail: contactEmailController.text,
               phone: phoneController.text,
               url: urlController.text,
+              country: '',
             );
           },
         ),

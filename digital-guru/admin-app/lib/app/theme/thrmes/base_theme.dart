@@ -15,29 +15,29 @@ class BaseTheme {
   double size10 = 10;
   textTheme(Color primaryColor, Color accentColor, Color button) {
     return TextTheme(
-      bodyText1: TextStyle(
+      bodyLarge: TextStyle(
           fontSize: size17, fontWeight: FontWeight.normal, color: primaryColor),
-      bodyText2: TextStyle(
+      bodyMedium: TextStyle(
           fontSize: size15, fontWeight: FontWeight.normal, color: primaryColor),
-      caption: TextStyle(
+      bodySmall: TextStyle(
           fontSize: size15, fontWeight: FontWeight.normal, color: primaryColor),
-      button: TextStyle(
+      labelLarge: TextStyle(
           fontSize: size15, fontWeight: FontWeight.normal, color: button),
-      subtitle1: TextStyle(
+      titleLarge: TextStyle(
           fontSize: size20, fontWeight: FontWeight.bold, color: primaryColor),
-      subtitle2: TextStyle(
+      titleMedium: TextStyle(
           fontSize: size17, fontWeight: FontWeight.bold, color: primaryColor),
-      headline1: TextStyle(
+      displayLarge: TextStyle(
           fontSize: size25, fontWeight: FontWeight.bold, color: accentColor),
-      headline2: TextStyle(
+      displayMedium: TextStyle(
           fontSize: size20, fontWeight: FontWeight.bold, color: primaryColor),
-      headline3: TextStyle(
+      displaySmall: TextStyle(
           fontSize: size17, fontWeight: FontWeight.normal, color: primaryColor),
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
           fontSize: size15, fontWeight: FontWeight.normal, color: primaryColor),
-      headline5: TextStyle(
+      headlineSmall: TextStyle(
           fontSize: size12, fontWeight: FontWeight.normal, color: primaryColor),
-      headline6: TextStyle(
+      titleSmall: TextStyle(
           fontSize: size10, fontStyle: FontStyle.normal, color: primaryColor),
     );
   }

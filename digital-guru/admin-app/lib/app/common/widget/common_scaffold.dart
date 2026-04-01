@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class CommonScaffold extends StatefulWidget {
   final appTitle;
-  final Widget bodyData;
+  final Widget? bodyData;
   final showAppbar;
   final showDrawer;
   final scaffoldKey;
@@ -16,14 +16,14 @@ class CommonScaffold extends StatefulWidget {
   final bottomNavBarIndex;
   CommonScaffold({
     this.appTitle,
-    @required this.model,
+    required this.model,
     this.bodyData,
     this.showAppbar = true,
     this.showDrawer = true,
     this.scaffoldKey,
     this.showBottomNav = true,
     this.elevation = 4.0,
-    this.bottomNavBarIndex = 2,
+    this.bottomNavBarIndex = 2, required Center body,
   });
 
   @override
@@ -41,7 +41,7 @@ class _CommonScaffoldState extends State<CommonScaffold> {
     return Scaffold(
         primary: true,
         key: widget.scaffoldKey != null ? widget.scaffoldKey : null,
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: widget.model.isAdmin && widget.showAppbar
             ? buildBusinessAppBar(
                 context,

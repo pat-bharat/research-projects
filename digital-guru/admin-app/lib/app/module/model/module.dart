@@ -2,49 +2,49 @@ import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 
 class Module {
-  String courseId;
-  String businessId;
-  String name;
-  String title;
-  double purchaseAmount;
-  int discountPercentage;
-  bool published;
-  bool deleted;
-  int displayOrder;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  late String courseId;
+  late String businessId;
+  late String name;
+  late String title;
+  double? purchaseAmount;
+  int? discountPercentage;
+  bool? published;
+  bool? deleted;
+  int? displayOrder;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
   List<String> tags = List<String>.empty(growable: true);
-  List<PricePlan> pricePlan;
-  ModuleBackground moduleBackground;
-  ModuleDetailDoc moduleDetailDoc;
-  VideoInfo moduleVideo;
-  int lessonCount;
+  List<PricePlan>? pricePlan;
+  ModuleBackground? moduleBackground;
+  ModuleDetailDoc? moduleDetailDoc;
+  VideoInfo? moduleVideo;
+  int? lessonCount;
 
-  String documentId;
-  Course course;
+  late String documentId;
+  late Course course;
 
   Module(
-      {this.courseId,
-      this.businessId,
-      this.name,
-      this.title,
-      this.purchaseAmount,
-      this.discountPercentage,
-      this.published,
-      this.deleted,
-      this.displayOrder,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.deletedTimestamp,
-      this.modifiedBy,
-      this.tags,
-      this.pricePlan,
-      this.moduleBackground,
-      this.moduleDetailDoc,
-      this.moduleVideo,
-      this.lessonCount});
+      {required this.courseId,
+      required this.businessId,
+      required this.name,
+      required this.title,
+       this.purchaseAmount = 0.0,
+       this.discountPercentage,
+       this.published,
+       this.deleted,
+       this.displayOrder,
+       this.createdTimestamp,
+       this.updatedTimestamp,
+       this.deletedTimestamp,
+       this.modifiedBy,
+       required this.tags,
+       this.pricePlan,
+       this.moduleBackground,
+       this.moduleDetailDoc,
+       this.moduleVideo,
+       this.lessonCount});
 
   Module.fromJson(Map<String, dynamic> json, String docId) {
     this.documentId = docId;
@@ -68,7 +68,7 @@ class Module {
     if (json['price_plan'] != null) {
       pricePlan = new List<PricePlan>.empty(growable: true);
       json['price_plan'].forEach((v) {
-        pricePlan.add(new PricePlan.fromJson(v));
+        pricePlan!.add(new PricePlan.fromJson(v));
       });
     }
     moduleBackground = json['module_background'] != null
@@ -100,16 +100,16 @@ class Module {
     data['tags'] = this.tags;
     data['lesson_count'] = this.lessonCount;
     if (this.pricePlan != null) {
-      data['price_plan'] = this.pricePlan.map((v) => v.toJson()).toList();
+      data['price_plan'] = this.pricePlan!.map((v) => v.toJson()).toList();
     }
     if (this.moduleBackground != null) {
-      data['module_background'] = this.moduleBackground.toJson();
+      data['module_background'] = this.moduleBackground!.toJson();
     }
     if (this.moduleDetailDoc != null) {
-      data['module_detail_doc'] = this.moduleDetailDoc.toJson();
+      data['module_detail_doc'] = this.moduleDetailDoc!.toJson();
     }
     if (this.moduleVideo != null) {
-      data['module_video'] = this.moduleVideo.toJson();
+      data['module_video'] = this.moduleVideo!.toJson();
     }
 
     return data;
@@ -117,8 +117,8 @@ class Module {
 }
 
 class PricePlan {
-  String name;
-  String price;
+  String? name;
+  String? price;
 
   PricePlan({this.name, this.price});
 
@@ -136,9 +136,9 @@ class PricePlan {
 }
 
 class ModuleBackground {
-  String title;
-  String imageUrl;
-  String imageSize;
+  String? title;
+  String? imageUrl;
+  String? imageSize;
 
   ModuleBackground({this.title, this.imageUrl, this.imageSize});
 
@@ -158,9 +158,9 @@ class ModuleBackground {
 }
 
 class ModuleDetailDoc {
-  String title;
-  String docUrl;
-  String docSize;
+  String? title;
+  String? docUrl;
+  String? docSize;
 
   ModuleDetailDoc({this.title, this.docUrl, this.docSize});
 
@@ -180,15 +180,15 @@ class ModuleDetailDoc {
 }
 
 class ModuleVideo {
-  String title;
-  String videoUrl;
-  String thumbUrl;
-  String coverUrl;
-  String videoSize;
-  bool finishedPrcessing;
-  bool uploadUrl;
-  String rawVideoPath;
-  bool uploadComplete;
+  String? title;
+  String? videoUrl;
+  String? thumbUrl;
+  String? coverUrl;
+  String? videoSize;
+  bool? finishedPrcessing;
+  bool? uploadUrl;
+  String? rawVideoPath;
+  bool? uploadComplete;
 
   ModuleVideo(
       {this.title,

@@ -20,7 +20,7 @@ class BusinessLegalListModel extends BaseModel {
       locator<CloudStorageService>();
   final MediaSelector _mediaSelector = MediaSelector();
 
-  static List<BusinessLegal> _businessLegals;
+  static List<BusinessLegal> _businessLegals = [];
 
   //Business _business;
   //Business get business => _business;
@@ -30,7 +30,7 @@ class BusinessLegalListModel extends BaseModel {
   void listenToBusinessLegals() async {
     setBusy(true);
     _businessService
-        .listenToBusinessLegalRealTime(currentBusiness.documentId)
+        .listenToBusinessLegalRealTime(currentBusiness.documentId!)
         .listen((businessLegal) {
       List<BusinessLegal> businessLegals = businessLegal;
       if (businessLegals != null && businessLegals.length > 0) {
@@ -54,7 +54,9 @@ class BusinessLegalListModel extends BaseModel {
       try {
         await _businessService.deleteBusinessLegal(businessLegal);
         // Delete the image after the post is deleted
-        await _cloudStorageService.deleteFile(businessLegal.pdfDoc);
+        if (businessLegal.pdfDoc != null && businessLegal.pdfDoc!.isNotEmpty) {
+          await _cloudStorageService.deleteFile(businessLegal.pdfDoc!);
+        }
       } catch (e) {
         await _dialogService.showDialog(
             title: "Failed Todelete BusinessLegal", description: e.toString());
@@ -81,25 +83,25 @@ class BusinessLegalListModel extends BaseModel {
   }
 
   Future getAllBusinessLegals() {
-    return _businessService.getAllBusinessLegals(currentBusiness.documentId);
+    return _businessService.getAllBusinessLegals(currentBusiness.documentId!);
   }
 
   Future updateBusinessLegal(BusinessLegal businessLegal) async {
     var tempdoc = await _mediaSelector.selectDocument();
-    File pdfFile;
+    File? pdfFile;
     if (tempdoc != null) {
       // setState(() {
-      pdfFile = File(tempdoc.files.single.path);
+      pdfFile = File(tempdoc.files.single.path ?? '');
       //});
     }
     if (pdfFile != null) {
       //removeand add storagefile by default system legal file from system should be there
       try {
-        if (businessLegal.pdfDoc != null && businessLegal.pdfDoc.length > 0) {
-          await _cloudStorageService.deleteFile(businessLegal.pdfDoc);
+        if (businessLegal.pdfDoc != null && businessLegal.pdfDoc!.length > 0) {
+          await _cloudStorageService.deleteFile(businessLegal.pdfDoc!);
         }
       } catch (e) {
-        print("Failed to deletebusiness documen from Storage" + e);
+        print("Failed to deletebusiness documen from Storage" + e.toString());
       }
 
       CloudStorageResult storageResult = await _cloudStorageService.uploadFile(
@@ -111,7 +113,7 @@ class BusinessLegalListModel extends BaseModel {
       if (storageResult != null) {
         businessLegal.pdfDoc = storageResult.mediaUrl;
         colResult = _businessService.updateBusinessLegal(
-            businessLegal.documentId, businessLegal);
+            businessLegal.documentId ?? '', businessLegal);
       }
       if (colResult != null && colResult is String) {
         await _dialogService.showDialog(
@@ -133,5 +135,5 @@ class BusinessLegalListModel extends BaseModel {
 class BusinessBusinessLegalArgs {
   final Business business;
   final BusinessLegal businessLegal;
-  BusinessBusinessLegalArgs({@required this.business, this.businessLegal});
+  BusinessBusinessLegalArgs({required this.business, required this.businessLegal});
 }

@@ -22,9 +22,9 @@ import 'package:stacked/stacked.dart';
 
 // ignore: must_be_immutable
 class InstructorView extends StatefulWidget {
-  final Instructor editingInstructor;
+  final Instructor? editingInstructor;
 
-  InstructorView({Key key, this.editingInstructor}) : super(key: key);
+  InstructorView({Key? key, this.editingInstructor}) : super(key: key);
 
   @override
   _InstructorViewState createState() => _InstructorViewState();
@@ -39,11 +39,11 @@ class _InstructorViewState extends State<InstructorView> {
   final emailController = TextEditingController();
   final urlController = TextEditingController();
 
-  File backgroundImageFile;
+  File? backgroundImageFile;
   // List<InstructorMedia> medias = List.empty(growable: true);
 
-  String _profilePic;
-  Instructor editingInstructor;
+  String? _profilePic;
+  Instructor? editingInstructor;
   final _instructorFormKey = GlobalKey<FormState>();
 
   @override
@@ -72,7 +72,7 @@ class _InstructorViewState extends State<InstructorView> {
             _profilePic = editingInstructor?.profilePic ?? null;
             //medias = editingInstructor?.InstructorMedia ?? model.defaultMedias();
             // InstructorMedia = editingInstructor?.InstructorMedia ?? null;
-            model.setEditingInstructor(editingInstructor);
+            model.setEditingInstructor(editingInstructor!);
           }
         },
         builder: (context, model, child) => SafeArea(
@@ -89,7 +89,9 @@ class _InstructorViewState extends State<InstructorView> {
                         key: _instructorFormKey,
                         autovalidateMode: AutovalidateMode.always,
                         child: _buildFields(context, model)),
-                  )),
+                  )
+                  ,body: Center(),
+                  ),
             ));
   }
 
@@ -131,9 +133,13 @@ class _InstructorViewState extends State<InstructorView> {
         IntlPhoneField(
           initialValue: phoneController.text,
           initialCountryCode: _country,
-          style: Theme.of(context).textTheme.bodyText1,
-          validator:
-              PatternValidator(phonePattern, errorText: Strings.invalidMobileNumber),
+          style: Theme.of(context).textTheme.bodyMedium,
+          validator: (phone) {
+            if (phone == null || phone.number.isEmpty) {
+              return Strings.required;
+            }
+            return null;
+          },
           decoration: InputDecoration(
             labelText: Strings.mobileNumber,
             border: OutlineInputBorder(),
@@ -162,7 +168,7 @@ class _InstructorViewState extends State<InstructorView> {
           title: 'Save',
           busy: model.busy,
           onPressed: () {
-            if (_instructorFormKey.currentState.validate()) {
+            if (_instructorFormKey.currentState?.validate() ?? false) {
               model.save(
                 fullName: instructorNameController.text,
                 introduction: introductionController.text,
@@ -200,7 +206,7 @@ class _InstructorViewState extends State<InstructorView> {
                 width: 70,
                 localFile: model.profilePicFile,
                 mediaLink: editingInstructor != null
-                    ? editingInstructor.profilePic
+                    ? editingInstructor!.profilePic
                     : null,
                 onTap: () => {
                   model
@@ -210,7 +216,7 @@ class _InstructorViewState extends State<InstructorView> {
                 onDelete: () => {
                   setState(() {
                     if (editingInstructor != null)
-                      editingInstructor.profilePic = null;
+                      editingInstructor!.profilePic = null;
                   })
                 },
               ),

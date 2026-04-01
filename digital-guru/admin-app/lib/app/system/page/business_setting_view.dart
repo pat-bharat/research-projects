@@ -8,13 +8,13 @@ import 'package:stacked/stacked.dart';
 
 class BusinessSettingView extends StatefulWidget {
   final BusinessSetting businessSetting;
-  const BusinessSettingView({Key key, this.businessSetting}) : super(key: key);
+  const BusinessSettingView({Key? key, required this.businessSetting}) : super(key: key);
   @override
   _BusinessSettingViewState createState() => _BusinessSettingViewState();
 }
 
 class _BusinessSettingViewState extends State<BusinessSettingView> {
-  BusinessSetting _businessSetting;
+  late BusinessSetting _businessSetting;
   @override
   initState() {
     super.initState();
@@ -38,7 +38,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 10,
-                            value: _businessSetting.maxCourses.toDouble(),
+                            value: _businessSetting.maxCourses?.toDouble() ?? 0,
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
@@ -60,7 +60,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 10,
-                            value: _businessSetting.maxModulePerCourse.toDouble(),
+                            value: _businessSetting.maxModulePerCourse?.toDouble() ?? 0,
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
@@ -82,7 +82,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 10,
-                            value: _businessSetting.lessonsPerModule.toDouble(),
+                            value: _businessSetting.lessonsPerModule!.toDouble(),
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
@@ -104,7 +104,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 60,
-                            value: _businessSetting.maxVideoDuration.toDouble(),
+                            value: _businessSetting.maxVideoDuration?.toDouble() ?? 0,
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {

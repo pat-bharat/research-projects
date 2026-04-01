@@ -16,7 +16,7 @@ class BusinessLegalService extends BaseService {
       var userData = await _legalCollectionReference.get();
 
       userData.docs.forEach((legal) =>
-          {legals.add(SystemLegal.fromJson(legal.id, legal.data()))});
+          legals.add(SystemLegal.fromJson(docId: legal.id, legal.data() as Map<String, dynamic>)));
       return legals;
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code

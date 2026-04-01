@@ -1,22 +1,22 @@
 class User {
-  String userId;
-  String businessId;
-  String fullName;
-  String email;
-  String userRole;
-  String country;
-  String mobileNo;
-  String profilePic;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String modifiedBy;
-  String lastLoginTimestamp;
-  UserPreferances userPreferances;
+  String? userId;
+  String? businessId;
+  String? fullName;
+  String? email;
+  String? userRole;
+  String? country;
+  String? mobileNo;
+  String? profilePic;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? modifiedBy;
+  String? lastLoginTimestamp;
+  UserPreferances? userPreferances;
 
-  String documentId;
+  String? documentId;
 
   User(
-      {this.userId,
+      {required this.userId,
       this.fullName,
       this.email,
       this.userRole,
@@ -60,18 +60,18 @@ class User {
     data['modified_by'] = this.modifiedBy;
     data['last_login_timestamp'] = this.lastLoginTimestamp;
     if (this.userPreferances != null) {
-      data['user_preferances'] = this.userPreferances.toJson();
+      data['user_preferances'] = this.userPreferances!.toJson();
     }
     return data;
   }
 }
 
 class UserPreferances {
-  bool downloadLessons;
-  bool wifiDownloadOnly;
-  bool inAppNotifications;
+  bool? downloadLessons;
+  bool? wifiDownloadOnly;
+  bool? inAppNotifications;
 
-  bool wifiUploadOnly;
+  bool? wifiUploadOnly;
 
   UserPreferances(
       {this.downloadLessons,

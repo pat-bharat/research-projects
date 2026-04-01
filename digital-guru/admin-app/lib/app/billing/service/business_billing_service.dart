@@ -18,15 +18,14 @@ class BusinessBillingService extends BaseService {
 
   static const int InvoiceLimit = 20;
 
-  DocumentSnapshot _lastDocument;
   bool _hasMorePosts = true;
 
   Future getInvoice(String documentId) async {
     try {
       var userData = await _invoiceCollectionReference.doc(documentId).get();
-      return new BusinessInvoice.fromJson(documentId, userData.data());
+      return new BusinessInvoice.fromJson(documentId, userData.data() as Map<String, dynamic>);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -35,7 +34,7 @@ class BusinessBillingService extends BaseService {
       super.populateCommonFields(object: invoice, created: true);
       return await _invoiceCollectionReference.add(invoice.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -58,7 +57,7 @@ class BusinessBillingService extends BaseService {
       if (snapshot.docs.isNotEmpty) {
         var cources = snapshot.docs
             .map((snapshot) =>
-                BusinessInvoice.fromJson(snapshot.id, snapshot.data()))
+                BusinessInvoice.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
             .toList();
         // #12: Broadcase all Invoice
         _invoiceController.add(cources);
@@ -71,7 +70,7 @@ class BusinessBillingService extends BaseService {
       super.populateCommonFields(object: invoice, created: false);
       await _invoiceCollectionReference.doc(invoiceId).update(invoice.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 

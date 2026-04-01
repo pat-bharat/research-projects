@@ -11,10 +11,7 @@ class BlueTheme extends BaseTheme {
   ThemeData data(BuildContext context) {
     return ThemeData(
       primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
       scaffoldBackgroundColor: scaffoldBackgroundColor,
-      accentColor: accentColor,
-      buttonColor: primaryColor,
       hintColor: hintColor,
       canvasColor: backgroundColor,
       fontFamily: 'Open Sans',
@@ -23,10 +20,10 @@ class BlueTheme extends BaseTheme {
         hintStyle: TextStyle(fontSize: hintSize, color: hintColor),
         labelStyle: TextStyle(fontSize: labelSize, color: primaryColor),
       ),
-      textTheme: textTheme(primaryColor, accentColor, backgroundColor),
+      textTheme: textTheme(primaryColor, accentColor!, backgroundColor),
       appBarTheme:
-          AppBarTheme(color: primaryColor, foregroundColor: backgroundColor),
-      bottomAppBarTheme: BottomAppBarTheme(color: primaryColor),
+          AppBarTheme(backgroundColor: primaryColor, foregroundColor: backgroundColor),
+      bottomAppBarTheme: BottomAppBarThemeData(color: primaryColor),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: primaryColor,
           selectedIconTheme: IconThemeData(color: backgroundColor)),
@@ -42,7 +39,7 @@ class BlueTheme extends BaseTheme {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient:
-                LinearGradient(colors: [Colors.green[50], backgroundColor])),
+                LinearGradient(colors: [const Color.fromARGB(255, 70, 198, 80), backgroundColor])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -51,12 +48,12 @@ class BlueTheme extends BaseTheme {
         padding: EdgeInsets.all(8.0),
       ),
       //dialog
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         contentTextStyle: TextStyle(
             fontSize: 15, fontWeight: FontWeight.normal, color: primaryColor),
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
-      ),
+      ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor).copyWith(background: backgroundColor),
     );
   }
 }

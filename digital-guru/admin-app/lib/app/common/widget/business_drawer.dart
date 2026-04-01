@@ -15,7 +15,7 @@ class BusinessDrawer extends StatefulWidget {
 
 class _BusinessDrawerState extends State<BusinessDrawer> {
   final NavigationService _navigationService = locator<NavigationService>();
-  bool isAdmin;
+  late bool isAdmin;
   @override
   void initState() {
     super.initState();
@@ -30,9 +30,9 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              BaseService.currentUser.fullName,
+              BaseService.currentUser?.fullName ?? '',
             ),
-            accountEmail: Text(BaseService.currentUser.email),
+            accountEmail: Text(BaseService.currentUser?.email ?? ''),
             currentAccountPicture: new CircleAvatar(
               backgroundImage: new AssetImage('assets/images/logo.png'),
             ),
@@ -40,7 +40,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           new ListTile(
             title: Text(
               "Profile",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.person,
@@ -53,7 +53,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           new ListTile(
             title: Text(
               "Dashboard",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.person,
@@ -66,7 +66,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           new ListTile(
             title: Text(
               "Upload Status",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.upload_sharp,
@@ -79,7 +79,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           ListTile(
             title: Text(
               "Download Status",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.download_sharp,
@@ -94,7 +94,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
               ? ListTile(
                   title: Text(
                     "Preview as User",
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   leading: Icon(
                     Icons.person,
@@ -102,7 +102,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
                   ),
                   onTap: () {
                     setState(() {
-                      BaseService.currentUser.userRole = UserRole.user;
+                      BaseService.currentUser?.userRole = UserRole.user;
                       BaseService.isPreviewAsUser = true;
                       isAdmin = true;
                       _navigationService.navigateTo(HomeViewRoute);
@@ -112,7 +112,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
               : ListTile(
                   title: Text(
                     "Preview as Admin",
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   leading: Icon(
                     Icons.person,
@@ -121,7 +121,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
                   onTap: () {
                     setState(() {
                       isAdmin = false;
-                      BaseService.currentUser.userRole = UserRole.admin;
+                      BaseService.currentUser?.userRole = UserRole.admin;
                       _navigationService.navigateTo(HomeViewRoute);
                     });
                   },
@@ -129,7 +129,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           ListTile(
             title: Text(
               "Preview as System Admin",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.person,
@@ -137,7 +137,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
             ),
             onTap: () {
               setState(() {
-                BaseService.currentUser.userRole = "System";
+                BaseService.currentUser?.userRole = "System";
                 _navigationService.navigateTo(HomeViewRoute);
               });
             },
@@ -145,7 +145,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           ListTile(
             title: Text(
               "View Invoices",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.pages,
@@ -158,7 +158,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           ListTile(
             title: Text(
               "Manage Legals",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.dock,
@@ -171,7 +171,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           new ListTile(
             title: Text(
               Strings.aboutUs,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.people,
@@ -181,7 +181,7 @@ class _BusinessDrawerState extends State<BusinessDrawer> {
           new ListTile(
             title: Text(
               Strings.logout,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             leading: Icon(
               Icons.logout,

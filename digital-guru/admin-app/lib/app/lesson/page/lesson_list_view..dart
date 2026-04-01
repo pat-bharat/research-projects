@@ -18,17 +18,16 @@ class LessonListView extends StatefulWidget {
   //final List<Course> courses = new List();
   final Module module;
   final Course course;
-  LessonListView({Key key, this.course, this.module}) : super(key: key);
+  LessonListView({Key? key, required this.course, required this.module}) : super(key: key);
 
   @override
   _LessonListViewState createState() => _LessonListViewState();
 }
 
 class _LessonListViewState extends State<LessonListView> {
-  Module module;
-  Course course;
-  LessonListModel model;
-  _LessonListViewState();
+  late Module module;
+  late Course course;
+  late LessonListModel model;
 
   @override
   void initState() {
@@ -78,14 +77,14 @@ class _LessonListViewState extends State<LessonListView> {
                             : Center(
                                 child: Text(
                                   Strings.pleaseAddLessons,
-                                  style: Theme.of(context).textTheme.headline2,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 ),
                               )),
                     _buildBottomActionBar(model)
                   ],
                 ),
               ),
-            )));
+            body: Center(),)));
   }
 
   Row _buildBottomActionBar(LessonListModel model) {
@@ -106,8 +105,8 @@ class _LessonListViewState extends State<LessonListView> {
 
   Card _buildLessonCard(
       BuildContext context, Lesson item, LessonListModel model) {
-    bool youtube = item.videoInfo.youtube;
-    if (youtube != null && !youtube) {
+    bool youtube = item.videoInfo!.youtube ?? false;
+    if (!youtube) {
       return Card(
         //color: Colors.blueGrey,
         key: ValueKey(item.documentId),
@@ -119,14 +118,15 @@ class _LessonListViewState extends State<LessonListView> {
           child: GestureDetector(
             // onTap: () => model.editCourse(index),
             child: LessonItem(
+              key: ValueKey(item.documentId),
               isAdmin: model.isAdmin,
               lesson: item,
               onDeleteItem: () => model.deleteLesson(item),
               onEditItem: () => model.editLesson(item),
-              onPlayVideo: () => model.viewVideo(item.videoInfo),
-              onViewDoc: () => model.viewPdf(item.instructionDoc.docUrl),
+              onPlayVideo: () => model.viewVideo(item.videoInfo!),
+              onViewDoc: () => model.viewPdf(item.instructionDoc!.docUrl!),
               onDownload: () {
-                model.downloadVideo(item.videoInfo);
+                model.downloadVideo(item.videoInfo!);
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(Strings.addedToQueue)));
               },
@@ -146,9 +146,10 @@ class _LessonListViewState extends State<LessonListView> {
           child: GestureDetector(
             // onTap: () => model.editCourse(index),
             child: LessonItem(
+              key: ValueKey(item.documentId),
               isAdmin: model.isAdmin,
               lesson: item,
-              onPlayVideo: () => model.viewVideo(item.videoInfo),
+              onPlayVideo: () => model.viewVideo(item.videoInfo!),
             ),
           ),
         ),

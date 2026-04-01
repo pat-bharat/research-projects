@@ -5,6 +5,7 @@ import 'package:digiguru/app/billing/page/business_invoice_list_view.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/business/page/business_dashboard_view.dart';
 import 'package:digiguru/app/business/page/business_legal_list_view.dart';
+import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/widget/image_viewer.dart';
 import 'package:digiguru/app/common/widget/pdf_viewer.dart';
 import 'package:digiguru/app/startup/page/accept_legal_view.dart';
@@ -39,7 +40,7 @@ import 'package:flutter/material.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:page_transition/page_transition.dart';
 
-Route<dynamic> generateRoute(RouteSettings settings) {
+Route<dynamic> generateRoute({required RouteSettings settings}) {
   switch (settings.name) {
     //login and signup
     case LoginViewRoute:
@@ -58,10 +59,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         viewToShow: ForgotPasswordView(),
       );
     case StartUpViewRoute:
-      AppConfig appConfig = settings.arguments;
+      AppConfig? appConfig = settings.arguments as AppConfig?;
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: StartUpView(appConfig: appConfig),
+        viewToShow: StartUpView(appConfig: appConfig ?? AppConfig(businessId: BusinessService().businessId)),
       );
     case HomeViewRoute:
       return _getPageRoute(
@@ -243,7 +244,7 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   }
 }
 
-PageRoute _getPageRoute({String routeName, Widget viewToShow}) {
+PageRoute _getPageRoute({String? routeName, required Widget viewToShow}) {
   return PageTransition(
     child: viewToShow,
     type: PageTransitionType.fade,

@@ -21,7 +21,7 @@ String formatBytes(int bytes, int decimals) {
 
 String computeDuration(String duration) {
   if (duration != null) {
-    double micro = (double.tryParse(duration));
+    double? micro = (double.tryParse(duration));
     if (micro != null) {
       double sec = micro / 100;
       if (sec > 60) {
@@ -59,10 +59,10 @@ int _parseTime(String duration, String timeUnit) {
   if (timeMatch == null) {
     return 0;
   }
-  final timeString = timeMatch.group(0);
+  final timeString = timeMatch.group(0)!;
   return int.parse(timeString.substring(0, timeString.length - 1));
 }
 
 String getFileName(String path){
- 
+  return path.split('/').last;
 }

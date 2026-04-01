@@ -12,7 +12,7 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:stacked/stacked.dart';
 
 class SystemBusinessManagementView extends StatefulWidget {
-  SystemBusinessManagementView({Key key}) : super(key: key);
+  SystemBusinessManagementView({Key? key}) : super(key: key);
 
   @override
   _SystemBusinessManagementViewState createState() =>
@@ -21,10 +21,10 @@ class SystemBusinessManagementView extends StatefulWidget {
 
 class _SystemBusinessManagementViewState
     extends State<SystemBusinessManagementView> {
-  SystemDashBoardViewModel model;
+  late SystemDashBoardViewModel model;
   Map<String, BusinessProfile> businessProfileMap = {};
   List<Business> businessList = List.empty(growable: true);
-  BusinessProfile currentBusinessProfile;
+  late BusinessProfile currentBusinessProfile;
   Business business = Business();
   @override
   void initState() {
@@ -41,7 +41,9 @@ class _SystemBusinessManagementViewState
     setState(() {
       businessList = _businessList;
       business = businessList.first;
-      getBusinessProfile(business.documentId);
+      if (business.documentId != null) {
+        getBusinessProfile(business.documentId!);
+      }
     });
     return "Success";
   }
@@ -68,6 +70,7 @@ class _SystemBusinessManagementViewState
             padding: viewPadding,
             child: Column(children: [buildBusinessProfileView(context, model)]),
           ),
+        body: Center()
         ),
       ),
     );
@@ -91,16 +94,18 @@ class _SystemBusinessManagementViewState
                       return DropdownMenuItem(
                         child: Text(
                           '${e.name}',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                         value: e,
                       );
                     }).toList(),
                     onChanged: (newBehavior) {
                       setState(
-                        () => {
-                          business = newBehavior,
-                          getBusinessProfile(business.documentId),
+                        () {
+                          business = newBehavior!;
+                          if (business.documentId != null) {
+                            getBusinessProfile(business.documentId!);
+                          }
                         },
                       );
                     },
@@ -132,7 +137,7 @@ class _SystemBusinessManagementViewState
       children: [
         Row(
           children: [
-            Text("General Stats", style: Theme.of(context).textTheme.headline3),
+            Text("General Stats", style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
         Container(
@@ -142,14 +147,14 @@ class _SystemBusinessManagementViewState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Admin Users:" + profile.userCounts.adminUsers.toString()),
+              Text("Admin Users:" + profile.userCounts!.adminUsers.toString()),
               Text(
-                "ConsumerUsers:" + profile.userCounts.consumerUsers.toString(),
+                "ConsumerUsers:" + profile.userCounts!.consumerUsers.toString(),
               ),
-              Text("Trial Users:" + profile.userCounts.trialUsers.toString()),
+              Text("Trial Users:" + profile.userCounts!.trialUsers.toString()),
               Text(
                 "Purchased Users:" +
-                    profile.userCounts.purchasedUsers.toString(),
+                    profile.userCounts!.purchasedUsers.toString(),
               ),
             ],
           ),
@@ -167,7 +172,7 @@ class _SystemBusinessManagementViewState
       children: [
         Row(
           children: [
-            Text("Publications", style: Theme.of(context).textTheme.headline3),
+            Text("Publications", style: Theme.of(context).textTheme.headlineSmall),
           ],
         ),
         Container(
@@ -177,18 +182,18 @@ class _SystemBusinessManagementViewState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Courses:" + profile.publication.courseCounts.toString()),
+              Text("Courses:" + profile.publication!.courseCounts.toString()),
               Text(
                 "Modules (trial):" +
-                    (profile.publication.totalModuleCounts -
-                            profile.publication.purchasedModuleCounts)
+                    (profile.publication!.totalModuleCounts -
+                            profile.publication!.purchasedModuleCounts)
                         .toString(),
               ),
               Text(
                 "Modules (purchased):" +
-                    profile.publication.purchasedModuleCounts.toString(),
+                    profile.publication!.purchasedModuleCounts.toString(),
               ),
-              Text("Lessons:" + profile.publication.lessonCounts.toString()),
+              Text("Lessons:" + profile.publication!.lessonCounts.toString()),
             ],
           ),
         ),
@@ -200,7 +205,7 @@ class _SystemBusinessManagementViewState
     if (profile == null) {
       return Container();
     }
-    BusinessSetting businessSetting = profile.businessSetting;
+    BusinessSetting businessSetting = profile.businessSetting!;
     if (businessSetting == null) {
       return Container();
     }
@@ -211,7 +216,7 @@ class _SystemBusinessManagementViewState
           children: [
             Text(
               "Business Settings",
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
@@ -227,7 +232,7 @@ class _SystemBusinessManagementViewState
                   SpinBox(
                     min: 0,
                     max: 10,
-                    value: businessSetting.maxCourses.toDouble(),
+                    value: businessSetting.maxCourses!.toDouble(),
                     decimals: 0,
                     step: 1,
                     onChanged: (value) {
@@ -249,7 +254,7 @@ class _SystemBusinessManagementViewState
                   SpinBox(
                     min: 0,
                     max: 10,
-                    value: businessSetting.maxModulePerCourse.toDouble(),
+                    value: businessSetting.maxModulePerCourse!.toDouble(),
                     decimals: 0,
                     step: 1,
                     onChanged: (value) {
@@ -271,7 +276,7 @@ class _SystemBusinessManagementViewState
                   SpinBox(
                     min: 0,
                     max: 10,
-                    value: businessSetting.lessonsPerModule.toDouble(),
+                    value: businessSetting.lessonsPerModule!.toDouble(),
                     decimals: 0,
                     step: 1,
                     onChanged: (value) {
@@ -293,7 +298,7 @@ class _SystemBusinessManagementViewState
                   SpinBox(
                     min: 0,
                     max: 60,
-                    value: businessSetting.maxVideoDuration.toDouble(),
+                    value: businessSetting.maxVideoDuration!.toDouble(),
                     decimals: 0,
                     step: 1,
                     onChanged: (value) {

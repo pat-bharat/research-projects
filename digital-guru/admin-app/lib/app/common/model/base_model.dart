@@ -20,7 +20,7 @@ class BaseModel extends ChangeNotifier {
       locator<RemoteConfigService>();
   final NavigationService _navigationService = locator<NavigationService>();
   final DialogService _dialogService = locator<DialogService>();
-  User get currentUser => BaseService.currentUser;
+  User? get currentUser => BaseService.currentUser;
   Business get currentBusiness => BaseService.currentBusiness;
   bool get isAdmin => BaseService.isAdmin();
   bool get isSystemAdmin => BaseService.isSystemAdmin();
@@ -35,10 +35,9 @@ class BaseModel extends ChangeNotifier {
   bool isDisposed = false;
 
   final DownloadService _downloadService = locator<DownloadService>();
-  AppConfig appConfig;
-  BaseModel({AppConfig appConfig}) {
-    this.appConfig = appConfig;
-  }
+  late AppConfig appConfig;
+  BaseModel();
+
   void setBusy(bool value) {
     _busy = value;
     if (!isDisposed) {
@@ -113,6 +112,6 @@ class BaseModel extends ChangeNotifier {
   Future<bool> confirmDeleteVideo(String fileName) async {
     DialogResponse resp = await _dialogService.showConfirmationDialog(
         title: "Are you sure?", description: "Want to delete " + fileName);
-    return resp.confirmed;
+    return resp.confirmed ?? false;
   }
 }

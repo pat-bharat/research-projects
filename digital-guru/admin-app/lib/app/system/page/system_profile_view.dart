@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class SystemProfileView extends StatefulWidget {
-  SystemProfileView({Key key}) : super(key: key);
+  SystemProfileView({Key? key}) : super(key: key);
   @override
   _SystemProfileViewState createState() => _SystemProfileViewState();
 }
 
 class _SystemProfileViewState extends State<SystemProfileView> {
-  SystemDashBoardViewModel model;
-  SystemProfile _systemProfile;
+ late SystemDashBoardViewModel model;
+  late SystemProfile _systemProfile;
   List<SystemLegal> businessLegalList = List.empty(growable: true);
   List<SystemLegal> cosumerLegalList = List.empty(growable: true);
   @override
@@ -30,7 +30,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
   }
 
   Future getSystemProfile() async {
-    SystemProfile prof;
+    late SystemProfile prof;
     await model.getSystemProfile().then((value) => {prof = value});
     setState(() {
       _systemProfile = prof;
@@ -72,16 +72,16 @@ class _SystemProfileViewState extends State<SystemProfileView> {
                                 decoration: boxDecoration(context),
                                 child: Column(children: [
                                   Text(
-                                    _systemProfile.name,
+                                    _systemProfile.name ?? '',
                                     style:
-                                        Theme.of(context).textTheme.headline2,
+                                        Theme.of(context).textTheme.headlineMedium,
                                   ),
                                   Text(
                                     _systemProfile.csPhone.toString() +
                                         '  ' +
-                                        _systemProfile.csEmail,
+                                        (_systemProfile.csEmail ?? ''),
                                     style:
-                                        Theme.of(context).textTheme.headline2,
+                                        Theme.of(context).textTheme.headlineMedium,
                                   ),
                                 ]),
                               ),
@@ -94,7 +94,8 @@ class _SystemProfileViewState extends State<SystemProfileView> {
                           ),
                         ),
                       )
-                    : Container())));
+                    : Container(),
+                    body: Center(),)));
   }
 
   buildSystemLegals(BuildContext context, SystemDashBoardViewModel model) {
@@ -108,7 +109,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
               height: 50,
               width: 50,
               mediaLink: legal.pdfDoc,
-              onView: () => {model.viewPdf(legal.pdfDoc)},
+              onView: () => {model.viewPdf(legal.pdfDoc!)},
               mediaType: MediaTypes.DOCUMENT,
               isEditing: true,
               onTap: () {
@@ -125,7 +126,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
               height: 50,
               width: 50,
               mediaLink: legal.pdfDoc,
-              onView: () => {model.viewPdf(legal.pdfDoc)},
+              onView: () => {model.viewPdf(legal.pdfDoc!)},
               mediaType: MediaTypes.DOCUMENT,
               isEditing: true,
               onTap: () {
@@ -140,14 +141,14 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         Row(children: [
           Text(
             "System Legals",
-            style: Theme.of(context).textTheme.headline2,
+            style: Theme.of(context).textTheme.headlineMedium,
           )
         ]),
         Row(children: [
           horizontalSpaceMedium,
           Text(
             "Business Legals",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           )
         ]),
         commonContainer(
@@ -160,14 +161,14 @@ class _SystemProfileViewState extends State<SystemProfileView> {
           horizontalSpaceMedium,
           Text(
             "Consumer Legals",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           )
         ]),
         commonContainer(
             context,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: bLegals,
+              children: cLegals,
             )),
       ],
     );
@@ -180,7 +181,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         Row(children: [
           Text(
             "General Stats",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ]),
         commonContainer(
@@ -190,18 +191,18 @@ class _SystemProfileViewState extends State<SystemProfileView> {
               children: [
                 Text(
                   "Total Businesses:" +
-                      _systemProfile.userCounts.adminUsers.toString(),
+                      (_systemProfile.businessId != null ? 1 : 0).toString(),
                 ),
                 Text(
                   "Admin Users:" +
-                      _systemProfile.userCounts.adminUsers.toString(),
+                      (_systemProfile.userCounts?.adminUsers ?? 0).toString(),
                 ),
                 Text("ConsumerUsers:" +
-                    _systemProfile.userCounts.consumerUsers.toString()),
+                    (_systemProfile.userCounts?.consumerUsers ?? 0).toString()),
                 Text("Trial Users:" +
-                    _systemProfile.userCounts.trialUsers.toString()),
+                    (_systemProfile.userCounts?.trialUsers ?? 0).toString()),
                 Text("Purchased Users:" +
-                    _systemProfile.userCounts.purchasedUsers.toString()),
+                    (_systemProfile.userCounts?.purchasedUsers ?? 0).toString()),
               ],
             ))
       ],
@@ -215,7 +216,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         Row(children: [
           Text(
             "Publications",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ]),
         commonContainer(
@@ -225,22 +226,22 @@ class _SystemProfileViewState extends State<SystemProfileView> {
               children: [
                 Text(
                   "Courses:" +
-                      _systemProfile.publication.courseCounts.toString(),
+                      (_systemProfile.publication?.courseCounts ?? 0).toString(),
                 ),
                 Text(
                   "Modules (trial):" +
-                      (_systemProfile.publication.totalModuleCounts -
-                              _systemProfile.publication.purchasedModuleCounts)
+                      ((_systemProfile.publication?.totalModuleCounts ?? 0) -
+                              (_systemProfile.publication?.purchasedModuleCounts ?? 0))
                           .toString(),
                 ),
                 Text(
                   "Modules (purchased):" +
-                      _systemProfile.publication.purchasedModuleCounts
+                      (_systemProfile.publication?.purchasedModuleCounts ?? 0)
                           .toString(),
                 ),
                 Text(
                   "Lessons:" +
-                      _systemProfile.publication.lessonCounts.toString(),
+                      (_systemProfile.publication?.lessonCounts ?? 0).toString(),
                 ),
               ],
             ))
@@ -255,7 +256,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         Row(children: [
           Text(
             "Financial",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
         ]),
         commonContainer(
@@ -277,7 +278,7 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         Row(children: [
           Text(
             "Branding & Theming",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           IconButton(
             icon: Icon(Icons.edit),

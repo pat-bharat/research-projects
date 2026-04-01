@@ -8,11 +8,11 @@ class Video {
   final String duration;
 
   Video(
-      {this.id,
-      this.title,
-      this.thumbnailUrl,
-      this.channelTitle,
-      this.duration});
+      {required this.id,
+      required this.title,
+      required this.thumbnailUrl,
+      required this.channelTitle,
+      required this.duration});
 
   factory Video.fromMap(Map<String, dynamic> item, int index) {
     return Video(

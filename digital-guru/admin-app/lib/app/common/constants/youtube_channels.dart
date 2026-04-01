@@ -24,6 +24,7 @@ var chandradeep = YoutubeCourseInfo(
     'PLrfRy6WDKwmwSM16CiSDzRfpgNE4auF-Y',
     'PLrfRy6WDKwmxZFBdq_4iEQJzorHn2hbr3'
   ],
+  nameIndex: 0,
 );
 var easyFluteSchool = YoutubeCourseInfo(
   businessId: "oAq9WHcJ5DdTmwJZfjaq",
@@ -55,4 +56,5 @@ var mayurChaudhari = YoutubeCourseInfo(
   language: "Hindi",
   maxVideoCount: 50,
   playlists: ['PLv5fJgaFYXwyLmIeVHknd_6RvIu8YTQAq'],
+  nameIndex: 0,
 );

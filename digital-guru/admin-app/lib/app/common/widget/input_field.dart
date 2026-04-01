@@ -11,24 +11,24 @@ class InputField extends StatefulWidget {
   final bool password;
   final bool isReadOnly;
   final String placeholder;
-  final String validationMessage;
-  final Function enterPressed;
+  final String? validationMessage;
+  final Function()? enterPressed;
   final bool smallVersion;
-  final FocusNode fieldFocusNode;
-  final FocusNode nextFocusNode;
+  final FocusNode? fieldFocusNode;
+  final FocusNode? nextFocusNode;
   final TextInputAction textInputAction;
-  final String additionalNote;
-  final Function(String) onChanged;
-  final TextInputFormatter formatter;
-  final String label;
-  final int maxLines;
-  final int maxLength;
-  final Function validator;
-  final String tooltip;
+  final String? additionalNote;
+  final Function(String)? onChanged;
+  final TextInputFormatter? formatter;
+  final String? label;
+  final int? maxLines;
+  final int? maxLength;
+  final FormFieldValidator<String>? validator;
+  final String? tooltip;
 
   InputField({
-    @required this.controller,
-    @required this.placeholder,
+    required this.controller,
+    required this.placeholder,
     this.enterPressed,
     this.fieldFocusNode,
     this.nextFocusNode,
@@ -53,7 +53,7 @@ class InputField extends StatefulWidget {
 }
 
 class _InputFieldState extends State<InputField> {
-  bool isPassword;
+  late bool isPassword;
   //double fieldHeight = 50;
 
   @override
@@ -70,7 +70,7 @@ class _InputFieldState extends State<InputField> {
         // widget.label != null ? Text(widget.label) : verticalSpaceTiny,
         // verticalSpaceTiny,
         Container(
-          height: widget.smallVersion ? 40 : fieldHeight * widget.maxLines,
+          height: widget.smallVersion ? 40 : fieldHeight * (widget.maxLines ?? 1),
           alignment: Alignment.centerLeft,
           //decoration: boxDecoration(context),
           // padding: fieldPadding,
@@ -79,7 +79,7 @@ class _InputFieldState extends State<InputField> {
             children: <Widget>[
               Expanded(
                 child: TextFormField(
-                  style: Theme.of(context).textTheme.bodyText1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                   decoration: InputDecoration(
                       // border: OutlineInputBorder(),
                       labelText: widget.label,
@@ -94,7 +94,7 @@ class _InputFieldState extends State<InputField> {
                               child: Icon(isPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off))
-                          : buildToolTip(context, widget.tooltip)),
+                          : widget.tooltip != null ? buildToolTip(context, widget.tooltip!) : null),
                   maxLines: isPassword ? 1 : widget.maxLines,
                   keyboardType: widget.textInputType,
                   maxLength: widget.maxLength,
@@ -103,16 +103,16 @@ class _InputFieldState extends State<InputField> {
                   textInputAction: widget.textInputAction,
                   onChanged: widget.onChanged,
                   inputFormatters:
-                      widget.formatter != null ? [widget.formatter] : null,
+                      widget.formatter != null ? <TextInputFormatter>[widget.formatter!] : null,
                   onEditingComplete: () {
                     if (widget.enterPressed != null) {
                       FocusScope.of(context).requestFocus(FocusNode());
-                      widget.enterPressed();
+                      widget.enterPressed!();
                     }
                   },
                   onFieldSubmitted: (value) {
                     if (widget.nextFocusNode != null) {
-                      widget.nextFocusNode.requestFocus();
+                      widget.nextFocusNode!.requestFocus();
                     }
                   },
                   obscureText: isPassword,
@@ -125,11 +125,11 @@ class _InputFieldState extends State<InputField> {
         ),
         if (widget.validationMessage != null)
           NoteText(
-            widget.validationMessage,
+            widget.validationMessage!,
             color: Colors.red,
           ),
         if (widget.additionalNote != null) verticalSpace(5),
-        if (widget.additionalNote != null) NoteText(widget.additionalNote),
+        if (widget.additionalNote != null) NoteText(widget.additionalNote!),
         verticalSpaceSmall
       ],
     );

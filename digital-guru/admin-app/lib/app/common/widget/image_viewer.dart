@@ -9,8 +9,8 @@ import 'package:http/http.dart';
 class ImageViewer extends StatefulWidget {
   final String url;
   ImageViewer({
-    Key key,
-    @required this.url,
+    Key? key,
+    required this.url,
   }) : super(key: key);
   @override
   _ImageViewerState createState() => _ImageViewerState();

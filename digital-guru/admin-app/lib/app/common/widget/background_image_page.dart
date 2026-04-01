@@ -6,12 +6,12 @@ class BackgroundImageBox extends StatelessWidget {
   final String url;
   final List<Widget> children;
   final MainAxisAlignment alignment;
-  final List<Color> colors;
+  final List<Color>? colors;
   BackgroundImageBox(
-      {Key key,
-      @required this.url,
-      @required this.children,
-      @required this.alignment,
+      {Key? key,
+      required this.url,
+      required this.children,
+      required this.alignment,
       this.colors});
   @override
   Widget build(BuildContext context) {

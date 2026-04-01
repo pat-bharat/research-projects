@@ -7,9 +7,9 @@ class BusyButton extends StatefulWidget {
   final Function onPressed;
   final bool enabled;
   const BusyButton(
-      {@required this.title,
+      {required this.title,
       this.busy = false,
-      @required this.onPressed,
+      required this.onPressed,
       this.enabled = true});
 
   @override
@@ -20,7 +20,7 @@ class _BusyButtonState extends State<BusyButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onPressed,
+      onTap: widget.enabled ? () => widget.onPressed() : null,
       child: InkWell(
         child: AnimatedContainer(
           height: widget.busy ? 40 : null,
@@ -31,14 +31,14 @@ class _BusyButtonState extends State<BusyButton> {
               horizontal: widget.busy ? 10 : 15, vertical: widget.busy ? 6 : 6),
           decoration: BoxDecoration(
             color: widget.enabled
-                ? Theme.of(context).buttonColor
+                ? Theme.of(context).primaryColor
                 : Colors.grey[300],
             borderRadius: BorderRadius.circular(7),
           ),
           child: !widget.busy
               ? Text(
                   widget.title,
-                  style: Theme.of(context).textTheme.button,
+                  style: Theme.of(context).textTheme.labelLarge,
                 )
               : CircularProgressIndicator(
                   strokeWidth: 2,

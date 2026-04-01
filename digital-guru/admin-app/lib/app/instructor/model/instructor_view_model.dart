@@ -19,18 +19,18 @@ class InstructorViewModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  Instructor _edittingInstructor;
+  Instructor? _edittingInstructor;
 
   bool get isEditting => _edittingInstructor != null;
-  Business _business;
-  Business get business => _business;
+  Business? _business;
+  Business? get business => _business;
 
   final MediaSelector _mediaSelector = locator<MediaSelector>();
 
   InstructorViewModel();
 
-  File _profilePicFile;
-  File get profilePicFile => _profilePicFile;
+  File? _profilePicFile;
+  File? get profilePicFile => _profilePicFile;
 
   Future selectProfilePicture() async {
     var tempdoc = await _mediaSelector.selectImage();
@@ -46,22 +46,22 @@ class InstructorViewModel extends BaseModel {
   }
 
   Future save(
-      {@required String fullName,
-      @required String email,
-      @required mobileNumber,
-      @required country,
-      String url,
+      {required String fullName,
+      required String email,
+      required mobileNumber,
+      required country,
+      String? url,
       introduction,
       profilePicture}) async {
     setBusy(true);
 
     Instructor course = Instructor(
-        businessId: currentBusiness.documentId,
+        businessId: currentBusiness.documentId ?? '',
         introduction: introduction,
         fullName: fullName,
         mobileNumber: mobileNumber,
         country: country,
-        url: url,
+        url: url ?? '',
         email: email,
         profilePic: profilePicture);
     var result;
@@ -70,25 +70,27 @@ class InstructorViewModel extends BaseModel {
       course.documentId = result.userId;
       //await _analyticsService.logPostCreated(hasImage: _logoImage != null);
     } else {
-      course.documentId = _edittingInstructor.documentId;
-      await _instructorService.updateInstructor(
-          _edittingInstructor.documentId, course);
+      if (_edittingInstructor != null) {
+        course.documentId = _edittingInstructor!.documentId;
+        await _instructorService.updateInstructor(
+            _edittingInstructor!.documentId!, course);
+      }
     }
     CloudStorageResult profilePicResult;
 
     if (_profilePicFile != null) {
       profilePicResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _profilePicFile,
-        title: super.currentBusiness.documentId +
+        fileToUpload: _profilePicFile!,
+        title: super.currentBusiness.documentId! +
             "/" +
             "instructors" +
             "/" +
-            p.basename(_profilePicFile.path),
+            p.basename(_profilePicFile!.path),
       );
 
       if (_profilePicFile != null) {
         course.profilePic = profilePicResult.mediaUrl;
-        _instructorService.updateInstructor(course.documentId, course);
+        _instructorService.updateInstructor(course.documentId!, course);
       }
     }
 

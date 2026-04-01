@@ -1,26 +1,26 @@
 import 'package:digiguru/app/video/model/video_info.dart';
 
 class Course {
-  String businessId;
-  String title;
-  String description;
-  String instructorId;
-  String instructorName;
-  String instructorEmail;
-  String instructorPhone;
-  bool deleted;
-  bool published;
-  int displayOrder;
-  int lessonCount;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  CourseBackground background;
-  CourseDetailDoc courseDetailDoc;
-  VideoInfo courseVideo;
-  String documentId;
-  String language;
+  String? businessId;
+  String? title;
+  String? description;
+  String? instructorId;
+  String? instructorName;
+  String? instructorEmail;
+  String? instructorPhone;
+  bool? deleted;
+  bool? published;
+  int? displayOrder;
+  int? lessonCount;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  CourseBackground? background;
+  CourseDetailDoc? courseDetailDoc;
+  VideoInfo? courseVideo;
+  String? documentId;
+  String? language;
   bool youtube;
   Course(
       {this.businessId,
@@ -44,7 +44,7 @@ class Course {
       this.language,
       this.youtube = false});
 
-  Course.fromJson(Map<String, dynamic> json, String docId) {
+  Course.fromJson(Map<String, dynamic> json, String docId) : youtube = json['youtube'] ?? false {
     this.documentId = docId;
     businessId = json['business_id'];
     title = json['title'];
@@ -58,7 +58,6 @@ class Course {
     published = json['published'];
     displayOrder = json['display_order'];
     lessonCount = json['lesson_count'];
-    youtube = json['youtube'];
     createdTimestamp = json['created_timestamp'];
     updatedTimestamp = json['updated_timestamp'];
     deletedTimestamp = json['deleted_timestamp'];
@@ -106,22 +105,22 @@ class Course {
     }
 
     if (this.background != null) {
-      data['course_background'] = this.background.toJson();
+      data['course_background'] = this.background?.toJson();
     }
     if (this.courseDetailDoc != null) {
-      data['course_detail_doc'] = this.courseDetailDoc.toJson();
+      data['course_detail_doc'] = this.courseDetailDoc?.toJson();
     }
     if (this.courseVideo != null) {
-      data['course_video'] = this.courseVideo.toJson();
+      data['course_video'] = this.courseVideo?.toJson();
     }
     return data;
   }
 }
 
 class CourseBackground {
-  String title;
-  String imageUrl;
-  String imageSize;
+  String? title;
+  String? imageUrl;
+  String? imageSize;
 
   CourseBackground({this.title, this.imageUrl, this.imageSize});
 
@@ -141,9 +140,9 @@ class CourseBackground {
 }
 
 class CourseDetailDoc {
-  String title;
-  String docUrl;
-  String docSize;
+  String? title;
+  String? docUrl;
+  String? docSize;
 
   CourseDetailDoc({this.title, this.docUrl, this.docSize});
 

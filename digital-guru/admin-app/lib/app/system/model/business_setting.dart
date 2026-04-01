@@ -1,14 +1,14 @@
 class BusinessSetting {
-  String businessId;
-  int maxCourses;
-  int maxModulePerCourse;
-  int maxVideoDuration;
-  int lessonsPerModule;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  String documetnId;
+  String? businessId;
+  int? maxCourses;
+  int? maxModulePerCourse;
+  int? maxVideoDuration;
+  int? lessonsPerModule;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  String? documentId;
   BusinessSetting(
       {this.businessId,
       this.maxCourses = 3,
@@ -21,7 +21,7 @@ class BusinessSetting {
       this.modifiedBy});
 
   BusinessSetting.fromJson(String docId, Map<String, dynamic> json) {
-    this.documetnId = docId;
+    this.documentId = docId;
     businessId = json['business_id'];
     maxCourses = json['max_courses'];
     maxModulePerCourse = json['max_module_per_course'];

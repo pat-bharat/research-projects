@@ -6,7 +6,7 @@ import 'package:digiguru/app/common/service/dialog_service.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
-  DialogManager({Key key, this.child}) : super(key: key);
+  DialogManager({Key? key, required this.child}) : super(key: key);
 
   _DialogManagerState createState() => _DialogManagerState();
 }

@@ -92,7 +92,7 @@ class AuthenticationService extends BaseService {
       _updateUserCount(businessId, BaseService.isAdmin());
       return authResult.user != null;
     } catch (e) {
-      return handleException(e);
+      return handleException(e is Exception ? e : Exception(e.toString()));
     }
   }
 
@@ -140,10 +140,12 @@ class AuthenticationService extends BaseService {
       BaseService.currentUser = _cUser;
       BaseService.currentFirebaseUser = user;
       //updateUserCount
-      _updateUserCount(businessId, BaseService.isAdmin());
+      if (businessId != null) {
+        _updateUserCount(businessId, BaseService.isAdmin());
+      }
       return true;
     } catch (e) {
-      return handleException(e);
+      return handleException(e is Exception ? e : Exception(e.toString()));
     }
   }
 
@@ -214,7 +216,7 @@ class AuthenticationService extends BaseService {
           await _businessService.getBusinessByEmail(user.email!);
     } else if (BaseService.currentUser.userRole == UserRole.user) {
       BaseService.currentBusiness = Business();
-      BaseService.currentBusiness.documentId = businessId;
+      BaseService.currentBusiness.documentId = businessId!;
     }
     //TODo analytics
     }
@@ -223,9 +225,9 @@ class AuthenticationService extends BaseService {
     BusinessProfile profile =
         await _businessService.getBusinessProfile(businessId);
     if (isAdmin) {
-      profile.userCounts.adminUsers = profile.userCounts.adminUsers + 1;
+      profile.userCounts!.adminUsers = (profile.userCounts?.adminUsers ?? 0) + 1;
     } else {
-      profile.userCounts.consumerUsers = profile.userCounts.consumerUsers + 1;
+      profile.userCounts!.consumerUsers = (profile.userCounts?.consumerUsers ?? 0) + 1;
     }
 
     DocumentReference bpRef =
@@ -237,16 +239,16 @@ class AuthenticationService extends BaseService {
     try {
       await _firebaseAuth.signOut();
     } catch (e) {
-      return handleException(e);
+      return handleException(e is Exception ? e : Exception(e.toString()));
     }
   }
 
-  Future sendPasswordEmail({@required String email}) async {
+  Future sendPasswordEmail({required String email}) async {
     if (email != null) {
       try {
         _firebaseAuth.sendPasswordResetEmail(email: email);
       } catch (e) {
-        return handleException(e);
+        return handleException(e is Exception ? e : Exception(e.toString()));
       }
     }
   }

@@ -1,14 +1,14 @@
 class VideoInfo {
-  String title;
-  String videoUrl;
-  String thumbUrl;
-  String videoSize;
-  bool finishedPrcessing;
-  bool uploadUrl;
-  String rawVideoPath;
-  bool uploadComplete;
-  String duration;
-  bool youtube;
+  String? title;
+  String? videoUrl;
+  String? thumbUrl;
+  String? videoSize;
+  bool? finishedPrcessing;
+  bool? uploadUrl;
+  String? rawVideoPath;
+  bool? uploadComplete;
+  String? duration;
+  bool? youtube;
 
   VideoInfo(
       {this.title,

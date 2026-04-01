@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class SystemLegalView extends StatefulWidget {
-  SystemLegalView({Key key}) : super(key: key);
+  SystemLegalView({Key? key}) : super(key: key);
   @override
   _SystemLegalViewState createState() => _SystemLegalViewState();
 }
@@ -16,7 +16,7 @@ class _SystemLegalViewState extends State<SystemLegalView> {
   List<SystemLegal> businessLegalList = List.empty(growable: true);
   List<SystemLegal> cosumerLegalList = List.empty(growable: true);
 
-  SystemDashBoardViewModel model;
+  late SystemDashBoardViewModel model;
   void initState() {
     super.initState();
     model = SystemDashBoardViewModel();

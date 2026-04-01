@@ -23,9 +23,9 @@ class _UserDrawerState extends State<UserDrawer> {
         children: <Widget>[
           UserAccountsDrawerHeader(
             accountName: Text(
-              BaseService.currentUser.fullName,
+              BaseService.currentUser?.fullName ?? '',
             ),
-            accountEmail: Text(BaseService.currentUser.email),
+            accountEmail: Text(BaseService.currentUser?.email ?? ''),
             currentAccountPicture: new CircleAvatar(
               backgroundImage:
                   new AssetImage('assets/images/blank_profile.png'),
@@ -34,7 +34,7 @@ class _UserDrawerState extends State<UserDrawer> {
           new ListTile(
             title: Text(
               "Profile",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.person,
@@ -47,7 +47,7 @@ class _UserDrawerState extends State<UserDrawer> {
           ListTile(
             title: Text(
               "Download Status",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.download_sharp,
@@ -61,7 +61,7 @@ class _UserDrawerState extends State<UserDrawer> {
           ListTile(
             title: Text(
               "Preview as Admin",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.person,
@@ -69,7 +69,7 @@ class _UserDrawerState extends State<UserDrawer> {
             ),
             onTap: () {
               setState(() {
-                BaseService.currentUser.userRole = "Admin";
+                BaseService.currentUser?.userRole = "Admin";
                 _navigationService.navigateTo(HomeViewRoute);
               });
             },
@@ -77,7 +77,7 @@ class _UserDrawerState extends State<UserDrawer> {
           ListTile(
             title: Text(
               "Trial Lessons",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.playlist_add_check_sharp,
@@ -92,7 +92,7 @@ class _UserDrawerState extends State<UserDrawer> {
           ListTile(
             title: Text(
               "My Packages",
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.playlist_add_check_sharp,
@@ -107,7 +107,7 @@ class _UserDrawerState extends State<UserDrawer> {
           new ListTile(
             title: Text(
               Strings.settings,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.settings,
@@ -117,7 +117,7 @@ class _UserDrawerState extends State<UserDrawer> {
           new ListTile(
             title: Text(
               Strings.aboutUs,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.people,
@@ -127,7 +127,7 @@ class _UserDrawerState extends State<UserDrawer> {
           new ListTile(
             title: Text(
               Strings.logout,
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             leading: Icon(
               Icons.logout,

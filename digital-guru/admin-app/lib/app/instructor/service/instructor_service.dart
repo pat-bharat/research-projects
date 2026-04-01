@@ -17,15 +17,15 @@ class InstructorService extends BaseService {
 
   static const int instructorsLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+  DocumentSnapshot? _lastDocument;
   bool _hasMorePosts = true;
 
   Future getInstructor(String documentId) async {
     try {
       var userData = await _instructorCollectionReference.doc(documentId).get();
-      return new Instructor.fromJson(documentId, userData.data());
+      return new Instructor.fromJson(docId: documentId, json: userData.data() as Map<String, dynamic>);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -36,12 +36,12 @@ class InstructorService extends BaseService {
           .get();
       if (userData.docs.isNotEmpty) {
         return new Instructor.fromJson(
-            userData.docs.first.id, userData.docs.first.data());
+            docId: userData.docs.first.id, json: userData.docs.first.data() as Map<String, dynamic>);
       } else {
         return null;
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -52,7 +52,7 @@ class InstructorService extends BaseService {
           await _instructorCollectionReference.add(instructor.toJson());
       return ref.get();
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -63,12 +63,12 @@ class InstructorService extends BaseService {
       if (instructorDocumentSnapshot.docs.isNotEmpty) {
         return instructorDocumentSnapshot.docs
             .map(
-                (snapshot) => Instructor.fromJson(snapshot.id, snapshot.data()))
+                (snapshot) => Instructor.fromJson(docId: snapshot.id, json: snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 
@@ -90,7 +90,7 @@ class InstructorService extends BaseService {
     // #5: If we have a document start the query after it
     if (_lastDocument != null) {
       pageInstructoresQuery =
-          pageInstructoresQuery.startAfterDocument(_lastDocument);
+          pageInstructoresQuery.startAfterDocument(_lastDocument!);
     }
 
     if (!_hasMorePosts) return;
@@ -102,7 +102,7 @@ class InstructorService extends BaseService {
       if (snapshot.docs.isNotEmpty) {
         var cources = snapshot.docs
             .map(
-                (snapshot) => Instructor.fromJson(snapshot.id, snapshot.data()))
+                (snapshot) => Instructor.fromJson(docId: snapshot.id, json: snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
 
@@ -149,7 +149,7 @@ class InstructorService extends BaseService {
           .doc(instructorId)
           .update(instructor.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as PlatformException);
     }
   }
 

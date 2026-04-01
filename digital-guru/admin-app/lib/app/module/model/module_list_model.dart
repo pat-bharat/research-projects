@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/course/model/course.dart';
@@ -12,7 +13,7 @@ import 'package:digiguru/app/purchase/service/purchase_service.dart';
 import 'package:digiguru/app/user/model/user_module.dart';
 import 'package:digiguru/app/user/service/user_module_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+
 import 'package:intl/intl.dart';
 
 class ModuleListModel extends BaseModel {
@@ -26,18 +27,18 @@ class ModuleListModel extends BaseModel {
 
   List<Module> _modules = List<Module>.empty(growable: true);
 
-  Course _course;
+  late Course _course;
   Course get course => _course;
   List<Module> get modules => _modules;
 
-  ModuleListModel({@required Course course}) {
+  ModuleListModel({required Course course}) {
     this._course = course;
   }
   void listenToModules() {
     setBusy(true);
-    _moduleService.listenToModulesRealTime(_course.documentId).listen((module) {
+    _moduleService.listenToModulesRealTime(_course.documentId!).listen((module) {
       List<Module> modules = module;
-      if (modules != null && modules.length > 0) {
+      if (modules.length > 0) {
         _modules = modules;
         // notifyListeners();
       }
@@ -45,8 +46,7 @@ class ModuleListModel extends BaseModel {
     });
   }
 
-  Future deleteModule({@required Module module}) async {
-    assert(module != null);
+  Future deleteModule({required Module module}) async {
     var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
       description: 'Do you really want to delete the post?',
@@ -54,20 +54,20 @@ class ModuleListModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       // var moduleToDelete = _modules[index];
       setBusy(true);
       await _moduleService.deleteModule(module.documentId);
       // Delete the image after the module is deleted
-      if (module.moduleBackground.imageUrl != null) {
-        await _cloudStorageService.deleteFile(module.moduleBackground.imageUrl);
+      if (module.moduleBackground!.imageUrl != null) {
+        await _cloudStorageService.deleteFile(module.moduleBackground!.imageUrl!);
       }
-      if (module.moduleDetailDoc.docUrl != null) {
-        await _cloudStorageService.deleteFile(module.moduleDetailDoc.docUrl);
+      if (module.moduleDetailDoc!.docUrl != null && module.moduleDetailDoc!.docUrl!.isNotEmpty) {
+        await _cloudStorageService.deleteFile(module.moduleDetailDoc!.docUrl!);
       }
 
-      if (module.moduleVideo.videoUrl != null) {
-        await _cloudStorageService.deleteFile(module.moduleVideo.videoUrl);
+      if (module.moduleVideo!.videoUrl != null && module.moduleVideo!.videoUrl!.isNotEmpty) {
+        await _cloudStorageService.deleteFile(module.moduleVideo!.videoUrl!);
       }
 
       setBusy(false);
@@ -89,7 +89,7 @@ class ModuleListModel extends BaseModel {
         arguments: CourseModuleArgs(course: course, module: module));
   }
 
-  void requestMoreData() => _moduleService.requestMoreData(_course.documentId);
+  void requestMoreData() => _moduleService.requestMoreData(_course.documentId!);
 
   void saveModuleDisplayOrder(List<Module> items) async {
     //TODO update in batch
@@ -104,17 +104,16 @@ class ModuleListModel extends BaseModel {
 
   purchaseModule(Module module) async {
     UserModule userModule = UserModule(
-      courseId: course.documentId,
+      courseId: course.documentId!,
       moduleId: module.documentId,
-      courseName: course.title,
-      instructorName: course.instructorName,
+      courseName: course.title!,
+      instructorName: course.instructorName!,
       moduleName: module.name,
       moduleTitle: module.title,
-      userId: currentUser.documentId,
-      purchaseAmount: module.discountPercentage > 0
-          ? module.purchaseAmount =
-              (module.discountPercentage * module.purchaseAmount / 100)
-          : module.purchaseAmount,
+      userId: currentUser!.documentId,
+      purchaseAmount: module.discountPercentage! > 0
+          ? (module.discountPercentage! * module.purchaseAmount! / 100)
+          : module.purchaseAmount!,
       purchaseDate: DateTime.now().toIso8601String(),
     );
     if (!_purchaseService.simulated) {
@@ -129,17 +128,17 @@ class ModuleListModel extends BaseModel {
           title: "Success!",
           buttonTitle: "Conratulations!",
           description: "Module \n" +
-              module.name +
+              module.name! +
               '\n' +
-              module.title +
+              module.title! +
               "\nSuccessfully purchased");
     } else {
       _dialogService.showDialog(
           title: "Failed!",
           buttonTitle: "Try Again!",
-          description: module.name +
+          description: module.name! +
               '\n' +
-              module.title +
+              module.title! +
               "\nFailed!! \n\n" +
               result.toString());
     }
@@ -208,7 +207,7 @@ productId = json['productId'] as String,
     List<UserModule> userModules =
         await _userModuleService.getAllUserModules(userId);
     userModules.forEach((um) {
-      modules.add(um.moduleId);
+      modules.add(um.moduleId!);
     });
     notifyListeners();
     setBusy(false);
@@ -217,8 +216,8 @@ productId = json['productId'] as String,
 }
 
 class CourseModuleArgs {
-  Module module;
+  Module? module;
   Course course;
 
-  CourseModuleArgs({@required this.course, this.module});
+  CourseModuleArgs({required this.course, this.module});
 }

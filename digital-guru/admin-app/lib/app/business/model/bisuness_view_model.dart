@@ -26,12 +26,12 @@ class BusinessViewModel extends BaseModel {
   final MediaSelector _imageSelector = locator<MediaSelector>();
   final SystemService _systemService = locator<SystemService>();
 
-  File _logoImage;
-  File get logoImage => _logoImage;
-  File _bannerImage;
-  File get bannerImage => _bannerImage;
+  File? _logoImage;
+  File? get logoImage => _logoImage;
+  File? _bannerImage;
+  File? get bannerImage => _bannerImage;
 
-  Business _edittingBusiness;
+  late Business _edittingBusiness;
 
   bool get _editting => _edittingBusiness != null;
 
@@ -60,29 +60,29 @@ class BusinessViewModel extends BaseModel {
   }
 
   Future save({
-    @required String name,
-    String punchLine,
-    String description,
-    @required String email,
-    @required String phone,
-    @required String country,
-    String contactEmail,
-    String logoUrl,
-    String url,
+    required String name,
+    String? punchLine,
+    String? description,
+    required String email,
+    required String phone,
+    required String country,
+    String? contactEmail,
+    String? logoUrl,
+    String? url,
   }) async {
     setBusy(true);
 
-    CloudStorageResult logoResult, bannerResult;
+    CloudStorageResult? logoResult, bannerResult;
 
     var result;
 
     Business business = Business(
         name: name,
-        punchLine: punchLine,
+        punchLine: punchLine ?? '',
         country: country,
         emailId: email,
-        contactEmail: contactEmail,
-        url: url,
+        contactEmail: contactEmail ?? '',
+        url: url ?? '',
         mobilePhone: phone);
     // new business
     if (!_editting) {
@@ -100,7 +100,7 @@ class BusinessViewModel extends BaseModel {
     } else {
       business.documentId = _edittingBusiness.documentId;
       await _businessService.updateBusiness(
-          _edittingBusiness.documentId, business);
+          _edittingBusiness.documentId!, business);
       BaseService.currentBusiness = business;
     }
 
@@ -108,19 +108,19 @@ class BusinessViewModel extends BaseModel {
 
     if (_logoImage != null) {
       logoResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _logoImage,
+        fileToUpload: _logoImage!,
         title: (_editting ? _edittingBusiness.documentId : result.userId) +
             "/" +
-            p.basename(_logoImage.path),
+            p.basename(_logoImage!.path),
       );
       business.logoLink = logoResult.mediaUrl;
     }
     if (_bannerImage != null) {
       bannerResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _bannerImage,
+        fileToUpload: _bannerImage!,
         title: (_editting ? _edittingBusiness.documentId : result.userId) +
             "/" +
-            p.basename(_bannerImage.path),
+            p.basename(_bannerImage!.path),
       );
       business.bannerLink = bannerResult.mediaUrl;
     }

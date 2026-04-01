@@ -14,8 +14,9 @@ class DataLoaderService extends BaseService {
       locator<BusinessBillingService>();
   loadBusinessInvoice() async {
     var binvoice = BusinessInvoice(
-        businessId: BaseService.currentBusiness.documentId,
+        businessId: BaseService.currentBusiness.documentId!,
         createdTimestamp: DateTime.now().toIso8601String(),
+        updatedTimestamp: DateTime.now().toIso8601String(),
         startDate: DateTime.now(),
         endDate: DateTime.now(),
         dueDate: DateTime.now(),
@@ -24,20 +25,22 @@ class DataLoaderService extends BaseService {
         paidBy: "pat.bharat@gmail.com",
         paidDate: DateTime.now(),
         paidVia: "google Pay",
+        currancyCode: "USD",
+        modifiedBy: "pat.bharat@gmail.com",
         billingItems: [
           BillingItem(
             amount: 30.00,
             itemType: BillingItemType.monthly,
             description: 'Setup Fees',
             quantity: 1,
-            rate: 30.00,
+            rate: 30.00, createdTimestamp: '', updatedTimestamp: '', modifyBy: '',
           ),
           BillingItem(
             amount: 70.00,
             itemType: BillingItemType.setup,
             description: 'User fees',
             quantity: 7,
-            rate: 10.00,
+            rate: 10.00, createdTimestamp: '', updatedTimestamp: '', modifyBy: '',
           ),
         ]);
     await _businessInvoiceService.addInvoice(binvoice);
@@ -48,7 +51,7 @@ class DataLoaderService extends BaseService {
         FirebaseFirestore.instance.collection('lessons');
     _lessonCollectionReference.snapshots().forEach((element) {
       element.docs.forEach((element) {
-        Lesson l = Lesson.fromJson(element.id, element.data());
+        Lesson l = Lesson.fromJson(element.id, element.data() as Map<String, dynamic>);
         l.businessId = bid;
         _lessonCollectionReference.doc(element.id).update(l.toJson());
       });

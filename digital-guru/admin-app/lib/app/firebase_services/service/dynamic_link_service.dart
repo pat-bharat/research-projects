@@ -8,7 +8,7 @@ class DynamicLinkService {
 
   Future handleDynamicLinks() async {
     // Get the initial dynamic link if the app is opened with a dynamic link
-    final PendingDynamicLinkData data =
+    final PendingDynamicLinkData? data =
         await FirebaseDynamicLinks.instance.getInitialLink();
 
     // handle link that has been retrieved
@@ -16,17 +16,17 @@ class DynamicLinkService {
 
     // Register a link callback to fire if the app is opened up from the background
     // using a dynamic link.
-    FirebaseDynamicLinks.instance.onLink(
-        onSuccess: (PendingDynamicLinkData dynamicLink) async {
+    FirebaseDynamicLinks.instance.onLink.listen(
+        (PendingDynamicLinkData dynamicLink) async {
       // handle link that has been retrieved
       _handleDeepLink(dynamicLink);
-    }, onError: (OnLinkErrorException e) async {
-      print('Link Failed: ${e.message}');
+    }, onError: (exception) async {
+      print('Link Failed: $exception');
     });
   }
 
-  void _handleDeepLink(PendingDynamicLinkData data) {
-    final Uri deepLink = data?.link;
+  void _handleDeepLink(PendingDynamicLinkData? data) {
+    final Uri? deepLink = data?.link;
     if (deepLink != null) {
       print('_handleDeepLink | deeplink: $deepLink');
 
@@ -50,7 +50,7 @@ class DynamicLinkService {
       ),
 
       // Other things to add as an example. We don't need it now
-      iosParameters: IosParameters(
+      iosParameters: const IOSParameters(
         bundleId: 'com.example.ios',
         minimumVersion: '1.0.1',
         appStoreId: '123456789',
@@ -60,17 +60,13 @@ class DynamicLinkService {
         medium: 'social',
         source: 'orkut',
       ),
-      itunesConnectAnalyticsParameters: ItunesConnectAnalyticsParameters(
-        providerToken: '123456',
-        campaignToken: 'example-promo',
-      ),
       socialMetaTagParameters: SocialMetaTagParameters(
         title: 'Example of a Dynamic Link',
         description: 'This link works whether app is installed or not!',
       ),
     );
 
-    final Uri dynamicUrl = await parameters.buildUrl();
+    final dynamicUrl = await FirebaseDynamicLinks.instance.buildLink(parameters);
 
     return dynamicUrl.toString();
   }

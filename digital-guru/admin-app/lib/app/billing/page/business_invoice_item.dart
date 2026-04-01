@@ -7,7 +7,7 @@ class BusinessInvoiceItem extends StatelessWidget {
   final Function onView;
   //final bool isAdmin;
 
-  const BusinessInvoiceItem({Key key, this.invoice, this.onView})
+  const BusinessInvoiceItem({Key? key, required this.invoice, required this.onView})
       : super(key: key);
 
   @override

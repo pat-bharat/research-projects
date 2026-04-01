@@ -8,16 +8,16 @@ import 'package:flutter/material.dart';
 
 class SystemLegalItem extends StatefulWidget {
   final SystemLegal systemLegal;
-  final Function onDeleteItem;
-  final Function onEditItem;
+  final Function()? onDeleteItem;
+  final Function()? onEditItem;
   final bool isAdmin;
 
   const SystemLegalItem(
-      {Key key,
-      @required this.systemLegal,
+      {Key? key,
+      required this.systemLegal,
       this.onDeleteItem,
       this.onEditItem,
-      this.isAdmin})
+      this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -25,8 +25,8 @@ class SystemLegalItem extends StatefulWidget {
 }
 
 class _SystemLegalItemState extends State<SystemLegalItem> {
-  SystemLegal _selectedLegal;
-  File pdfFile;
+  late SystemLegal _selectedLegal;
+  late File pdfFile;
   @override
   void initState() {
     super.initState();
@@ -56,7 +56,7 @@ class _SystemLegalItemState extends State<SystemLegalItem> {
             children: [
               Expanded(
                 child: Text(systemLegal.title,
-                    style: Theme.of(context).textTheme.headline2),
+                    style: Theme.of(context).textTheme.headlineMedium),
               ),
             ],
           ),
@@ -64,16 +64,14 @@ class _SystemLegalItemState extends State<SystemLegalItem> {
             Column(children: [
               Text(
                 "Created On:",
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               )
             ]),
             Column(
               children: [
                 Text(
-                  systemLegal.createdTimestamp != null
-                      ? systemLegal.createdTimestamp
-                      : "",
-                  style: Theme.of(context).textTheme.headline4,
+                  systemLegal.createdTimestamp ?? "",
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
             ),
@@ -83,15 +81,13 @@ class _SystemLegalItemState extends State<SystemLegalItem> {
               Column(children: [
                 Text(
                   "Updated On:",
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 )
               ]),
               Column(children: [
                 Text(
-                  systemLegal.updatedTimestamp != null
-                      ? systemLegal.updatedTimestamp
-                      : "",
-                  style: Theme.of(context).textTheme.headline4,
+                  systemLegal.updatedTimestamp ?? "",
+                  style: Theme.of(context).textTheme.headlineSmall,
                 )
               ]),
             ],
@@ -101,13 +97,13 @@ class _SystemLegalItemState extends State<SystemLegalItem> {
               Column(children: [
                 Text(
                   "Modified By:",
-                  style: Theme.of(context).textTheme.headline4,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 )
               ]),
               Column(children: [
                 Text(
-                  systemLegal.modifiedBy != null ? systemLegal.modifiedBy : "",
-                  style: Theme.of(context).textTheme.headline4,
+                  systemLegal.modifiedBy ?? "",
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ]),
             ],

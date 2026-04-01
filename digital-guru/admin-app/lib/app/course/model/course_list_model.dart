@@ -15,17 +15,17 @@ class CourseListModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  List<Course> _courses;
+  late List<Course> _courses;
 
   List<Course> get courses => _courses;
 
   void listenToCourses() {
     setBusy(true);
-    String businessId;
+    String? businessId;
     if (currentBusiness != null) {
-      businessId = currentBusiness.documentId;
+      businessId = currentBusiness!.documentId;
     }
-    _courseService.listenToCourseesRealTime(businessId).listen((coursessData) {
+    _courseService.listenToCourseesRealTime(businessId!).listen((coursessData) {
       List<Course> updatedCourses = coursessData;
       if (updatedCourses != null && updatedCourses.length > 0) {
         _courses = updatedCourses;
@@ -37,30 +37,29 @@ class CourseListModel extends BaseModel {
     
   }
 
-  Future deleteCourse({@required Course course}) async {
-    assert(course != null);
+  Future deleteCourse({required Course course}) async {
     var dialogResponse = await _dialogService.showConfirmationDialog(
       title: 'Are you sure?',
       description:
-          "Do you really want to delete course: " + course.title + " ?",
+          "Do you really want to delete course: " + course.title! + " ?",
       confirmationTitle: 'Yes',
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed == true) {
       //var courseToDelete = _courses[index];
       setBusy(true);
       await _courseService.deleteCourse(course: course);
       // Delete the image after the post is deleted
-      if (course.background.imageUrl != null) {
-        await _cloudStorageService.deleteFile(course.background.imageUrl);
+      if (course.background?.imageUrl != null) {
+        await _cloudStorageService.deleteFile(course.background!.imageUrl!);
       }
-      if (course.courseDetailDoc.docUrl != null) {
-        await _cloudStorageService.deleteFile(course.courseDetailDoc.docUrl);
+      if (course.courseDetailDoc?.docUrl != null) {
+        await _cloudStorageService.deleteFile(course.courseDetailDoc!.docUrl!);
       }
 
-      if (course.courseVideo.videoUrl != null) {
-        await _cloudStorageService.deleteFile(course.courseVideo.videoUrl);
+      if (course.courseVideo?.videoUrl != null) {
+        await _cloudStorageService.deleteFile(course.courseVideo!.videoUrl!);
       }
       notifyListeners();
       setBusy(false);
@@ -84,7 +83,7 @@ class CourseListModel extends BaseModel {
   }
 
   void requestMoreData() => _courseService.requestMoreData(
-      currentBusiness != null ? currentBusiness.documentId : null);
+      currentBusiness.documentId!);
 
   Future saveCoursesDisplayOrder(List<Course> courses) async {
     bool result = false;
@@ -92,14 +91,14 @@ class CourseListModel extends BaseModel {
       int index = courses.indexOf(course);
       if (index != course.displayOrder) {
         course.displayOrder = index;
-        this._courseService.updateCourse(course.documentId, course);
+        this._courseService.updateCourse(course.documentId!, course);
         result = true;
       }
     }
     if (result) {
       await _dialogService.showDialog(
         title: 'Success!',
-        description: 'SUccessfully Updated Courses Order',
+        description: 'Successfully Updated Courses Order',
       );
     } else {
       await _dialogService.showDialog(

@@ -14,7 +14,7 @@ import 'package:stacked/stacked.dart';
 
 class CourseListView extends StatefulWidget {
   //final List<Course> courses = new List();
-  CourseListView({Key key}) : super(key: key);
+  CourseListView({Key? key}) : super(key: key);
 
   @override
   _CourseListViewState createState() => _CourseListViewState();
@@ -31,13 +31,14 @@ class _CourseListViewState extends State<CourseListView> {
     portraitModeOnly();
     return ViewModelBuilder<CourseListModel>.reactive(
       viewModelBuilder: () => CourseListModel(),
-      onModelReady: (model) => model.listenToCourses(),
+      onViewModelReady: (model) => model.listenToCourses(),
       builder: (context, model, child) => SafeArea(
           child: CommonScaffold(
         model: model,
         appTitle: Strings.courseTitle,
         showBottomNav: model.isAdmin,
         bottomNavBarIndex: 1,
+        body: Center(),
         bodyData: Padding(
           padding: listPadding,
           child: Column(
@@ -68,7 +69,7 @@ class _CourseListViewState extends State<CourseListView> {
                           child: !model.busy
                               ? Text(
                                   Strings.addCourse,
-                                  style: Theme.of(context).textTheme.headline2,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 )
                               : Container(),
                         )),
@@ -145,8 +146,8 @@ class _CourseListViewState extends State<CourseListView> {
             onDeleteItem: () => model.deleteCourse(course: item),
             onEditItem: () => model.editCourse(item),
             onEditModules: () => model.editModules(item),
-            onViewDoc: () => model.viewPdf(item.courseDetailDoc.docUrl),
-            onPlayVideo: () => model.viewVideo(item.courseVideo),
+            onViewDoc: item.courseDetailDoc?.docUrl != null ? () => model.viewPdf(item.courseDetailDoc!.docUrl!) : null,
+            onPlayVideo: item.courseVideo != null ? () => model.viewVideo(item.courseVideo!) : null,
           ),
         ),
       ),

@@ -25,20 +25,20 @@ class TrialUserModuleListModel extends BaseModel {
   Future listenToFreeUserModule() async {
     setBusy(true);
     _userModuleService
-        .listenToTrialUserModuleRealTime(currentUser.documentId)
+        .listenToTrialUserModuleRealTime(currentUser!.documentId!)
         .listen((userModules) {
       if (userModules != null) {
         _userModules.addAll(userModules);
 
         notifyListeners();
-        return _userModules;
+      } else {
+        setBusy(false);
       }
-      setBusy(false);
     });
   }
 
   void requestMoreData() =>
-      _userModuleService.requestMoreData(currentBusiness.documentId);
+      _userModuleService.requestMoreData(currentBusiness.documentId!);
 
   goBack() {
     _navigationService.pop();
@@ -61,5 +61,5 @@ class ModuleLessonsArgs {
   Module module;
   Lesson lesson;
 
-  ModuleLessonsArgs({this.module, this.lesson});
+  ModuleLessonsArgs({required this.module, required this.lesson});
 }

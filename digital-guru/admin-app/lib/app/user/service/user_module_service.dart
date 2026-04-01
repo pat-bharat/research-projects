@@ -33,31 +33,34 @@ class UserModuleService extends BaseService {
 
   static const int PostsLimit = 20;
 
-  DocumentSnapshot _lastDocument;
+  late DocumentSnapshot _lastDocument;
   bool _hasMorePosts = true;
 
   Future addUserModule(UserModule userModule) async {
     try {
       //check if it is already purchased?
-      var purchased = await isModuleAlreadyPurchased(userModule.documentId);
+      if (userModule.documentId == null) {
+        return "Invalid module ID";
+      }
+      var purchased = await isModuleAlreadyPurchased(userModule.documentId!);
       if (purchased is bool && !purchased) {
         var result =
             await _userModulesCollectionReference.add(userModule.toJson());
         BusinessProfile bProfile = await _businessService
-            .getBusinessProfile(BaseService.currentBusiness.documentId);
-        bProfile.userCounts.purchasedUsers =
-            bProfile.userCounts.purchasedUsers + 1;
+            .getBusinessProfile(BaseService.currentBusiness.documentId!);
+        bProfile.userCounts?.purchasedUsers =
+            (bProfile.userCounts?.purchasedUsers ?? 0) + 1;
         bProfile.collectedRevenue =
-            bProfile.collectedRevenue + userModule.purchaseAmount;
-        bProfile.publication.purchasedModuleCounts =
-            bProfile.publication.purchasedModuleCounts + 1;
+            ((bProfile.collectedRevenue ?? 0) + (userModule?.purchaseAmount ?? 0));
+        bProfile.publication?.purchasedModuleCounts =
+            (bProfile.publication?.purchasedModuleCounts ?? 0) + 1;
         await _businessService.updateBusinessProfileStats(bProfile);
         return result;
       } else {
         return "Already Purchased!";
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -78,16 +81,16 @@ class UserModuleService extends BaseService {
       });
       return purchased;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
   Future getUserModule(String uid) async {
     try {
       var userData = await _userModulesCollectionReference.doc(uid).get();
-      return UserModule.fromJson(uid, userData.data());
+      return UserModule.fromJson(uid, userData.data() as Map<String, dynamic>);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -166,21 +169,21 @@ Future getFreeUserModules() async {
       lessonList.forEach((l) {
         {
           if (map.containsKey(l.moduleTitle)) {
-            UserModule um = map.remove(l.moduleTitle);
-            um.lessonIds.add(l.documentId);
-            um.lessons.add(l);
-            map.putIfAbsent(l.moduleTitle, () => um);
+            UserModule? um = map.remove(l.moduleTitle);
+            um!.lessonIds!.add(l.documentId!);
+            um.lessons!.add(l);
+            map.putIfAbsent(l.moduleTitle!, () => um);
           } else {
             map.putIfAbsent(
-                l.moduleTitle,
+                l.moduleTitle!,
                 () => UserModule(
-                    userId: BaseService.currentUser.documentId,
+                    userId: BaseService.currentUser?.documentId,
                     courseId: l.courseId,
                     courseName: l.courseTitle,
                     instructorName: l.instructorName,
                     moduleId: l.moduleId,
                     moduleTitle: l.moduleTitle,
-                    lessonIds: [l.documentId],
+                    lessonIds: [l.documentId!],
                     lessons: [l]));
           }
         }
@@ -188,7 +191,7 @@ Future getFreeUserModules() async {
       userModuleList.addAll(map.values);
       _trialUserModuleController.add(userModuleList);
     } catch (e) {
-      handleException(e);
+      handleException(e as Exception);
     }
   }
 
@@ -209,7 +212,7 @@ Future getFreeUserModules() async {
       if (userModuleSnapshot.docs.isNotEmpty) {
         userModuleSnapshot.docs
             .map(
-                (snapshot) => UserModule.fromJson(snapshot.id, snapshot.data()))
+                (snapshot) => UserModule.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.userId != null)
             .toList()
             .forEach((um) {
@@ -238,9 +241,9 @@ Future getFreeUserModules() async {
   Future _populateModuleLessons(UserModule um) async {
     List<Lesson> lessons = List.empty(growable: true);
     await _lessonService
-        .getModuleLessons(um.moduleId)
+        .getModuleLessons(um.moduleId!)
         .then((lsns) => lessons.addAll(lsns));
-    um.lessons.addAll(lessons);
+    um.lessons!.addAll(lessons);
     return "Success";
   }
 
@@ -255,12 +258,12 @@ Future getFreeUserModules() async {
           .get()
           .then((value) => {
                 value.docs.forEach((element) {
-                  modules.add(UserModule.fromJson(element.id, element.data()));
+                  modules.add(UserModule.fromJson(element.id, element.data() as Map<String, dynamic>));
                 })
               });
       return modules;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 }

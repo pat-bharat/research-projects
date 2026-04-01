@@ -1,20 +1,20 @@
 class UserLegal {
-  String businessId;
-  String userId;
-  String title;
-  String legalId;
-  String pdfDoc;
-  String acceptedTimestamp;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  String? businessId;
+  String? userId;
+  String? title;
+  String? legalId;
+  String? pdfDoc;
+  String? acceptedTimestamp;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
-  String documentId;
+  String? documentId;
 
   UserLegal(
-      {this.userId,
-      this.businessId,
+      {required this.userId,
+      required this.businessId,
       this.title,
       this.legalId,
       this.pdfDoc,
@@ -26,7 +26,7 @@ class UserLegal {
 
   UserLegal.fromJson(String docId, Map<String, dynamic> json) {
     this.documentId = docId;
-    businessId = json['user_id'];
+    userId = json['user_id'];
     businessId = json['business_id'];
     title = json['title'];
     legalId = json['legal_id'];

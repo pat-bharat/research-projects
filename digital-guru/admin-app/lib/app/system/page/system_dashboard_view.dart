@@ -14,14 +14,14 @@ import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:stacked/stacked.dart';
 
 class SystemDashBoardView extends StatefulWidget {
-  SystemDashBoardView({Key key}) : super(key: key);
+  SystemDashBoardView({Key? key}) : super(key: key);
 
   @override
   _SystemDashBoardViewState createState() => _SystemDashBoardViewState();
 }
 
 class _SystemDashBoardViewState extends State<SystemDashBoardView> {
-  SystemDashBoardViewModel model;
+  late SystemDashBoardViewModel model;
   Map<String, BusinessProfile> businessProfileMap = {};
   List<Business> businessList = List.empty(growable: true);
   BusinessProfile currentBusinessProfile = BusinessProfile();
@@ -36,7 +36,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SystemDashBoardViewModel>.reactive(
       viewModelBuilder: () => model,
-      onModelReady: (model) {},
+      onViewModelReady: (model) {},
       builder: (context, model, child) => SafeArea(
         child: CommonScaffold(
           appTitle: Strings.system,
@@ -62,7 +62,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
               ],
             ),
           ),
-        ),
+        body: Center(),),
       ),
     );
   }
@@ -78,7 +78,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
           children: [
             Text(
               "Business Settings",
-              style: Theme.of(context).textTheme.headline3,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             IconButton(
               icon: Icon(Icons.edit),
@@ -119,14 +119,16 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
                       return DropdownMenuItem(
                         child: Text(
                           '${e.name}',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         value: e,
                       );
                     }).toList(),
                     // hint: Text("Select Instructor"),
                     onChanged: (newBehavior) {
-                      setState(() => business = newBehavior);
+                      if (newBehavior != null) {
+                        setState(() => business = newBehavior);
+                      }
                     },
                     value: business,
                     //dropdownColor: Colors.grey,
@@ -141,7 +143,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
               children: [
                 Text(
                   "Business Profile",
-                  style: Theme.of(context).textTheme.headline3,
+                  style: Theme.of(context).textTheme.headlineMedium,
                 ),
               ],
             ),
@@ -160,7 +162,8 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
     );
   }
 
-  buildBusinessSettings(BuildContext context, BusinessSetting businessSetting) {
+  buildBusinessSettings(BuildContext context, BusinessSetting? businessSetting) {
+    if (businessSetting == null) return SizedBox.shrink();
     return Column(
       children: [
         Row(
@@ -169,7 +172,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
             SpinBox(
               min: 0,
               max: 10,
-              value: businessSetting.maxCourses.toDouble(),
+              value: businessSetting.maxCourses!.toDouble(),
               decimals: 0,
               step: 1,
               onChanged: (value) {
@@ -191,7 +194,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
             SpinBox(
               min: 0,
               max: 10,
-              value: businessSetting.maxModulePerCourse.toDouble(),
+              value: businessSetting.maxModulePerCourse!.toDouble(),
               decimals: 0,
               step: 1,
               onChanged: (value) {
@@ -213,7 +216,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
             SpinBox(
               min: 0,
               max: 10,
-              value: businessSetting.lessonsPerModule.toDouble(),
+              value: businessSetting.lessonsPerModule!.toDouble(),
               decimals: 0,
               step: 1,
               onChanged: (value) {
@@ -235,7 +238,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
             SpinBox(
               min: 0,
               max: 60,
-              value: businessSetting.maxVideoDuration.toDouble(),
+              value: businessSetting.maxVideoDuration!.toDouble(),
               decimals: 0,
               step: 1,
               onChanged: (value) {

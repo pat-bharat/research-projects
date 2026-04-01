@@ -5,18 +5,18 @@ import 'package:flutter/material.dart';
 
 class InstructorItem extends StatelessWidget {
   final Instructor instructor;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final Function onEditModules;
+  final Function? onDeleteItem;
+  final Function? onEditItem;
+  final Function? onEditModules;
   final bool isAdmin;
 
   const InstructorItem(
-      {Key key,
-      this.instructor,
+      {Key? key,
+      required this.instructor,
       this.onDeleteItem,
       this.onEditItem,
       this.onEditModules,
-      this.isAdmin})
+      this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -43,8 +43,8 @@ class InstructorItem extends StatelessWidget {
             width: 80,
             height: 80,
             child: instructor.profilePic != null &&
-                    instructor.profilePic.length > 0
-                ? buildCachedNetworkCacheImage(context, instructor.profilePic)
+                    instructor.profilePic!.length > 0
+                ? buildCachedNetworkCacheImage(context, instructor.profilePic!)
                 : Container(
                     child: Icon(Icons.person_rounded, size: 60),
                     padding: EdgeInsets.all(10),
@@ -59,8 +59,8 @@ class InstructorItem extends StatelessWidget {
                   )),*/
           horizontalSpaceMedium,
           Expanded(
-            child: Text(instructor.fullName,
-                style: Theme.of(context).textTheme.headline3),
+            child: Text(instructor.fullName ?? '',
+                style: Theme.of(context).textTheme.headlineMedium),
           ),
           isAdmin
               ? Column(
@@ -75,7 +75,7 @@ class InstructorItem extends StatelessWidget {
                           iconSize: Theme.of(context).iconTheme.size,
                           onPressed: () {
                             if (onDeleteItem != null) {
-                              onDeleteItem();
+                              onDeleteItem!();
                             }
                           },
                         ),
@@ -84,7 +84,7 @@ class InstructorItem extends StatelessWidget {
                           iconSize: Theme.of(context).iconTheme.size,
                           onPressed: () {
                             if (onEditItem != null) {
-                              onEditItem();
+                              onEditItem!();
                             }
                           },
                         )

@@ -4,7 +4,7 @@ import 'package:digiguru/app/video/model/firebase_upload_item.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 
 class UploadQueueViewModel extends BaseModel {
-  List<FirebaseUploadItem> uploadItems;
+  late List<FirebaseUploadItem> uploadItems;
 
   MediaUploadService uploadService = locator<MediaUploadService>();
   UploadQueueViewModel();

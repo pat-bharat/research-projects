@@ -20,7 +20,7 @@ class LessonView extends StatefulWidget {
   final Lesson editingLesson;
   final Module module;
   final Course course;
-  LessonView({Key key, this.course, this.editingLesson, this.module})
+  LessonView({Key? key, required this.course, required this.editingLesson, required this.module})
       : super(key: key);
   @override
   _LessonViewState createState() => _LessonViewState();
@@ -30,9 +30,9 @@ class _LessonViewState extends State<LessonView> {
   final titleController = TextEditingController();
   final instructorNotesController = TextEditingController();
   bool _freeTrial = false;
-  Lesson editingLesson;
-  Module _module;
-  Course _course;
+  late Lesson editingLesson;
+  late Module _module;
+  late Course _course;
   InstructionDoc instructionDoc = new InstructionDoc();
   VideoInfo lessonVideo = new VideoInfo();
 
@@ -81,7 +81,8 @@ class _LessonViewState extends State<LessonView> {
                       key: _lessonViewKey,
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
-                  )),
+                  ),
+                  body: Center(),),
             ));
   }
 
@@ -114,7 +115,7 @@ class _LessonViewState extends State<LessonView> {
               value: _freeTrial,
               onChanged: (value) {
                 setState(() {
-                  _freeTrial = value;
+                  _freeTrial = value!;
                 });
               },
             ),
@@ -143,8 +144,7 @@ class _LessonViewState extends State<LessonView> {
                   },
                   onDelete: () => {
                     setState(() {
-                      if (editingLesson != null)
-                        editingLesson.instructionDoc.docUrl = "";
+                      editingLesson.instructionDoc!.docUrl = "";
                     })
                   },
                 ),
@@ -165,7 +165,7 @@ class _LessonViewState extends State<LessonView> {
                   onDelete: () => {
                     setState(() {
                       if (model.isEditting)
-                        editingLesson.videoInfo.videoUrl = "";
+                        editingLesson.videoInfo!.videoUrl = "";
                     })
                   },
                 ),
@@ -181,7 +181,7 @@ class _LessonViewState extends State<LessonView> {
               title: Strings.save,
               busy: model.busy,
               onPressed: () {
-                if (_lessonViewKey.currentState.validate()) {
+                if (_lessonViewKey.currentState?.validate() ?? false) {
                   model.save(
                       moduleId: _module.documentId,
                       moduleTitle: _module.title,

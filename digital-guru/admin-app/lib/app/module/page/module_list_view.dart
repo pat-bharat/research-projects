@@ -18,15 +18,15 @@ class ModuleListView extends StatefulWidget {
   final Course course;
   // ModuleListModel model;
 
-  ModuleListView({Key key, this.course}) : super(key: key);
+  ModuleListView({Key? key, required this.course}) : super(key: key);
 
   @override
   _ModuleListViewState createState() => _ModuleListViewState();
 }
 
 class _ModuleListViewState extends State<ModuleListView> {
-  Course course;
-  ModuleListModel model;
+  late Course course;
+  late ModuleListModel model;
   List<String> _userModules = List.empty(growable: true);
   @override
   void initState() {
@@ -40,10 +40,10 @@ class _ModuleListViewState extends State<ModuleListView> {
 
   Future populateUserModules() async {
     List userModules = await model
-        .getAllUserPurchasedModules(BaseService.currentUser.documentId);
+        .getAllUserPurchasedModules(BaseService.currentUser!.documentId!);
 
     setState(() {
-      _userModules = userModules;
+      _userModules = userModules.cast<String>();
     });
     return "Success";
   }
@@ -53,7 +53,7 @@ class _ModuleListViewState extends State<ModuleListView> {
     portraitModeOnly();
     return ViewModelBuilder<ModuleListModel>.reactive(
       viewModelBuilder: () => new ModuleListModel(course: widget.course),
-      onModelReady: (model) => model.listenToModules(),
+      onViewModelReady: (model) => model.listenToModules(),
       builder: (context, model, child) => SafeArea(
           child: CommonScaffold(
         appTitle: Strings.moduleListViewTitle,
@@ -92,7 +92,7 @@ class _ModuleListViewState extends State<ModuleListView> {
                             : Center(
                                 child: Text(
                                   Strings.pleaseAddModules,
-                                  style: Theme.of(context).textTheme.headline2,
+                                  style: Theme.of(context).textTheme.headlineMedium,
                                 ),
                               )),
                     model.isAdmin ? _buildBottomButtonsBar(model) : Container(),
@@ -101,7 +101,7 @@ class _ModuleListViewState extends State<ModuleListView> {
                 )
               : buildCircularLoader(context),
         ),
-      )),
+      body: Center(),)),
     );
   }
 
@@ -120,7 +120,7 @@ class _ModuleListViewState extends State<ModuleListView> {
     );
   }
 
-  Card _buildModuleItemCard(Module item, ModuleListModel model) {
+  Card _buildModuleItemCard(Module? item, ModuleListModel model) {
     /* bool purchased = true;
     var result = model.isModuleAlreadyPurchased(item.documentId);
     if (result != null && result is bool) {
@@ -134,7 +134,7 @@ class _ModuleListViewState extends State<ModuleListView> {
 */
     return Card(
       //color: Colors.blueGrey,
-      key: ValueKey(item.documentId),
+      key: ValueKey(item!.documentId),
       elevation: 2,
       child: CreationAwareListItem(
         itemCreated: () {
@@ -148,8 +148,8 @@ class _ModuleListViewState extends State<ModuleListView> {
             onDeleteItem: () => model.deleteModule(module: item),
             onEditItem: () => model.editModule(item),
             onEditLessons: () => model.editLesons(item),
-            onViewDoc: () => model.viewPdf(item.moduleDetailDoc.docUrl),
-            onPlayVideo: () => model.viewVideo(item.moduleVideo),
+            onViewDoc: () => item.moduleDetailDoc?.docUrl != null ? model.viewPdf(item.moduleDetailDoc!.docUrl!) : null,
+            onPlayVideo: () => item.moduleVideo != null ? model.viewVideo(item.moduleVideo!) : null,
             onPurchase: () => purchaseModule(item),
           ),
         ),

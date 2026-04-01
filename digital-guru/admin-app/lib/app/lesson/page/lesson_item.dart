@@ -8,19 +8,19 @@ import 'package:flutter/material.dart';
 
 class LessonItem extends StatelessWidget {
   final Lesson lesson;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final Function onDownload;
-  final Function onViewDoc;
-  final Function onPlayVideo;
+  final Function? onDeleteItem;
+  final Function? onEditItem;
+  final Function? onDownload;
+  final Function? onViewDoc;
+  final Function? onPlayVideo;
   final bool isAdmin;
   const LessonItem(
-      {Key key,
-      this.lesson,
+      {required Key key,
+      required this.lesson,
       this.onDeleteItem,
       this.onEditItem,
       this.onDownload,
-      this.isAdmin,
+      required this.isAdmin,
       this.onViewDoc,
       this.onPlayVideo})
       : super(key: key);
@@ -39,7 +39,7 @@ class LessonItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (onPlayVideo != null) {
-          onPlayVideo();
+          onPlayVideo!();
         }
       },
       child: Container(
@@ -51,7 +51,7 @@ class LessonItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            lesson.videoInfo.thumbUrl != null
+            lesson.videoInfo != null && lesson.videoInfo!.thumbUrl != null
                 ? Stack(
                     alignment: AlignmentDirectional.bottomCenter,
                     children: [
@@ -59,17 +59,17 @@ class LessonItem extends StatelessWidget {
                         height: 80,
                         width: 80,
                         child: buildCachedNetworkCacheImage(
-                            context, lesson.videoInfo.thumbUrl),
+                            context, lesson.videoInfo!.thumbUrl!),
                       ),
                       Container(
                           color: Colors.grey[800],
                           child: Text(
-                            computeDuration(lesson.videoInfo.duration),
+                            computeDuration(lesson.videoInfo!.duration!),
                             style: TextStyle(
                                 fontSize: Theme.of(context)
                                     .textTheme
-                                    .headline5
-                                    .fontSize,
+                                    .headlineSmall
+                                    ?.fontSize,
                                 color: Colors.white),
                           ))
                     ],
@@ -86,9 +86,9 @@ class LessonItem extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                  buildWrappedText(context, lesson.title, lines: 2),
-                  buildWrappedText(context, lesson.instructorNotes,
-                      lines: 2, style: Theme.of(context).textTheme.headline5),
+                  buildWrappedText(context, lesson.title ?? '', lines: 2),
+                  buildWrappedText(context, lesson.instructorNotes ?? '',
+                      lines: 2, style: Theme.of(context).textTheme.headlineSmall),
                 ])),
             isAdmin
                 ? _builldAdminActionButtons(context, lesson)
@@ -100,7 +100,7 @@ class LessonItem extends StatelessWidget {
   }
 
   _builldAdminActionButtons(BuildContext context, Lesson lesson) {
-    if (lesson.videoInfo.youtube != null && lesson.videoInfo.youtube) {
+    if (lesson.videoInfo != null && lesson.videoInfo!.youtube != null && lesson.videoInfo!.youtube!) {
       return Container();
     }
     return Column(
@@ -114,7 +114,7 @@ class LessonItem extends StatelessWidget {
               iconSize: Theme.of(context).iconTheme.size,
               onPressed: () {
                 if (onDeleteItem != null) {
-                  onDeleteItem();
+                  onDeleteItem!();
                 }
               },
             ),
@@ -123,7 +123,7 @@ class LessonItem extends StatelessWidget {
               iconSize: Theme.of(context).iconTheme.size,
               onPressed: () {
                 if (onEditItem != null) {
-                  onEditItem();
+                  onEditItem!();
                 }
               },
             ),
@@ -134,7 +134,7 @@ class LessonItem extends StatelessWidget {
   }
 
   _builldUserActionButtons(BuildContext context, Lesson lesson) {
-    if (lesson.videoInfo.youtube != null && lesson.videoInfo.youtube) {
+    if (lesson.videoInfo != null && lesson.videoInfo!.youtube != null && lesson.videoInfo!.youtube!) {
       return Container();
     }
     return Column(
@@ -143,7 +143,7 @@ class LessonItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            lesson.freeTrial != null && !lesson.freeTrial
+            lesson.freeTrial != null && !lesson.freeTrial!
                 ? IconButton(
                     icon: Icon(Icons.lock_sharp),
                     iconSize: Theme.of(context).iconTheme.size,
@@ -156,35 +156,35 @@ class LessonItem extends StatelessWidget {
                   )
                 : Container(),
             lesson.instructionDoc != null &&
-                    lesson.instructionDoc.docUrl != null
+                    lesson.instructionDoc!.docUrl != null
                 ? IconButton(
                     icon: Icon(Icons.picture_as_pdf_sharp),
                     iconSize: Theme.of(context).iconTheme.size,
                     onPressed: () {
                       if (onViewDoc != null) {
-                        onViewDoc();
+                        onViewDoc!();
                       }
                     },
                   )
                 : Container(),
-            lesson.videoInfo != null && lesson.videoInfo.videoUrl != null
+            lesson.videoInfo != null && lesson.videoInfo!.videoUrl != null
                 ? IconButton(
                     icon: Icon(Icons.play_arrow_sharp),
                     iconSize: Theme.of(context).iconTheme.size,
                     onPressed: () {
                       if (onPlayVideo != null) {
-                        onPlayVideo();
+                        onPlayVideo!();
                       }
                     },
                   )
                 : Container(),
-            lesson.videoInfo != null && lesson.videoInfo.videoUrl != null
+            lesson.videoInfo != null && lesson.videoInfo!.videoUrl != null
                 ? IconButton(
                     icon: Icon(Icons.download_rounded),
                     iconSize: Theme.of(context).iconTheme.size,
                     onPressed: () {
                       if (onDownload != null) {
-                        onDownload();
+                        onDownload!();
                       }
                     },
                   )

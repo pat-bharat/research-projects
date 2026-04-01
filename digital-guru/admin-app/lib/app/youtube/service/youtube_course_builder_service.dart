@@ -43,14 +43,14 @@ class YoutubeCourseBuilderService extends BaseService {
           Instructor(
               businessId: info.businessId,
               fullName: info.instructorName,
-              profilePic: channel.profilePictureUrl));
-      instructor = Instructor.fromJson(snapshot.id, snapshot.data());
+              profilePic: channel.profilePictureUrl!));
+      instructor = Instructor.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>);
     }
 
     Course course = Course(
       businessId: info
           .businessId, //  oAq9WHcJ5DdTmwJZfjaq   BaseService.currentBusiness.documentId,
-      title: channel.title,
+      title: channel.title!,
       instructorName: info.instructorName,
       displayOrder: 0,
       language: info.language,
@@ -63,21 +63,21 @@ class YoutubeCourseBuilderService extends BaseService {
 
     List<Module> modules = List.empty(growable: true);
     int index = 1;
-    channel.playLists.forEach((pl) async {
+    channel.playLists?.forEach((pl) async {
       DocumentReference _moduleDocRef;
       Module m = Module(
         courseId: _courseDocRef.id,
         businessId: info.businessId, //BaseService.currentBusiness.documentId,
         name: "",
-        title: pl.title,
+        title: pl.title!,
         published: true,
-        lessonCount: pl.videoCount,
+        lessonCount: pl.videoCount!,
         displayOrder: index,
       );
       _moduleDocRef = await _moduleService.addModule(m);
       index++;
       List<Video> videos = await api.fetchVideosFromPlaylist(
-          nameIndex: info.nameIndex, playlistId: pl.id);
+          nameIndex: info.nameIndex, playlistId: pl.id!);
       int lIndex = 0;
       videos.forEach((video) async {
         await _lessonService.addLesson(Lesson(
@@ -85,7 +85,7 @@ class YoutubeCourseBuilderService extends BaseService {
             courseId: _courseDocRef.id,
             moduleId: _moduleDocRef.id,
             title: video.title,
-            courseTitle: channel.title,
+            courseTitle: channel.title!,
             freeTrial: true,
             locked: false,
             displayOrder: lIndex++,
@@ -129,11 +129,11 @@ class YoutubeCourseInfo {
   int nameIndex;
 
   YoutubeCourseInfo(
-      {this.businessId,
-      this.channelId,
-      this.instructorName,
-      this.language,
-      this.playlists,
-      this.maxVideoCount,
-      this.nameIndex});
+      {required this.businessId,
+      required this.channelId,
+      required this.instructorName,
+      required this.language,
+      required this.playlists,
+      required this.maxVideoCount,
+      required this.nameIndex});
 }

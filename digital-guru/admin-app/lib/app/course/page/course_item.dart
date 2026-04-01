@@ -9,22 +9,22 @@ import 'package:flutter/material.dart';
 
 class CourseItem extends StatelessWidget {
   final Course course;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final Function onEditModules;
-  final Function onViewDoc;
-  final Function onPlayVideo;
+  final Function? onDeleteItem;
+  final Function? onEditItem;
+  final Function? onEditModules;
+  final Function? onViewDoc;
+  final Function? onPlayVideo;
   final bool isAdmin;
 
   const CourseItem(
-      {Key key,
-      this.course,
+      {Key? key,
+      required this.course,
       this.onDeleteItem,
       this.onEditItem,
       this.onEditModules,
       this.onViewDoc,
       this.onPlayVideo,
-      this.isAdmin})
+      this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -35,7 +35,7 @@ class CourseItem extends StatelessWidget {
       decoration: boxDecoration(context),
       //alignment: Alignment.center,
       child: BackgroundImageBox(
-        url: course.background.imageUrl,
+        url: course.background?.imageUrl ?? '',
         alignment: MainAxisAlignment.end,
         children: <Widget>[
           Column(
@@ -46,8 +46,8 @@ class CourseItem extends StatelessWidget {
                 //decoration: decorationUnderline(),
                 child: buildWrappedText(
                   context,
-                  course.title,
-                  style: Theme.of(context).textTheme.headline1,
+                  course.title!,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ),
               Container(
@@ -57,8 +57,8 @@ class CourseItem extends StatelessWidget {
                     children: [
                       buildWrappedText(
                         context,
-                        course.instructorName,
-                        style: Theme.of(context).textTheme.headline4,
+                        course.instructorName!,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
                       buildWrappedText(
                           context,
@@ -67,9 +67,9 @@ class CourseItem extends StatelessWidget {
                               course.lessonCount.toString() +
                               ' ' +
                               Strings.lessons,
-                          style: Theme.of(context).textTheme.headline5),
-                      Text(course.language,
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context).textTheme.headlineSmall),
+                      Text(course.language!,
+                          style: Theme.of(context).textTheme.headlineSmall),
                     ],
                   )),
               Container(
@@ -92,19 +92,19 @@ class CourseItem extends StatelessWidget {
   Row _buildActionIconsRow(BuildContext context) {
     if (!isAdmin) {
       return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-        course.courseVideo.videoUrl != null
+        course.courseVideo?.videoUrl != null
             ? IconButton(
                 color: Theme.of(context).iconTheme.color,
                 icon: Icon(Icons.play_arrow_sharp),
                 tooltip: Tooltips.playVideo,
                 onPressed: () {
                   if (onPlayVideo != null) {
-                    onPlayVideo();
+                    onPlayVideo!();
                   }
                 },
               )
             : Container(),
-        course.courseDetailDoc.docUrl != null
+        course.courseDetailDoc?.docUrl != null
             ? IconButton(
                 color: Theme.of(context).iconTheme.color,
                 icon: Icon(
@@ -113,7 +113,7 @@ class CourseItem extends StatelessWidget {
                 tooltip: Tooltips.viewPdf,
                 onPressed: () {
                   if (onViewDoc != null) {
-                    onViewDoc();
+                    onViewDoc!();
                   }
                 },
               )
@@ -122,7 +122,7 @@ class CourseItem extends StatelessWidget {
           title: Strings.details,
           onPressed: () {
             if (onEditModules != null) {
-              onEditModules();
+              onEditModules!();
             }
           },
         ),
@@ -138,7 +138,7 @@ class CourseItem extends StatelessWidget {
             tooltip: Tooltips.deleteCourse,
             onPressed: () {
               if (onDeleteItem != null) {
-                onDeleteItem();
+                onDeleteItem!();
               }
             },
           ),
@@ -148,7 +148,7 @@ class CourseItem extends StatelessWidget {
             // tooltip: Tooltips.editCourse,
             onPressed: () {
               if (onEditItem != null) {
-                onEditItem();
+                onEditItem!();
               }
             },
           ),
@@ -156,7 +156,7 @@ class CourseItem extends StatelessWidget {
             title: Strings.details,
             onPressed: () {
               if (onEditModules != null) {
-                onEditModules();
+                onEditModules!();
               }
             },
           ),

@@ -83,11 +83,11 @@ BoxDecoration boxDecoration(BuildContext context) {
 }
 
 BoxDecoration buildLinearGradient(BuildContext context,
-    {List<Color> colors,
-    List<double> stops,
+    {List<Color>? colors,
+    List<double>? stops,
     BoxShape shape = BoxShape.rectangle}) {
-  if (colors == null) colors = [Theme.of(context).primaryColor, Colors.white];
-  if (stops == null) stops = [0.0, 0.5];
+  colors ??= [Theme.of(context).primaryColor, Colors.white];
+  stops ??= [0.0, 0.5];
   return BoxDecoration(
       shape: shape,
       gradient: LinearGradient(
@@ -98,7 +98,7 @@ BoxDecoration buildLinearGradient(BuildContext context,
       ));
 }
 
-CircleAvatar ceircularAvatar({double radious, String image}) {
+CircleAvatar ceircularAvatar({required double radious, required String image}) {
   return CircleAvatar(
     backgroundColor: Colors.white,
     radius: radious,
@@ -145,17 +145,13 @@ buildToolTip(BuildContext context, String msg) {
 }
 
 buildWrappedText(BuildContext context, String text,
-    {int lines = 1, TextStyle style}) {
-  if (text != null) {
-    return AutoSizeText(text,
-        softWrap: true,
-        minFontSize: 12,
-        maxLines: lines,
-        overflow: TextOverflow.ellipsis,
-        style: style != null ? style : Theme.of(context).textTheme.headline4);
-  } else {
-    return Container();
-  }
+    {int lines = 1, TextStyle? style}) {
+  return AutoSizeText(text,
+      softWrap: true,
+      minFontSize: 12,
+      maxLines: lines,
+      overflow: TextOverflow.ellipsis,
+      style: style != null ? style : Theme.of(context).textTheme.headlineSmall);
 }
 
 buildCachedNetworkCacheImage(BuildContext context, String url) {
@@ -181,12 +177,11 @@ buildCachedNetworkCacheImage(BuildContext context, String url) {
 }
 
 buildScorabbleAccordian(BuildContext context,
-    {@required List<Widget> headChildren,
-    @required List<Widget> bodyChildren}) {
+    {required List<Widget> headChildren,
+    required List<Widget> bodyChildren}) {
   return ExpandableNotifier(
     child: ScrollOnExpand(
       child: ExpandablePanel(
-        collapsed: null,
         header: Container(
             padding: EdgeInsets.only(left: 10),
             child: Row(
@@ -198,6 +193,7 @@ buildScorabbleAccordian(BuildContext context,
                 )
               ],
             )),
+        collapsed: Container(),
         expanded: Column(children: bodyChildren),
         theme: ExpandableThemeData(
           iconColor: Theme.of(context).primaryColor,

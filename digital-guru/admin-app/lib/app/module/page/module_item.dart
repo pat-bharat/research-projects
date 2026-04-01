@@ -8,17 +8,17 @@ import 'package:digiguru/app/module/model/module.dart';
 import 'package:flutter/material.dart';
 
 class ModuleItem extends StatelessWidget {
-  final Module module;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final Function onEditLessons;
-  final Function onPurchase;
-  final Function onViewDoc;
-  final Function onPlayVideo;
+  final Module? module;
+  final Function? onDeleteItem;
+  final Function? onEditItem;
+  final Function? onEditLessons;
+  final Function? onPurchase;
+  final Function? onViewDoc;
+  final Function? onPlayVideo;
   final bool isAdmin;
-  final bool canPurchase;
+  final bool? canPurchase;
   const ModuleItem(
-      {Key key,
+      {Key? key,
       this.module,
       this.onDeleteItem,
       this.onEditItem,
@@ -38,8 +38,8 @@ class ModuleItem extends StatelessWidget {
       //decoration: boxDecorationWhite(),
       alignment: Alignment.center,
       child: BackgroundImageBox(
-          url: module.moduleBackground.imageUrl,
-          colors: [Theme.of(context).accentColor, Colors.white],
+          url: module?.moduleBackground?.imageUrl ?? '',
+          colors: [Theme.of(context).primaryColor, Colors.white],
           alignment: MainAxisAlignment.center,
           children: [
             Expanded(
@@ -47,13 +47,13 @@ class ModuleItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                module.name != null && module.name.length > 0
+                module?.name != null && module!.name.length > 0
                     ? Container(
                         padding: EdgeInsets.only(right: 10, left: 10),
                         child: buildWrappedText(
                           context,
-                          module.name,
-                          style: Theme.of(context).textTheme.headline4,
+                          module!.name,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ),
                       )
                     : Container(),
@@ -61,23 +61,23 @@ class ModuleItem extends StatelessWidget {
                   padding: EdgeInsets.only(right: 10, left: 10),
                   child: buildWrappedText(
                     context,
-                    module.title,
-                    style: Theme.of(context).textTheme.headline2,
+                    module!.title,
+                    style: Theme.of(context).textTheme.headlineMedium,
                   ),
                 ),
-                module.lessonCount != null
+                module!.lessonCount != null
                     ? Container(
                         padding: EdgeInsets.only(right: 10, left: 10),
                         child: Text(
                           Strings.total +
                               ' ' +
-                              module.lessonCount.toString() +
+                              module!.lessonCount.toString() +
                               ' ' +
                               Strings.lessons,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineSmall,
                         ))
                     : Container(),
-                displayTags(context, module.tags),
+                displayTags(context, module!.tags),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -106,11 +106,11 @@ class ModuleItem extends StatelessWidget {
             children: [
               new Text(
                 tags[0],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               new Text(
                 tags[3],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               //new Text(tags[2], style: moduleTagTextStyle),
             ],
@@ -120,11 +120,11 @@ class ModuleItem extends StatelessWidget {
             children: [
               new Text(
                 tags[1],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               new Text(
                 tags[4],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               //new Text(tags[2], style: moduleTagTextStyle),
             ],
@@ -134,11 +134,11 @@ class ModuleItem extends StatelessWidget {
             children: [
               new Text(
                 tags[2],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               new Text(
                 tags[5],
-                style: Theme.of(context).textTheme.headline4,
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
               //new Text(tags[5], style: moduleTagTextStyle),
             ],
@@ -161,7 +161,7 @@ class ModuleItem extends StatelessWidget {
           tooltip: Tooltips.deleteModule,
           onPressed: () {
             if (onDeleteItem != null) {
-              onDeleteItem();
+              onDeleteItem!();
             }
           },
         ),
@@ -173,7 +173,7 @@ class ModuleItem extends StatelessWidget {
           tooltip: Tooltips.editModule,
           onPressed: () {
             if (onEditItem != null) {
-              onEditItem();
+              onEditItem!();
             }
           },
         ),
@@ -181,7 +181,7 @@ class ModuleItem extends StatelessWidget {
           title: Strings.details,
           onPressed: () {
             if (onEditLessons != null) {
-              onEditLessons();
+              onEditLessons!();
             }
           },
         ),
@@ -196,19 +196,19 @@ class ModuleItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.end,
       children: <Widget>[
-        module.moduleVideo.videoUrl != null
+        module?.moduleVideo?.videoUrl != null
             ? IconButton(
                 color: Theme.of(context).iconTheme.color,
                 icon: Icon(Icons.play_arrow_sharp),
                 tooltip: Tooltips.playVideo,
                 onPressed: () {
                   if (onPlayVideo != null) {
-                    onPlayVideo();
+                    onPlayVideo!();
                   }
                 },
               )
             : Container(),
-        module.moduleDetailDoc.docUrl != null
+        module?.moduleDetailDoc?.docUrl != null
             ? IconButton(
                 color: Theme.of(context).iconTheme.color,
                 icon: Icon(
@@ -217,7 +217,7 @@ class ModuleItem extends StatelessWidget {
                 tooltip: Tooltips.viewPdf,
                 onPressed: () {
                   if (onViewDoc != null) {
-                    onViewDoc();
+                    onViewDoc!();
                   }
                 },
               )
@@ -226,18 +226,18 @@ class ModuleItem extends StatelessWidget {
           title: Strings.details,
           onPressed: () {
             if (onEditLessons != null) {
-              onEditLessons();
+              onEditLessons!();
             }
           },
         ),
         horizontalSpaceSmall,
-        canPurchase != null && canPurchase
+        canPurchase != null && canPurchase!
             ? BusyButton(
                 title: Strings.buy,
                 busy: false,
                 onPressed: () {
                   if (onPurchase != null) {
-                    onPurchase();
+                    onPurchase!();
                   }
                 },
               )

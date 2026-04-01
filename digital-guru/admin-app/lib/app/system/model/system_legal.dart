@@ -1,16 +1,16 @@
 class SystemLegal {
-  String title;
-  String pdfDoc;
-  bool active;
-  String userType;
-  String legalType;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  String documentId;
+  late final String title;
+  late String? pdfDoc;
+  late bool? active;
+  late String? userType;
+  late String? legalType;
+  late String? createdTimestamp;
+  late String? updatedTimestamp;
+  late String? deletedTimestamp;
+  late String? modifiedBy;
+  late String? documentId;
   SystemLegal(
-      {this.title,
+      {required this.title,
       this.pdfDoc,
       this.active,
       this.legalType,

@@ -16,7 +16,7 @@ import 'instructor_item.dart';
 
 class InstructorListView extends StatefulWidget {
   //final List<Course> courses = new List();
-  InstructorListView({Key key}) : super(key: key);
+  InstructorListView({Key? key}) : super(key: key);
 
   @override
   _InstructorListViewState createState() => _InstructorListViewState();
@@ -68,14 +68,16 @@ class _InstructorListViewState extends State<InstructorListView> {
                       : Center(
                           child: !model.busy
                               ? Text(Strings.addInstructor,
-                                  style: Theme.of(context).textTheme.headline2)
+                                  style: Theme.of(context).textTheme.headlineMedium)
                               : Container(),
                         )),
               model.isAdmin ? _buildBottomButtonRaw(model) : Container(),
               verticalSpaceSmall,
             ],
           ),
+          
         ),
+      body: Center(),
       )),
     );
   }

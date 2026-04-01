@@ -5,12 +5,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 
 class UploadItem extends Equatable {
-  final String id;
-  final int uploadProgress;
-  final UploadTaskStatus status;
+  final String? id;
+  final int? uploadProgress;
+  final UploadTaskStatus? status;
 
   /// Store the entire response object.
-  final UploadTaskResponse response;
+  final UploadTaskResponse? response;
 
   const UploadItem(
     this.id, {
@@ -20,10 +20,10 @@ class UploadItem extends Equatable {
   });
 
   UploadItem copyWith({
-    String id,
-    int progress,
-    UploadTaskStatus status,
-    UploadTaskResponse response,
+    String? id,
+    int? progress,
+    UploadTaskStatus? status,
+    UploadTaskResponse? response,
   }) {
     return UploadItem(
       id ?? this.id,
@@ -39,7 +39,7 @@ class UploadItem extends Equatable {
       status == UploadTaskStatus.failed;
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       id,
       uploadProgress,

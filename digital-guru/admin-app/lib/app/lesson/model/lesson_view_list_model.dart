@@ -20,12 +20,13 @@ class LessonListModel extends BaseModel {
 
   List<Lesson> _lessons = List.empty(growable: true);
 
-  Module _module;
-  Course _course;
-  Module get mmodule => _module;
+  late Module _module;
+  late Course _course;
+  Module get module => _module;
+  Course get course => _course; 
   List<Lesson> get lessons => _lessons;
 
-  LessonListModel({@required Course course, @required Module module}) {
+  LessonListModel({required Course course, required Module module}) {
     this._module = module;
     this._course = course;
   }
@@ -50,11 +51,11 @@ class LessonListModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       setBusy(true);
-      await _lessonService.deleteLesson(lesson.documentId);
+      await _lessonService.deleteLesson(lesson.documentId!);
       // Delete the image after the post is deleted
-      await _cloudStorageService.deleteFile(lesson.videoInfo.thumbUrl);
+      await _cloudStorageService.deleteFile(lesson.videoInfo!.thumbUrl!);
       setBusy(false);
     }
   }
@@ -79,7 +80,7 @@ class LessonListModel extends BaseModel {
       int index = items.indexOf(item);
       if (index != item.displayOrder) {
         item.displayOrder = index;
-        this._lessonService.updateLesson(item.documentId, item);
+        this._lessonService.updateLesson(item.documentId!, item);
       }
     }
   }
@@ -88,7 +89,7 @@ class LessonListModel extends BaseModel {
 class CourseModuleLessonsArgs {
   Course course;
   Module module;
-  Lesson lesson;
+  Lesson? lesson;
 
-  CourseModuleLessonsArgs({this.course, this.module, this.lesson});
+  CourseModuleLessonsArgs({required this.course, required this.module, this.lesson});
 }

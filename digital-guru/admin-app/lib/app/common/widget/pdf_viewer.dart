@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 
 class PdfViewer extends StatefulWidget {
-  final String url;
+  final String? url;
   PdfViewer({
-    Key key,
+    Key? key,
     this.url,
   }) : super(key: key);
   @override
@@ -20,7 +20,7 @@ class PdfViewer extends StatefulWidget {
 
 class _PdfViewwerState extends State<PdfViewer> {
   bool _isLoading = true;
-  PDFDocument document;
+  PDFDocument? document;
   final NavigationService _navigationService = locator<NavigationService>();
 
   @override
@@ -31,7 +31,9 @@ class _PdfViewwerState extends State<PdfViewer> {
 
   loadDocument() async {
     try {
-      document = await PDFDocument.fromURL(widget.url);
+      if (widget.url != null) {
+        document = await PDFDocument.fromURL(widget.url!);
+      }
     } catch (e) {
       print(e);
     }
@@ -48,7 +50,7 @@ class _PdfViewwerState extends State<PdfViewer> {
           appTitle: Strings.document,
           showBottomNav: false,
           showDrawer: false,
-          bodyData: Center(
+          body: Center(
             child: _isLoading
                 ? Center(child: buildCircularLoader(context))
                 : _buildPdfViewer(context),
@@ -61,14 +63,14 @@ class _PdfViewwerState extends State<PdfViewer> {
       height: screenHeight(context),
       width: screenWidth(context),
       child: PDFViewer(
-        document: document,
+        document: document!,
         zoomSteps: 1,
         
-        pickerIconColor: Theme.of(context).backgroundColor,
+        pickerIconColor: Theme.of(context).scaffoldBackgroundColor,
         pickerButtonColor: Theme.of(context).primaryColor,
         indicatorBackground: Theme.of(context).primaryColor,
         showNavigation: false,
-        indicatorText: Theme.of(context).backgroundColor,
+        indicatorText: Theme.of(context).scaffoldBackgroundColor,
         showPicker: true,
         showIndicator: true,
       ),

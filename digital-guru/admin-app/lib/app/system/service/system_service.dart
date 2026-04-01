@@ -48,10 +48,10 @@ class SystemService extends BaseService {
           .get();
 
       userData.docs.forEach((legal) =>
-          {legals.add(SystemLegal.fromJson(legal.id, legal.data()))});
+          legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>)));
       return legals;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -63,10 +63,10 @@ class SystemService extends BaseService {
           .get();
 
       userData.docs.forEach((legal) =>
-          {legals.add(SystemLegal.fromJson(legal.id, legal.data()))});
+          legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>)));
       return legals;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -78,26 +78,26 @@ class SystemService extends BaseService {
           .get()
           .then((snapshot) => {
                 snapshot.docs.forEach((legal) =>
-                    {legals.add(SystemLegal.fromJson(legal.id, legal.data()))})
+                    {legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>))})
               });
 
       return legals;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
-  Future deleteSystemLegal(SystemLegal legal) {
-    _legalCollectionReference.doc(legal.documentId).delete();
+  Future deleteSystemLegal(SystemLegal legal) async {
+    return _legalCollectionReference.doc(legal.documentId).delete();
   }
 
   Future updateBusinessSettings(BusinessSetting businessSetting) async {
     try {
       await _businessSettingsCollectionReference
-          .doc(businessSetting.documetnId)
+          .doc(businessSetting.documentId)
           .update(businessSetting.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -108,20 +108,20 @@ class SystemService extends BaseService {
           .where("business_id", isEqualTo: businessId)
           .get()
           .then((snapshot) => bSetting = BusinessSetting.fromJson(
-              snapshot.docs.first.id, snapshot.docs.first.data()));
+              snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>));
       return bSetting;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
   Future getSystemProfile() async {
-    SystemProfile profile;
+    SystemProfile? profile;;
     await _systemProfileCollectionReference.get().then((snapshot) => {
           if (snapshot.docs.isNotEmpty)
             {
               profile = SystemProfile.fromJson(
-                  snapshot.docs.first.id, snapshot.docs.first.data())
+                  snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>)
             }
         });
     return profile;
@@ -166,13 +166,13 @@ class SystemService extends BaseService {
     await _businessCollectionReference
         .get()
         .then((snapshot) => snapshot.docs.forEach((doc) {
-              businessList.add(Business.fromJson(doc.data(), doc.id));
+              businessList.add(Business.fromJson(doc.data() as Map<String, dynamic>, doc.id));
             }));
     return businessList;
   }
 
   Future getBusinessProfile(String bid) async {
-    BusinessProfile profile;
+    BusinessProfile? profile;
     await _businessProfileCollectionReference
         .where("business_id", isEqualTo: bid)
         .get()
@@ -180,9 +180,9 @@ class SystemService extends BaseService {
               if (snapshot.docs.isNotEmpty)
                 {
                   profile = BusinessProfile.fromJson(
-                      snapshot.docs.first.id, snapshot.docs.first.data()),
+                      snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>),
                   await getBusinessSettings(bid)
-                      .then((value) => profile.businessSetting = value)
+                      .then((value) => profile!.businessSetting = value)
                 }
             });
     return profile;
@@ -193,15 +193,15 @@ class SystemService extends BaseService {
       assert(legals != null);
       legals.forEach((l) async {
         UserAcceptedLegal ual = UserAcceptedLegal(
-            userId: BaseService.currentUser.documentId,
-            acceptedBy: BaseService.currentUser.email,
+            userId: BaseService.currentUser?.documentId ?? '',
+            acceptedBy: BaseService.currentUser?.email ?? '',
             legalType: l.legalType,
             pdfDoc: l.pdfDoc,
             acceptedTimestamp: DateTime.now().toIso8601String());
         await _userAcceptedLegalsCollectionReference.add(ual.toJson());
       });
     } catch (e) {
-      handleException(e);
+      handleException(e as Exception);
     }
   }
   /* Map<String, BusinessProfile> profileMap = {};

@@ -12,7 +12,7 @@ buildBusinessAppBar(BuildContext context, dynamic model, String title,
     title: Text(
       title,
       style: TextStyle(
-          fontSize: Theme.of(context).textTheme.headline3.fontSize,
+          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
           color: Theme.of(context).appBarTheme.foregroundColor),
     ),
     elevation: 10,
@@ -72,7 +72,7 @@ buildSystemAppBar(BuildContext context, dynamic model, String title,
     title: Text(
       title,
       style: TextStyle(
-          fontSize: Theme.of(context).textTheme.headline3.fontSize,
+          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
           color: Theme.of(context).appBarTheme.foregroundColor),
     ),
     elevation: 10,
@@ -109,7 +109,7 @@ buildUserAppBar(BuildContext context, dynamic model, String title,
     title: Text(
       title,
       style: TextStyle(
-          fontSize: Theme.of(context).textTheme.headline3.fontSize,
+          fontSize: Theme.of(context).textTheme.headlineSmall?.fontSize,
           color: Theme.of(context).appBarTheme.foregroundColor),
     ),
     elevation: 10,

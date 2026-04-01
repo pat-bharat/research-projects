@@ -1,14 +1,14 @@
 import 'package:digiguru/app/youtube/model/video_model.dart';
 
 class PlayList {
-  final String id;
-  final String channelId;
-  final String title;
-  final String description;
-  final String profilePictureUrl;
-  final String subscriberCount;
-  final int videoCount;
-  List<Video> videos;
+  final String? id;
+  final String? channelId;
+  final String? title;
+  final String? description;
+  final String? profilePictureUrl;
+  final String? subscriberCount;
+  final int? videoCount;
+  List<Video>? videos;
 
   PlayList({
     this.id,

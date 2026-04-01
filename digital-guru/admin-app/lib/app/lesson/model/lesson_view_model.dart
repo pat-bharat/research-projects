@@ -26,11 +26,11 @@ class LessonViewModel extends BaseModel {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
 
-  Lesson _edittingLesson;
+  late Lesson _edittingLesson;
 
-  File _lessonDetailDocument;
+  late File _lessonDetailDocument;
 
-  File _lessonVideoFile;
+  late File _lessonVideoFile;
 
   File get lessonDetailDocument => _lessonDetailDocument;
   File get lessonVideoFile => _lessonVideoFile;
@@ -55,7 +55,7 @@ class LessonViewModel extends BaseModel {
   Future selectLessonDocument() async {
     var tempdoc = await _mediaSelector.selectDocument();
     if (tempdoc != null) {
-      _lessonDetailDocument = File(tempdoc.files.single.path);
+      _lessonDetailDocument = File(tempdoc.files.single.path!);
       notifyListeners();
     }
     return _lessonDetailDocument;
@@ -64,38 +64,38 @@ class LessonViewModel extends BaseModel {
   Future selectLessonVideo() async {
     var tempdoc = await _mediaSelector.selectVideo();
     if (tempdoc != null) {
-      _lessonVideoFile = File(tempdoc.files.single.path);
+      _lessonVideoFile = File(tempdoc.files.single.path!);
       notifyListeners();
     }
     return _lessonVideoFile;
   }
 
   Future save(
-      {@required String moduleId,
-      @required String title,
-      @required String instructorNotes,
-      String moduleTitle,
-      String courseTitle,
-      String instructorName,
-      String bacgroundImage,
-      bool freeTrial,
-      InstructionDoc instructionDoc,
-      VideoInfo videoInfo}) async {
+      {required String moduleId,
+      required String title,
+      required String instructorNotes,
+      String? moduleTitle,
+      String? courseTitle,
+      String? instructorName,
+      String? bacgroundImage,
+      bool? freeTrial,
+      InstructionDoc? instructionDoc,
+      VideoInfo? videoInfo}) async {
     setBusy(true);
 
     Lesson lesson = Lesson(
       businessId: module.businessId,
       courseId: module.courseId,
       moduleId: module.documentId,
-      moduleTitle: moduleTitle,
-      courseTitle: courseTitle,
-      instructorName: instructorName,
+      moduleTitle: moduleTitle!,
+      courseTitle: courseTitle!,
+      instructorName: instructorName!,
       title: title,
-      freeTrial: freeTrial,
-      locked: freeTrial ? true : (isEditting ? _edittingLesson.locked : true),
+      freeTrial: freeTrial!,
+      locked: freeTrial == true ? true : (isEditting ? _edittingLesson.locked : true),
       instructorNotes: instructorNotes,
-      instructionDoc: instructionDoc,
-      videoInfo: videoInfo,
+      instructionDoc: instructionDoc!,
+      videoInfo: videoInfo!,
     );
     var result;
     if (!isEditting) {
@@ -104,40 +104,29 @@ class LessonViewModel extends BaseModel {
       //await _analyticsService.logPostCreated(hasImage: _logoImage != null);
     } else {
       lesson.documentId = _edittingLesson.documentId;
-      await _lessonService.updateLesson(_edittingLesson.documentId, lesson);
+      await _lessonService.updateLesson(_edittingLesson.documentId!, lesson);
     }
     //upload  to firestore
-    CloudStorageResult lessonDocResult;
+    CloudStorageResult? lessonDocResult;
 
-    if (_lessonDetailDocument != null) {
-      lessonDocResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _lessonDetailDocument,
-        title: super.currentBusiness.documentId +
-            "/" +
-            module.documentId +
-            "/" +
-            (isEditting ? _edittingLesson.documentId : result.userId) +
-            "/" +
-            p.basename(_lessonDetailDocument.path),
-      );
-    }
-    //update course
+    lessonDocResult = await _cloudStorageService.uploadFile(
+      fileToUpload: _lessonDetailDocument,
+      title: super.currentBusiness.documentId! +
+          "/" +
+          module.documentId +
+          "/" +
+          (isEditting ? _edittingLesson.documentId : result.userId) +
+          "/" +
+          p.basename(_lessonDetailDocument.path),
+    );
+      //update course
 
-    if (lessonDocResult != null) {
-      lesson.instructionDoc = new InstructionDoc(
-          title: p.basename(_lessonDetailDocument.path),
-          docUrl: lessonDocResult.mediaUrl,
-          docSize: lessonDocResult.size);
-    } else if (isEditting && lesson.instructionDoc != null) {
-      lesson.instructionDoc.docSize = _edittingLesson.instructionDoc.docSize;
-      lesson.instructionDoc.docUrl = _edittingLesson.instructionDoc.docUrl;
-    }
-
-    if (_lessonVideoFile != null) {
-      await handleVideoUpload(_lessonVideoFile, result, lesson);
-    } else {
-      _lessonService.updateLesson(lesson.documentId, lesson);
-    }
+    lesson.instructionDoc = new InstructionDoc(
+        title: p.basename(_lessonDetailDocument.path),
+        docUrl: lessonDocResult.mediaUrl,
+        docSize: lessonDocResult.size);
+    
+    await handleVideoUpload(_lessonVideoFile, result, lesson);
     /*
     if (videoResult != null) {
       course.courseVideo = new VideoInfo(
@@ -184,46 +173,44 @@ class LessonViewModel extends BaseModel {
     File thumbnailFile =
         await mediaService.getVideoThumbnail(videoFile.path, 30);
     //upload thumbnail
-    if (thumbnailFile != null) {
-      CloudStorageResult videoThumbnailResult =
-          await _cloudStorageService.uploadFile(
-        fileToUpload: thumbnailFile,
-        title: super.currentBusiness.documentId +
-            "/" +
-            lesson.courseId +
-            "/" +
-            lesson.moduleId +
-            "/" +
-            (isEditting ? _edittingLesson.documentId : result.userId) +
-            "/" +
-            p.basename(thumbnailFile.path),
-      );
-      lesson.videoInfo.thumbUrl = videoThumbnailResult.mediaUrl;
-    }
-
+    CloudStorageResult videoThumbnailResult =
+        await _cloudStorageService.uploadFile(
+      fileToUpload: thumbnailFile,
+      title: super.currentBusiness.documentId! +
+          "/" +
+          lesson.courseId! +
+          "/" +
+          lesson.moduleId! +
+          "/" +
+          (isEditting ? _edittingLesson.documentId! : result.userId) +
+          "/" +
+          p.basename(thumbnailFile.path),
+    );
+    lesson.videoInfo!.thumbUrl = videoThumbnailResult.mediaUrl;
+  
     //update Media Info
     MediaInfo mediaInfo = await mediaService.getMediaInfo(videoFile.path);
-    lesson.videoInfo.videoSize = filesize(mediaInfo.filesize);
-    lesson.videoInfo.title =
-        mediaInfo.title != null && mediaInfo.title.length > 0
-            ? mediaInfo.title
-            : p.basename(mediaInfo.path);
-    lesson.videoInfo.duration = computeDuration(mediaInfo.duration.toString());
-    lesson.videoInfo.rawVideoPath = mediaInfo.path;
-    String uploadPath = super.currentBusiness.documentId +
+    lesson.videoInfo!.videoSize = filesize(mediaInfo.filesize);
+    lesson.videoInfo!.title =
+        mediaInfo.title != null && mediaInfo.title!.length > 0
+            ? mediaInfo.title!
+            : p.basename(mediaInfo.path!);
+    lesson.videoInfo!.duration = computeDuration(mediaInfo.duration.toString());
+    lesson.videoInfo!.rawVideoPath = mediaInfo.path!;
+    String uploadPath = super.currentBusiness.documentId! +
         "/" +
-        lesson.courseId +
+        lesson.courseId! +
         "/" +
-        lesson.moduleId +
+        lesson.moduleId! +
         "/" +
-        (isEditting ? _edittingLesson.documentId : result.userId);
+        (isEditting ? _edittingLesson.documentId! : result.userId);
     //compress video
-    mediaService.uploadVideo(lesson.videoInfo, uploadPath,
+    mediaService.uploadVideo(lesson.videoInfo!, uploadPath,
         onComplete: () async {
       String downloadURL =
-          await FirebaseStorage.instance.ref(uploadPath + '/' + lesson.videoInfo.title).getDownloadURL();
-      lesson.videoInfo.videoUrl = downloadURL;
-      _lessonService.updateLesson(lesson.documentId, lesson);
+          await FirebaseStorage.instance.ref(uploadPath + '/' + lesson.videoInfo!.title!).getDownloadURL();
+      lesson.videoInfo!.videoUrl = downloadURL;
+      _lessonService.updateLesson(lesson.documentId!, lesson);
     });
     //update videoInfo
     /* await mediaService.compressVideo(path: videoFile.path);

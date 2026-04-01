@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyReorderableListView extends StatefulWidget {
   final List<dynamic> list;
   final List<Widget> children;
-  MyReorderableListView({@required this.list, @required this.children});
+  MyReorderableListView({required this.list, required this.children});
 
   @override
   _MyReorderableListViewState createState() => _MyReorderableListViewState();
