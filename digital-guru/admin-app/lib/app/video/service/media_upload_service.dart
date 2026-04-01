@@ -26,10 +26,10 @@ import 'package:light_compressor/light_compressor.dart' as lc;
 class MediaUploadService extends BaseService {
   static FlutterUploader _uploader = FlutterUploader();
   static FlutterUploader get uploader => _uploader;
-  static String videosDir;
+  static String? videosDir;
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
-  static MediaUploadService _instance;
+  static MediaUploadService? _instance;
   static List<FirebaseUploadItem> _tasks = [];
   static List<FirebaseUploadItem> get tasks => _tasks;
 
@@ -66,7 +66,7 @@ class MediaUploadService extends BaseService {
 
   Future<MediaInfo> getMediaInfo(String path) async {
     MediaInfo info = await VideoCompress.getMediaInfo(path);
-    if (info.title == null || info.title.length == 0) {
+    if (info.title == null || info.title!.isEmpty) {
       info.title = p.basename(path);
     }
     return info;
@@ -103,27 +103,22 @@ Future<String> get _destinationFile(String fileName) async {
   }
 */
   Future<String> videoCompressLigh(
-      {VideoInfo videoInfo, lc.VideoQuality outputQuality}) async {
-    var fileName = videoInfo.title.split('.').first;
-    final Map<String, dynamic> response =
-        await lc.LightCompressor.compressVideo(
-            path: videoInfo.rawVideoPath,
-            destinationPath: '$videosDir//$fileName.mp4',
-            videoQuality: outputQuality != null
-                ? outputQuality
-                : lc.VideoQuality.very_high,
-            isMinBitRateEnabled: false,
-            keepOriginalResolution: true);
+      {required VideoInfo videoInfo, lc.VideoQuality? outputQuality}) async {
+    var fileName = videoInfo.title!.split('.').first;
+    final result =
+        await lc.LightCompressor().compressVideo(
+            path: videoInfo.rawVideoPath!,
+            videoQuality: outputQuality ?? lc.VideoQuality.very_high, 
+            android: lc.AndroidConfig(saveAt: lc.SaveAt.Movies, isSharedStorage: false), 
+            ios: lc.IOSConfig(), 
+            video: lc.Video(videoName: videoInfo.title!, keepOriginalResolution: true,videoBitrateInMbps: 1000));
 
-    if (response != null && response['onSuccess'] != null) {
-      return '$videosDir/$fileName.mp4';
-    }
-    return videoInfo.rawVideoPath;
+    return '$videosDir/$fileName.mp4';
   }
 
   void uploadVideo(VideoInfo videoInfo, String uploadDir,
-      {Function onComplete}) async {
-    var fn = videoInfo.title.split('.').first;
+      {Function? onComplete}) async {
+    var fn = videoInfo.title!.split('.').first;
     String outPath = '$videosDir/$fn.mp4';
 
     //compress
@@ -162,7 +157,7 @@ Future<String> get _destinationFile(String fileName) async {
     UploadTask _uploadTask = FirebaseStorage.instance
         .ref()
         .child(uploadDir + '/' + fileName)
-        .putFile(File(videoInfo.rawVideoPath));
+        .putFile(File(videoInfo.rawVideoPath!));
 
     FirebaseUploadItem uplaodItem = FirebaseUploadItem(videoInfo.title,
         fileToUpload: videoInfo.rawVideoPath,
@@ -171,20 +166,20 @@ Future<String> get _destinationFile(String fileName) async {
         onComplete: onComplete,
         uploadTask: _uploadTask);
     addUploadItem(uplaodItem);
-    _uploadTask.whenComplete(onComplete);
+    if (onComplete != null) {
+      _uploadTask.whenComplete(() => onComplete());
+    }
     // _uploadTask.whenComplete(() => onComplete);
 
     //await _uploader.enqueue(upload);
   }
 
   void addUploadItem(FirebaseUploadItem item) {
-    assert(item != null);
     _tasks.add(item);
   }
 
-  FirebaseUploadItemView removeUploadItem(FirebaseUploadItem item) {
-    assert(item != null);
-    _tasks.remove(item);
+  void removeUploadItem(FirebaseUploadItem item) {
+      _tasks.remove(item);
   }
 
   void clearCompletedTasks() {

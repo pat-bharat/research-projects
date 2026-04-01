@@ -30,10 +30,10 @@ class StartUpViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   final UserService _userService = locator<UserService>();
 
-  AppConfig apConfig;
-  bool tocAccepted;
-  bool privacyAccepted;
-  StartUpViewModel(AppConfig appConfig) : super(appConfig: appConfig);
+  AppConfig appConfig;
+  bool? tocAccepted;
+  bool? privacyAccepted;
+  StartUpViewModel({required this.appConfig}) : super();
   Future handleStartUpLogic() async {
     await _dynamicLinkService.handleDynamicLinks();
     await _remoteConfigService.initialise();
@@ -47,7 +47,7 @@ class StartUpViewModel extends BaseModel {
 
     if (hasLoggedInUser) {
       var legalAccepted =
-          await _userService.hasUserAcceptedLegals(currentUser.documentId);
+          await _userService.hasUserAcceptedLegals(currentUser!.documentId!);
       if (legalAccepted) {
         if (super.isAdmin) {
           var result = await _authenticationService.getBusinessByEmail();

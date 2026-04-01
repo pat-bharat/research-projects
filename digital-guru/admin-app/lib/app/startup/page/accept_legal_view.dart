@@ -16,18 +16,18 @@ import 'package:getwidget/types/gf_toggle_type.dart';
 import 'package:stacked/stacked.dart';
 
 class AcceptLegalView extends StatefulWidget {
-  const AcceptLegalView({Key key}) : super(key: key);
+  const AcceptLegalView({Key? key}) : super(key: key);
 
   @override
   AcceptLegalViewState createState() => AcceptLegalViewState();
 }
 
 class AcceptLegalViewState extends State<AcceptLegalView> {
-  bool isAdmin;
-  AcceptLegalModel model;
-  bool _tocAccepted = false;
-  bool _provacyPolicyAccepted = false;
-  List<dynamic> _legals = List.empty(growable: true);
+  bool? isAdmin;
+  AcceptLegalModel? model;
+  bool? _tocAccepted = false;
+  late bool? _privacyPolicyAccepted = false;
+  late List<dynamic> _legals = List.empty(growable: true);
   final DialogService _dialogService = locator<DialogService>();
   @override
   void initState() {
@@ -38,7 +38,7 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
 
   void getLegals() async {
     List<dynamic> legals = List.empty(growable: true);
-    await model.getLegalList().then((value) => {
+    await model?.getLegalList().then((value) => {
           if (value != null) {legals.addAll(value)}
         });
 
@@ -50,8 +50,8 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AcceptLegalModel>.reactive(
-      viewModelBuilder: () => model,
-      onModelReady: (model) => () {},
+      viewModelBuilder: () => model!,
+      onViewModelReady: (model) => () {},
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
           // backgroundColor: Colors.white,
@@ -83,7 +83,7 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
           children: [
             TextLink("Please read Terms and Conditions", onPressed: () {
               model.viewPdf(l.pdfDoc);
-            }, style: Theme.of(context).textTheme.headline2),
+            }, style: Theme.of(context).textTheme.bodyMedium),
             IconButton(
               icon: Icon(Icons.picture_as_pdf),
               onPressed: () {
@@ -101,7 +101,7 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
                   _tocAccepted = val;
                 });
               },
-              value: _tocAccepted,
+              value: _tocAccepted!,
               type: GFToggleType.ios,
             ),
             horizontalSpaceSmall,
@@ -113,9 +113,9 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
       if (l.legalType == LegalType.privacy_policy) {
         widgets.add(Row(
           children: [
-            TextLink("Please read Privacy Polivy", onPressed: () {
+            TextLink("Please read Privacy Policy", onPressed: () {
               model.viewPdf(l.pdfDoc);
-            }, style: Theme.of(context).textTheme.headline2),
+            }, style: Theme.of(context).textTheme.bodyMedium),
             IconButton(
               icon: Icon(Icons.picture_as_pdf),
               onPressed: () {
@@ -130,10 +130,10 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
             GFToggle(
               onChanged: (val) {
                 setState(() {
-                  _provacyPolicyAccepted = val;
+                  _privacyPolicyAccepted = val;
                 });
               },
-              value: _provacyPolicyAccepted,
+              value: _privacyPolicyAccepted!,
               type: GFToggleType.ios,
             ),
             horizontalSpaceSmall,
@@ -150,7 +150,7 @@ class AcceptLegalViewState extends State<AcceptLegalView> {
         BusyButton(
             title: Strings.accept,
             onPressed: () {
-              if (_tocAccepted && _provacyPolicyAccepted) {
+              if (_tocAccepted! && _privacyPolicyAccepted!) {
                 model.legalAccepted();
               } else {
                 _dialogService.showDialog(

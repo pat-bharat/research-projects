@@ -44,7 +44,7 @@ class AcceptLegalModel extends BaseModel {
       return _legals = await _systemService.getBusinessOnlyLegals();
     } else {
       return _legals = await _businessService
-          .getAllBusinessLegals(currentBusiness.documentId);
+          .getAllBusinessLegals(currentBusiness.documentId!);
     }
   }
 

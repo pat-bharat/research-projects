@@ -1,13 +1,13 @@
 class UserAcceptedLegal {
-  String userId;
-  String acceptedBy;
-  String legalType;
-  String pdfDoc;
-  String acceptedTimestamp;
+  String? userId;
+  String? acceptedBy;
+  String? legalType;
+  String? pdfDoc;
+  String? acceptedTimestamp;
 
   UserAcceptedLegal(
-      {this.userId,
-      this.acceptedBy,
+      {required this.userId,
+      required this.acceptedBy,
       this.legalType,
       this.pdfDoc,
       this.acceptedTimestamp});

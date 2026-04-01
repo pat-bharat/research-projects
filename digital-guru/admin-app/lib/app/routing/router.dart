@@ -62,7 +62,7 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       AppConfig? appConfig = settings.arguments as AppConfig?;
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: StartUpView(appConfig: appConfig ?? AppConfig(businessId: BusinessService().businessId)),
+        viewToShow: StartUpView(appConfig: appConfig),
       );
     case HomeViewRoute:
       return _getPageRoute(
@@ -71,13 +71,13 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       );
     //Courses
     case CreateCourseViewRoute:
-      Course courseToEdit;
+      Course? courseToEdit;
       if (settings.arguments is Course) {
         courseToEdit = settings.arguments as Course;
       }
 
       return _getPageRoute(
-        viewToShow: CourseView(editingCourse: courseToEdit),
+        viewToShow: CourseView(editingCourse: courseToEdit!),
       );
     case CourseViewListRoute:
       return _getPageRoute(
@@ -86,30 +86,30 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       );
     //Modules
     case ModuleViewListRoute:
-      Course course;
+      Course? course;
       if (settings.arguments is Course) {
         course = settings.arguments as Course;
       }
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: ModuleListView(course: course),
+        viewToShow: ModuleListView(course: course!),
       );
     case AddUpadateModuleViewRoute:
       CourseModuleArgs cm = settings.arguments as CourseModuleArgs;
 
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: ModuleView(editingModule: cm.module, course: cm.course),
+        viewToShow: ModuleView(editingModule: cm.module!, course: cm.course),
       );
     //Business
     case CreateBusinessViewRoute:
-      Business businessToEdit;
+      Business? businessToEdit;
       if (settings.arguments != null && settings.arguments is Business) {
         businessToEdit = settings.arguments as Business;
       }
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: BusinessView(editingBusiness: businessToEdit),
+        viewToShow: BusinessView(editingBusiness: businessToEdit!),
       );
     case BusinessLegalListViewRoute:
       return _getPageRoute(
@@ -128,14 +128,14 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       );
     //Lessons
     case LessonViewListRoute:
-      CourseModuleArgs _courseModule;
+      CourseModuleArgs? _courseModule;
       if (settings.arguments is CourseModuleArgs) {
         _courseModule = settings.arguments as CourseModuleArgs;
       }
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: LessonListView(
-            course: _courseModule.course, module: _courseModule.module),
+            course: _courseModule!.course, module: _courseModule.module!),
       );
     case CreateLessonViewRoute:
       CourseModuleLessonsArgs ml =
@@ -143,7 +143,7 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: LessonView(
-            course: ml.course, module: ml.module, editingLesson: ml.lesson),
+            course: ml.course, module: ml.module, editingLesson: ml.lesson!),
       );
     //instructors
     case InstructorListViewRoute:
@@ -152,13 +152,13 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
         viewToShow: InstructorListView(),
       );
     case AddEditInstructorViewRoute:
-      Instructor instructor;
+      Instructor? instructor;
       if (settings.arguments is Instructor) {
         instructor = settings.arguments as Instructor;
       }
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: InstructorView(editingInstructor: instructor),
+        viewToShow: InstructorView(editingInstructor: instructor!),
       );
     //Users
     case FreeUserModuleListRoute:
@@ -172,28 +172,28 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
         viewToShow: PurchasedUserModuleListView(),
       );
     case ViewPdfRoute:
-      String pdfUrl = settings.arguments;
+      String pdfUrl = settings.arguments! as String;
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: PdfViewer(url: pdfUrl),
       );
     case ViewImageRoute:
-      String url = settings.arguments;
+      String url = settings.arguments! as String;
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: ImageViewer(url: url),
       );
     case ViewVideoRoute:
-      String url = settings.arguments;
+      String url = settings.arguments! as String;
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,
         viewToShow: VideoPlayer(url: url),
       );
     case YoutubeVideoRoute:
-      String id = settings.arguments;
+      String id = settings.arguments! as String;
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,
@@ -202,7 +202,7 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
         ),
       );
     case ViewDownloadQueueRoute:
-      TargetPlatform platform = settings.arguments;
+      TargetPlatform platform = settings.arguments! as TargetPlatform;
       //settings.arguments;
       return _getPageRoute(
         routeName: settings.name,

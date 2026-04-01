@@ -20,9 +20,9 @@ class PurchaseService extends BaseService {
       : ['com.cooni.point1000', 'com.cooni.point5000'];
 
   String _platformVersion = 'Unknown';
-  List<Purchase> _items = [];
   List<Purchase> _purchases = [];
   List<Purchase> _purchasesHistory = [];
+  List<Purchase> _items = [];
 
   bool simulated = true;
   Future<void> initPurchaseService() async {
@@ -36,7 +36,7 @@ class PurchaseService extends BaseService {
     // refresh items for android
     try {
       var products = await FlutterInappPurchase.instance.getAvailablePurchases();
-      _items = products as List<Purchase>;
+      _items = products;
     } catch (err) {
       print('getProducts error: $err');
     }
@@ -58,7 +58,10 @@ class PurchaseService extends BaseService {
   }
 
   Future requestPurchase(Purchase item) async {
-    return await FlutterInappPurchase.instance.requestPurchase(RequestPurchaseProps.inApp(item.productId));
+    final props = Platform.isIOS
+        ? RequestPurchaseIosProps(sku: item.productId) as RequestPurchaseProps
+        : RequestPurchaseAndroidProps(skus: List.of([item.productId])) as RequestPurchaseProps;
+    return await FlutterInappPurchase.instance.requestPurchase(props);
   }
 
   Future getProducts() async {
@@ -77,7 +80,7 @@ class PurchaseService extends BaseService {
 
   Future getPurchaseHistory() async {
     List<Purchase> items =
-        (await FlutterInappPurchase.instance.getAvailablePurchases() ?? []) as List<IAPItem>;
+        await FlutterInappPurchase.instance.getAvailablePurchases() ?? [];
     for (var item in items) {
       print('${item.toString()}');
       this._purchasesHistory.add(item);

@@ -12,10 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadScreen extends StatefulWidget {
   UploadScreen({
-    Key key,
-    @required this.uploader,
-    @required this.uploadURL,
-    @required this.onUploadStarted,
+    Key? key,
+    required this.uploader,
+    required this.uploadURL,
+    required this.onUploadStarted,
   }) : super(key: key);
 
   final FlutterUploader uploader;
@@ -36,16 +36,12 @@ class _UploadScreenState extends State<UploadScreen> {
     super.initState();
 
     if (Platform.isAndroid) {
-      imagePicker.getLostData().then((lostData) {
-        if (lostData == null) {
-          return;
-        }
-
+      imagePicker.retrieveLostData().then((lostData) {
         if (lostData.type == RetrieveType.image) {
-          _handleFileUpload([lostData.file.path]);
+          _handleFileUpload([lostData.file!.path]);
         }
         if (lostData.type == RetrieveType.video) {
-          _handleFileUpload([lostData.file.path]);
+          _handleFileUpload([lostData.file!.path]);
         }
       });
     }
@@ -66,7 +62,7 @@ class _UploadScreenState extends State<UploadScreen> {
               children: <Widget>[
                 Text(
                   'Configure test Server Behavior',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 /*DropdownButton<ServerBehavior>(
                   items: ServerBehavior.all.map((e) {
@@ -81,7 +77,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 Divider(),
                 Text(
                   'multipart/form-data uploads',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Wrap(
                   alignment: WrapAlignment.center,
@@ -104,7 +100,7 @@ class _UploadScreenState extends State<UploadScreen> {
                 Divider(height: 40),
                 Text(
                   'binary uploads',
-                  style: Theme.of(context).textTheme.subtitle1,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text('this will upload selected files as binary'),
                 Wrap(
@@ -151,43 +147,42 @@ class _UploadScreenState extends State<UploadScreen> {
     );
   }
 
-  Future getImage({@required bool binary}) async {
+  Future getImage({required bool binary}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('binary', binary);
 
-    var image = await imagePicker.getImage(source: ImageSource.gallery);
+    var image = await imagePicker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       _handleFileUpload([image.path]);
     }
   }
 
-  Future getVideo({@required bool binary}) async {
+  Future getVideo({required bool binary}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('binary', binary);
 
-    var video = await imagePicker.getVideo(source: ImageSource.gallery);
+    var video = await imagePicker.pickVideo(source: ImageSource.gallery);
 
     if (video != null) {
       _handleFileUpload([video.path]);
     }
   }
 
-  Future getMultiple({@required bool binary}) async {
+  Future getMultiple({required bool binary}) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('binary', binary);
 
     final files = await FilePicker.platform.pickFiles(
-      allowCompression: false,
       allowMultiple: true,
     );
     if (files != null && files.count > 0) {
       if (binary) {
         for (var file in files.files) {
-          _handleFileUpload([file.path]);
+          _handleFileUpload([file.path!]);
         }
       } else {
-        _handleFileUpload(files.paths);
+        _handleFileUpload(files.paths!.whereType<String>().toList());
       }
     }
   }
@@ -220,6 +215,12 @@ class _UploadScreenState extends State<UploadScreen> {
         tag: tag,
       );
     }
+    return RawUpload(
+      url: url.toString(),
+      path: paths.first,
+      method: UploadMethod.POST,
+      tag: tag,
+    );
     /*else {
       return MultipartFormDataUpload(
         url: url.toString(),

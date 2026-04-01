@@ -27,10 +27,9 @@ void backgroundHandler() {
             AndroidNotificationDetails(
           'FlutterUploader.Example',
           'FlutterUploader',
-          'Installed when you activate the Flutter Uploader Example',
-          progress: uploadTaskProgress.progress,
+          importance: Importance.min,
+          progress: uploadTaskProgress.progress ?? 0,
           enableVibration: false,
-          importance: Importance.Low,
           showProgress: true,
           onlyAlertOnce: true,
           maxProgress: 100,
@@ -55,7 +54,7 @@ void backgroundHandler() {
       processed.add(result.taskId);
       preferences.setStringList('processed', processed);
 
-      notifications.cancel(result.taskId.hashCode);
+      await notifications.cancel(id: int.parse(result.taskId));
 
       final successful = result.status == UploadTaskStatus.complete;
 
@@ -70,13 +69,13 @@ void backgroundHandler() {
           AndroidNotificationDetails(
         'FlutterUploader.Example',
         'FlutterUploader',
-        'Installed when you activate the Flutter Uploader Example',
+        channelDescription: 'Installed when you activate the Flutter Uploader Example',
         progress: 100,
         icon: 'ic_upload',
         enableVibration: !successful,
         importance: result.status == UploadTaskStatus.failed
-            ? Importance.High
-            : Importance.Min,
+            ? Importance.max
+            : Importance.min,
       );
       /*NotificationDetails platformChannelSpecifics = NotificationDetails(
           androidPlatformChannelSpecifics,

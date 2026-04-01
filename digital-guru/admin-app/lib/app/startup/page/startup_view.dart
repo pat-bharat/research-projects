@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class StartUpView extends StatelessWidget {
-  final AppConfig appConfig;
-  const StartUpView({Key key, this.appConfig}) : super(key: key);
+  final AppConfig? appConfig;
+  const StartUpView({Key? key, this.appConfig}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<StartUpViewModel>.reactive(
-      viewModelBuilder: () => StartUpViewModel(appConfig),
-      onModelReady: (model) => model.handleStartUpLogic(),
+      viewModelBuilder: () => StartUpViewModel(appConfig: appConfig!),
+      onViewModelReady: (model) => model.handleStartUpLogic(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.white,
         body: Center(

@@ -24,10 +24,10 @@ class SignUpViewModel extends BaseModel {
   }
 
   Future signUpWithEmail(
-      {@required String email,
-      @required String password,
-      @required String fullName,
-      String businessId}) async {
+      {required String email,
+      required String password,
+      required String fullName,
+      String? businessId}) async {
     setBusy(true);
 
     var result = await _authenticationService.signUpWithEmail(

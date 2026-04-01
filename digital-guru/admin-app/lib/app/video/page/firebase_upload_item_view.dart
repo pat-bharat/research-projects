@@ -9,8 +9,8 @@ class FirebaseUploadItemView extends StatefulWidget {
   final FirebaseUploadItem item;
 
   FirebaseUploadItemView({
-    Key key,
-    this.item,
+    Key? key,
+    required this.item,
   }) : super(key: key);
   @override
   _FirebaseUploadItemViewState createState() => _FirebaseUploadItemViewState();
@@ -19,7 +19,7 @@ class FirebaseUploadItemView extends StatefulWidget {
 class _FirebaseUploadItemViewState extends State<FirebaseUploadItemView> {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  UploadTask _uploadTask;
+  UploadTask? _uploadTask;
   @override
   void initState() {
     super.initState();
@@ -29,30 +29,35 @@ class _FirebaseUploadItemViewState extends State<FirebaseUploadItemView> {
   /// Starts an upload task
   void startUpload() {
     /// Unique file name for the file
+    final fileToUpload = widget.item.fileToUpload;
+    if (fileToUpload == null) return;
+    
     setState(() {
       _uploadTask = _storage
           .ref()
-          .child(widget.item.destPath)
-          .putFile(File(widget.item.fileToUpload));
+          .child(widget.item.destPath ?? '')
+          .putFile(File(fileToUpload));
     });
 
-    _uploadTask.whenComplete(widget.item.onComplete);
+    if (widget.item.onComplete != null) {
+      _uploadTask?.whenComplete(() => widget.item.onComplete!());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_uploadTask != null) {
-      TaskSnapshot snapshot;
+      TaskSnapshot? snapshot;
 
       /// Manage the task state and event subscription with a StreamBuilder
       return StreamBuilder<TaskSnapshot>(
-          stream: _uploadTask.snapshotEvents,
+          stream: _uploadTask?.snapshotEvents,
           builder: (context, AsyncSnapshot<TaskSnapshot> asyncSnapshot) {
             double progressPercent = 0;
             if (asyncSnapshot != null && asyncSnapshot.hasData) {
               snapshot = asyncSnapshot.data;
               progressPercent = snapshot != null
-                  ? snapshot.bytesTransferred / snapshot.totalBytes
+                  ? snapshot!.bytesTransferred / snapshot!.totalBytes
                   : 0;
               print('Uplaod Task >> ' + snapshot.toString());
               return commonContainer(
@@ -62,27 +67,27 @@ class _FirebaseUploadItemViewState extends State<FirebaseUploadItemView> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(widget.item.title),
-                          if (snapshot.state == TaskState.success)
+                          Text(widget.item.title ?? ''),
+                          if (snapshot!.state == TaskState.success)
                             IconButton(
                                 icon: Icon(Icons.check),
                                 iconSize: Theme.of(context).iconTheme.size,
                                 onPressed: () {}),
-                          if (TaskState.paused == snapshot.state)
+                          if (TaskState.paused == snapshot!.state)
                             IconButton(
                                 icon: Icon(Icons.play_arrow_rounded),
                                 iconSize: Theme.of(context).iconTheme.size,
-                                onPressed: _uploadTask.resume),
-                          if (TaskState.running == snapshot.state)
+                                onPressed: _uploadTask?.resume),
+                          if (TaskState.running == snapshot!.state)
                             IconButton(
                                 icon: Icon(Icons.pause),
                                 iconSize: Theme.of(context).iconTheme.size,
-                                onPressed: _uploadTask.resume),
-                          if (TaskState.success != snapshot.state)
+                                onPressed: _uploadTask?.pause),
+                          if (TaskState.success != snapshot!.state)
                             IconButton(
                                 icon: Icon(Icons.cancel),
                                 iconSize: Theme.of(context).iconTheme.size,
-                                onPressed: _uploadTask.cancel),
+                                onPressed: _uploadTask?.cancel),
                         ],
                       ),
                       if (progressPercent < 1)
@@ -102,7 +107,7 @@ class _FirebaseUploadItemViewState extends State<FirebaseUploadItemView> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(widget.item.title),
+                        Text(widget.item.title ?? ''),
                         IconButton(
                             icon: Icon(Icons.check),
                             iconSize: Theme.of(context).iconTheme.size,

@@ -15,6 +15,7 @@ import 'package:form_field_validator/form_field_validator.dart';
 import 'package:getwidget/components/toggle/gf_toggle.dart';
 import 'package:getwidget/types/gf_toggle_type.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:intl_phone_field/models/phone_number.dart';
 import 'package:stacked/stacked.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -23,8 +24,8 @@ class UserProfileView extends StatefulWidget {
 }
 
 class _UserProfileViewState extends State<UserProfileView> {
-  User profile;
-  UserProfileModel model;
+  User? profile;
+  UserProfileModel? model;
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -39,7 +40,7 @@ class _UserProfileViewState extends State<UserProfileView> {
 
   void loadUserProfile() {
     model = UserProfileModel();
-    User _profile = model.loadCurrentUserProfile();
+    User? _profile = model?.loadCurrentUserProfile();
     setState(() {
       profile = _profile;
     });
@@ -49,12 +50,12 @@ class _UserProfileViewState extends State<UserProfileView> {
   Widget build(BuildContext context) {
     portraitModeOnly();
     return ViewModelBuilder<UserProfileModel>.reactive(
-        viewModelBuilder: () => model,
-        onModelReady: (model) {
-          nameController.text = profile.fullName;
-          emailController.text = profile.email;
-          mobileController.text = profile.mobileNo;
-          _country = profile.country ?? profile.country;
+        viewModelBuilder: () => model!,
+        onViewModelReady: (model) {
+          nameController.text = profile!.fullName ?? '';
+          emailController.text = profile!.email ?? '';
+          mobileController.text = profile!.mobileNo ?? '';
+          _country = profile!.country ?? 'US';
         },
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
@@ -79,7 +80,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                           _buildActionButtons(context, model),
                           verticalSpaceMedium,
                         ]),
-                      ))),
+                      )), body: Center(),),
             ));
   } //Column1
 
@@ -93,7 +94,7 @@ class _UserProfileViewState extends State<UserProfileView> {
         Row(children: [
           Text(
             "Profile",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -115,9 +116,16 @@ class _UserProfileViewState extends State<UserProfileView> {
                 IntlPhoneField(
                   initialValue: mobileController.text,
                   initialCountryCode: _country,
-                  style: Theme.of(context).textTheme.bodyText1,
-                  validator: PatternValidator(phonePattern,
-                      errorText: Strings.invalidMobileNumber),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  validator: (PhoneNumber? phone) {
+                    if (phone == null || phone.number.isEmpty) {
+                      return Strings.invalidMobileNumber;
+                    }
+                    if (!RegExp(phonePattern.toString()).hasMatch(phone.number)) {
+                      return Strings.invalidMobileNumber;
+                    }
+                    return null;
+                  },
                   decoration: InputDecoration(
                     labelText: Strings.mobileNumber,
                     border: OutlineInputBorder(),
@@ -145,7 +153,7 @@ class _UserProfileViewState extends State<UserProfileView> {
         Row(children: [
           Text(
             "Preferences",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -157,10 +165,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                   GFToggle(
                     onChanged: (val) {
                       setState(() {
-                        profile.userPreferances.downloadLessons = val;
+                        profile!.userPreferances?.downloadLessons = val;
                       });
                     },
-                    value: profile.userPreferances.downloadLessons,
+                    value: profile!.userPreferances?.downloadLessons ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -175,10 +183,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                   GFToggle(
                     onChanged: (val) {
                       setState(() {
-                        profile.userPreferances.wifiDownloadOnly = val;
+                        profile!.userPreferances?.wifiDownloadOnly = val;
                       });
                     },
-                    value: profile.userPreferances.wifiDownloadOnly,
+                    value: profile!.userPreferances?.wifiDownloadOnly ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -193,10 +201,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                   GFToggle(
                     onChanged: (val) {
                       setState(() {
-                        profile.userPreferances.inAppNotifications = val;
+                        profile!.userPreferances?.inAppNotifications = val;
                       });
                     },
-                    value: profile.userPreferances.inAppNotifications,
+                    value: profile!.userPreferances?.inAppNotifications ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -222,7 +230,7 @@ class _UserProfileViewState extends State<UserProfileView> {
         Row(children: [
           Text(
             "Preferences",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -235,10 +243,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                   GFToggle(
                     onChanged: (val) {
                       setState(() {
-                        profile.userPreferances.wifiUploadOnly = val;
+                        profile!.userPreferances?.wifiUploadOnly = val;
                       });
                     },
-                    value: profile.userPreferances.wifiUploadOnly,
+                    value: profile!.userPreferances?.wifiUploadOnly ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -253,10 +261,10 @@ class _UserProfileViewState extends State<UserProfileView> {
                   GFToggle(
                     onChanged: (val) {
                       setState(() {
-                        profile.userPreferances.inAppNotifications = val;
+                        profile!.userPreferances?.inAppNotifications = val;
                       });
                     },
-                    value: profile.userPreferances.inAppNotifications,
+                    value: profile!.userPreferances?.inAppNotifications ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -283,11 +291,11 @@ class _UserProfileViewState extends State<UserProfileView> {
                 title: Strings.save,
                 busy: model.busy,
                 onPressed: () {
-                  if (_userViewKey.currentState.validate()) {
-                    profile.fullName = nameController.text;
-                    profile.country = _country;
-                    profile.mobileNo = mobileController.text;
-                    model.save(profile);
+                  if (_userViewKey.currentState!.validate()) {
+                    profile!.fullName = nameController.text;
+                    profile!.country = _country;
+                    profile!.mobileNo = mobileController.text;
+                    model.save(profile! );
                   }
                 }),
             horizontalSpaceMedium,

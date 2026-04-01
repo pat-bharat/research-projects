@@ -18,7 +18,7 @@ class SignUpView extends StatelessWidget {
       viewModelBuilder: () => SignUpViewModel(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(

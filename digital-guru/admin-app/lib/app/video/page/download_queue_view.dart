@@ -33,9 +33,9 @@ class DownloadList extends StatelessWidget {
 }*/
 
 class DownloadQueueView extends StatefulWidget with WidgetsBindingObserver {
-  final TargetPlatform platform;
+  final TargetPlatform? platform;
 
-  DownloadQueueView({Key key, this.title, this.platform}) : super(key: key);
+  DownloadQueueView({Key? key, required this.title, this.platform}) : super(key: key);
 
   final String title;
 
@@ -46,21 +46,21 @@ class DownloadQueueView extends StatefulWidget with WidgetsBindingObserver {
 class _DownloadQueueViewState extends State<DownloadQueueView> {
   List<_TaskInfo> _tasks = List.empty(growable: true);
   List<_ItemHolder> _items = List.empty(growable: true);
-  bool _isLoading;
-  bool _permissionReady;
-  String _localPath;
+  bool? _isLoading;
+  bool? _permissionReady;
+  String? _localPath;
   ReceivePort _port = ReceivePort();
-  DownloadService downloadService;
+  DownloadService? downloadService;
   @override
   void initState() {
     super.initState();
     downloadService = DownloadService.instance;
-    downloadService.initDownloadDirectory();
+    downloadService?.initDownloadDirectory();
     // _bindBackgroundIsolate();
-    downloadService.registerCallBack(downloadCallback);
+    downloadService?.registerCallBack(downloadCallback);
     // FlutterDownloader.registerCallback(downloadCallback);
     _prepare(); // load tasks
-    downloadService.listenToBackgroundIsolate((dynamic data) {
+    downloadService?.listenToBackgroundIsolate((dynamic data) {
       if (debug) {
         print('UI Isolate Callback: $data');
       }
@@ -88,9 +88,9 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
       print(
           'Background Isolate Callback: task ($id) is in status ($status) and process ($progress)');
     }
-    final SendPort send =
+    final SendPort? send =
         IsolateNameServer.lookupPortByName('digiguru_download_port');
-    send.send([id, status, progress]);
+    send?.send([id, status, progress]);
   }
 
   @override
@@ -105,11 +105,11 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
                 title: new Text("Download Queue"),
               ),
               body: Builder(
-                  builder: (context) => _isLoading
+                  builder: (context) => _isLoading!
                       ? new Center(
                           child: new CircularProgressIndicator(),
                         )
-                      : _permissionReady
+                      : _permissionReady ?? false
                           ? _buildDownloadList(context, model)
                           : _buildNoPermissionWarning()),
             )));
@@ -220,12 +220,12 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
       );
 
   void _requestDownload(_TaskInfo task) async {
-    task.taskId = await FlutterDownloader.enqueue(
+    task.taskId = (await FlutterDownloader.enqueue(
         url: task.link,
         headers: {"auth": "test_for_sql_encoding"},
-        savedDir: _localPath,
+        savedDir: _localPath!,
         showNotification: true,
-        openFileFromNotification: true);
+        openFileFromNotification: true))!;
   }
 
   void _cancelDownload(_TaskInfo task) async {
@@ -237,13 +237,17 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
   }
 
   void _resumeDownload(_TaskInfo task) async {
-    String newTaskId = await FlutterDownloader.resume(taskId: task.taskId);
-    task.taskId = newTaskId;
+    String? newTaskId = await FlutterDownloader.resume(taskId: task.taskId);
+    if (newTaskId != null) {
+      task.taskId = newTaskId;
+    }
   }
 
   void _retryDownload(_TaskInfo task) async {
-    String newTaskId = await FlutterDownloader.retry(taskId: task.taskId);
-    task.taskId = newTaskId;
+    String? newTaskId = await FlutterDownloader.retry(taskId: task.taskId);
+    if (newTaskId != null) {
+      task.taskId = newTaskId;
+    }
   }
 
   Future<bool> _openDownloadedFile(_TaskInfo task) {
@@ -325,7 +329,7 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
         }
       }
       if (!found) {
-        _TaskInfo info = _TaskInfo(name: task.filename, link: task.url);
+        _TaskInfo info = _TaskInfo(name: task.filename ?? '', link: task.url);
         info.taskId = task.taskId;
         info.status = task.status;
         info.progress = task.progress;
@@ -345,10 +349,10 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
 
 class DownloadItem extends StatelessWidget {
   final _ItemHolder data;
-  final Function(_TaskInfo) onItemClick;
-  final Function(_TaskInfo) onAtionClick;
+  final Function(_TaskInfo)? onItemClick;
+  final Function(_TaskInfo)? onAtionClick;
 
-  DownloadItem({this.data, this.onItemClick, this.onAtionClick});
+  DownloadItem({required this.data, this.onItemClick,  this.onAtionClick});
 
   @override
   Widget build(BuildContext context) {
@@ -357,7 +361,7 @@ class DownloadItem extends StatelessWidget {
       child: InkWell(
         onTap: data.task.status == DownloadTaskStatus.complete
             ? () {
-                onItemClick(data.task);
+                onItemClick!(data.task);
               }
             : null,
         child: Stack(
@@ -404,7 +408,7 @@ class DownloadItem extends StatelessWidget {
     if (task.status == DownloadTaskStatus.undefined) {
       return RawMaterialButton(
         onPressed: () {
-          onAtionClick(task);
+          onAtionClick!(task);
         },
         child: Icon(Icons.file_download),
         shape: CircleBorder(),
@@ -413,7 +417,7 @@ class DownloadItem extends StatelessWidget {
     } else if (task.status == DownloadTaskStatus.running) {
       return RawMaterialButton(
         onPressed: () {
-          onAtionClick(task);
+          onAtionClick!(task);
         },
         child: Icon(
           Icons.pause,
@@ -425,7 +429,7 @@ class DownloadItem extends StatelessWidget {
     } else if (task.status == DownloadTaskStatus.paused) {
       return RawMaterialButton(
         onPressed: () {
-          onAtionClick(task);
+          onAtionClick!(task);
         },
         child: Icon(
           Icons.play_arrow,
@@ -445,7 +449,7 @@ class DownloadItem extends StatelessWidget {
           ),
           RawMaterialButton(
             onPressed: () {
-              onAtionClick(task);
+              onAtionClick!(task);
             },
             child: Icon(
               Icons.delete_forever,
@@ -466,7 +470,7 @@ class DownloadItem extends StatelessWidget {
           Text('Failed', style: TextStyle(color: Colors.red)),
           RawMaterialButton(
             onPressed: () {
-              onAtionClick(task);
+              onAtionClick!(task);
             },
             child: Icon(
               Icons.refresh,
@@ -480,7 +484,7 @@ class DownloadItem extends StatelessWidget {
     } else if (task.status == DownloadTaskStatus.enqueued) {
       return Text('Pending', style: TextStyle(color: Colors.orange));
     } else {
-      return null;
+      return SizedBox.shrink();
     }
   }
 }
@@ -493,12 +497,12 @@ class _TaskInfo {
   int progress = 0;
   DownloadTaskStatus status = DownloadTaskStatus.undefined;
 
-  _TaskInfo({this.name, this.link});
+  _TaskInfo({required this.name, required this.link}) : taskId = '';
 }
 
 class _ItemHolder {
   final String name;
   final _TaskInfo task;
 
-  _ItemHolder({this.name, this.task});
+  _ItemHolder({required this.name, required this.task});
 }

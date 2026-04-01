@@ -12,11 +12,11 @@ class DownloadService {
 
 //final TargetPlatform platform;
 
-  String _localPath;
+  late String _localPath;
   String get localDir => _localPath;
   ReceivePort _port = ReceivePort();
   // final platform;
-  List<DownloadTask> tasks;
+  late List<DownloadTask> tasks;
 
   static bool setupListener = false;
 
@@ -26,7 +26,7 @@ class DownloadService {
 
   static final DownloadService instance = DownloadService._privateConstructor();
 
-  void registerCallBack(Function callback) {
+  void registerCallBack(DownloadCallback callback) {
     FlutterDownloader.registerCallback(callback);
   }
 
@@ -40,7 +40,7 @@ class DownloadService {
     }
   }
 
-  void listenToBackgroundIsolate(Function listen) {
+  void listenToBackgroundIsolate(Function(dynamic) listen) {
     if (!setupListener) {
       _port.listen(listen);
       setupListener = true;

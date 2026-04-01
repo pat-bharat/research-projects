@@ -17,7 +17,7 @@ import 'package:stacked/stacked.dart';
 /// Shows the statusresponses for previous uploads.
 class FirebaseUploadQueueView extends StatefulWidget {
   FirebaseUploadQueueView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final FlutterUploader uploader = MediaUploadService.uploader;
@@ -28,19 +28,18 @@ class FirebaseUploadQueueView extends StatefulWidget {
 }
 
 class _FirebaseUploadQueueViewState extends State<FirebaseUploadQueueView> {
-  StreamSubscription<UploadTaskProgress> _progressSubscription;
-  StreamSubscription<UploadTaskResponse> _resultSubscription;
-  Stream<dynamic> _compressionSubscription;
+  late StreamSubscription<UploadTaskProgress> _progressSubscription;
+  late StreamSubscription<UploadTaskResponse> _resultSubscription;
+  late Stream<dynamic> _compressionSubscription;
 
-  List<FirebaseUploadItem> _tasks;
-  UploadQueueViewModel model;
+  late List<FirebaseUploadItem> _tasks;
+  late UploadQueueViewModel model;
   @override
   void initState() {
     super.initState();
     model = UploadQueueViewModel();
     _tasks = model.uploadItems;
-    _compressionSubscription =
-        LightCompressor.progressStream.receiveBroadcastStream();
+    _compressionSubscription = Stream.empty();
   }
 
   @override
@@ -62,7 +61,7 @@ class _FirebaseUploadQueueViewState extends State<FirebaseUploadQueueView> {
   Widget build(BuildContext context) {
     return ViewModelBuilder<UploadQueueViewModel>.reactive(
       viewModelBuilder: () => model,
-      onModelReady: (model) => model.listendToUpload(),
+      onViewModelReady: (model) => model.listendToUpload(),
       builder: (context, model, child) => SafeArea(
           child: CommonScaffold(
         model: model,
@@ -88,13 +87,13 @@ class _FirebaseUploadQueueViewState extends State<FirebaseUploadQueueView> {
                           : Center(
                               child: Text(
                                 "No upload Item Found..",
-                                style: Theme.of(context).textTheme.headline2,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             )),
             ],
           ),
         ),
-      )),
+      body: Center(),)),
     );
   }
 

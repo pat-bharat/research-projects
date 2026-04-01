@@ -13,7 +13,7 @@ import 'package:video_compress/video_compress.dart';
 /// Shows the statusresponses for previous uploads.
 class UploadQueueView extends StatefulWidget {
   UploadQueueView({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   final FlutterUploader uploader = MediaUploadService.uploader;
@@ -23,9 +23,9 @@ class UploadQueueView extends StatefulWidget {
 }
 
 class _UploadQueueViewState extends State<UploadQueueView> {
-  StreamSubscription<UploadTaskProgress> _progressSubscription;
-  StreamSubscription<UploadTaskResponse> _resultSubscription;
-  Stream<dynamic> _compressionSubscription;
+  StreamSubscription<UploadTaskProgress>? _progressSubscription;
+  StreamSubscription<UploadTaskResponse>? _resultSubscription;
+  StreamSubscription<dynamic>? _compressionSubscription;
 
   Map<String, UploadItem> _tasks = {};
 
@@ -57,7 +57,7 @@ class _UploadQueueViewState extends State<UploadQueueView> {
       var tmp = <String, UploadItem>{}..addAll(_tasks);
       tmp.putIfAbsent(result.taskId, () => UploadItem(result.taskId));
       tmp[result.taskId] =
-          tmp[result.taskId].copyWith(status: result.status, response: result);
+          tmp[result.taskId]!.copyWith(status: result.status, response: result);
 
       setState(() => _tasks = tmp);
     }, onError: (ex, stacktrace) {
@@ -66,19 +66,26 @@ class _UploadQueueViewState extends State<UploadQueueView> {
     });
 
     _compressionSubscription =
-        LightCompressor.progressStream.receiveBroadcastStream();
+        LightCompressor().onProgressUpdated.listen((event) {
+      // Handle compression progress
+    });
   }
 
   @override
   void dispose() {
     super.dispose();
     try {
-      if (_progressSubscription != null) _progressSubscription.cancel();
+      if (_progressSubscription != null) _progressSubscription?.cancel();
     } catch (e) {
       print(e);
     }
     try {
-      if (_resultSubscription != null) _resultSubscription.cancel();
+      if (_resultSubscription != null) _resultSubscription?.cancel();
+    } catch (e) {
+      print(e);
+    }
+    try {
+      if (_compressionSubscription != null) _compressionSubscription?.cancel();
     } catch (e) {
       print(e);
     }

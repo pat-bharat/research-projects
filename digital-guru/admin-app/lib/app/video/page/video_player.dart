@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
 
 class VideoPlayer extends StatefulWidget {
-  final String url;
+  final String? url;
   VideoPlayer({
-    Key key,
-    this.url,
+    Key? key,
+    required this.url,
   }) : super(key: key);
   @override
   _VideoPlayerState createState() => _VideoPlayerState();
@@ -18,7 +18,7 @@ class VideoPlayer extends StatefulWidget {
 
 class _VideoPlayerState extends State<VideoPlayer> {
   final NavigationService _navigationService = locator<NavigationService>();
-  BetterPlayerController _betterPlayerController;
+  late BetterPlayerController _betterPlayerController;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         BetterPlayerCacheConfiguration(
             useCache: true, maxCacheSize: 2 * 134217728);
     BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, widget.url,
+        BetterPlayerDataSourceType.network, widget.url!,
         cacheConfiguration: cacheConfiguration);
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setupDataSource(dataSource);

@@ -9,12 +9,12 @@ import 'package:light_compressor/light_compressor.dart';
 typedef CancelUploadCallback = Future<void> Function(String id);
 
 class UploadItemView extends StatelessWidget {
-  final UploadItem item;
-  final CancelUploadCallback onCancel;
+  final UploadItem? item;
+  final CancelUploadCallback? onCancel;
 
   UploadItemView({
-    Key key,
-    this.item,
+    Key? key,
+    required this.item,
     this.onCancel,
   }) : super(key: key);
 
@@ -30,7 +30,7 @@ class UploadItemView extends StatelessWidget {
                 visible: true, //!_isVideoCompressed,
                 child: StreamBuilder<dynamic>(
                   stream:
-                      LightCompressor.progressStream.receiveBroadcastStream(),
+                      LightCompressor().onProgressUpdated,
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     if (snapshot.data != null && snapshot.data > 0) {
@@ -57,16 +57,16 @@ class UploadItemView extends StatelessWidget {
                 ),
               ),
               Text(
-                item.id,
+                item?.id ?? '',
                 style: Theme.of(context)
                     .textTheme
-                    .caption
-                    .copyWith(fontFamily: 'monospace'),
+                    .bodySmall
+                    ?.copyWith(fontFamily: 'monospace'),
               ),
               Container(
                 height: 5.0,
               ),
-              Text(item.status.description),
+              Text(item?.status?.description ?? ''),
               // if (item.status == UploadTaskStatus.complete &&
               //     item.remoteHash != null)
               //   Builder(builder: (context) {
@@ -80,31 +80,35 @@ class UploadItemView extends StatelessWidget {
               //     );
               //   }),
               Container(height: 5.0),
-              if (item.status == UploadTaskStatus.running)
+              if (item?.status == UploadTaskStatus.running)
                 LinearProgressIndicator(
-                    value: item.uploadProgress.toDouble() / 100),
-              if (item.status == UploadTaskStatus.complete ||
-                  item.status == UploadTaskStatus.failed) ...[
-                Text('HTTP status code: ${item.response.statusCode}'),
-                if (item.response.response != null)
+                    value: (item!.uploadProgress?.toDouble() ?? 0) / 100),
+              if (item?.status == UploadTaskStatus.complete ||
+                  item?.status == UploadTaskStatus.failed) ...[
+                Text('HTTP status code: ${item?.response?.statusCode}'),
+                if (item?.response?.response != null)
                   Text(
-                    item.response.response,
+                    item?.response?.response ?? '',
                     style: Theme.of(context)
                         .textTheme
-                        .caption
-                        .copyWith(fontFamily: 'monospace'),
+                        .bodySmall
+                        ?.copyWith(fontFamily: 'monospace'),
                   ),
               ]
             ],
           ),
         ),
-        if (item.status == UploadTaskStatus.running)
+        if (item?.status == UploadTaskStatus.running)
           Container(
             height: 50,
             width: 50,
             child: IconButton(
               icon: Icon(Icons.cancel),
-              onPressed: () => onCancel(item.id),
+              onPressed: () {
+                if (item?.id != null) {
+                  onCancel?.call(item!.id!);
+                }
+              },
             ),
           )
       ],

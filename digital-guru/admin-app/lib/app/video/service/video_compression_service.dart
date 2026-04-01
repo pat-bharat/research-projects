@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:video_compress/video_compress.dart';
 
 class VideoCompressionService {
-  static Future<MediaInfo> compressVideo(
+  static Future<MediaInfo?> compressVideo(
       String path, VideoQuality outputQuality) async {
     await VideoCompress.setLogLevel(0);
     final info = await VideoCompress.compressVideo(
