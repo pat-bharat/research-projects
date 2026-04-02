@@ -17,7 +17,7 @@ class LoginViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
 
   Future isLegalAcceptedByUser() async {
-    return await _userService.hasUserAcceptedLegals(currentUser.documentId);
+    return await _userService.hasUserAcceptedLegals(currentUser?.documentId ?? '');
   }
 
   Future loginWithEmail({

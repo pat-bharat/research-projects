@@ -49,7 +49,7 @@ class BusinessLegalListModel extends BaseModel {
       cancelTitle: 'No',
     );
 
-    if (dialogResponse.confirmed) {
+    if (dialogResponse.confirmed!) {
       setBusy(true);
       try {
         await _businessService.deleteBusinessLegal(businessLegal);

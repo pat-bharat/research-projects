@@ -16,14 +16,14 @@ import 'package:flutter/material.dart';
 class BusinessLegalItem extends StatefulWidget {
   // final List<SystemLegal> systemLegals;
   final BusinessLegal businessLegal;
-  final Function onDeleteItem;
-  final Function onEditItem;
-  final bool isAdmin;
+  final Function()? onDeleteItem;
+  final Function()? onEditItem;
+  final bool? isAdmin;
 
   const BusinessLegalItem(
-      {Key key,
+      {Key? key,
       // @required this.systemLegals,
-      @required this.businessLegal,
+      required this.businessLegal,
       this.onDeleteItem,
       this.onEditItem,
       this.isAdmin})
@@ -35,7 +35,7 @@ class BusinessLegalItem extends StatefulWidget {
 
 class _BusinessLegalItemState extends State<BusinessLegalItem> {
   //SystemLegal _selectedLegal;
-  File pdfFile;
+  File? pdfFile;
   final NavigationService _navigationService = locator<NavigationService>();
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
@@ -69,7 +69,7 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
               horizontalSpaceSmall,
               Text(
                 businessLegal.title,
-                style: Theme.of(context).textTheme.headline2,
+                style: Theme.of(context).textTheme.bodyMedium,
               )
             ],
           ),
@@ -81,22 +81,16 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
                 children: [
                   Text(
                       Strings.createdOn +
-                          (businessLegal.createdTimestamp != null
-                              ? businessLegal.createdTimestamp
-                              : " "),
-                      style: Theme.of(context).textTheme.headline4),
+                          (businessLegal.createdTimestamp ?? " "),
+                      style: Theme.of(context).textTheme.bodySmall),
                   Text(
                       Strings.updatedOn+
-                          (businessLegal.updatedTimestamp != null
-                              ? businessLegal.updatedTimestamp
-                              : " "),
-                      style: Theme.of(context).textTheme.headline4),
+                          (businessLegal.updatedTimestamp ?? " "),
+                      style: Theme.of(context).textTheme.bodySmall),
                   Text(
                       Strings.modifiedBy +
-                          (businessLegal.modifiedBy != null
-                              ? businessLegal.modifiedBy
-                              : " "),
-                      style: Theme.of(context).textTheme.headline4),
+                          (businessLegal.modifiedBy ?? " "),
+                      style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
             ],
@@ -117,7 +111,7 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
                     onTap: () {
                       if (widget.onEditItem != null) {
                         setState(() {
-                          widget.onEditItem();
+                          widget.onEditItem!();
                         });
                       }
                     },

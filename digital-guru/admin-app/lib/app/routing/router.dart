@@ -122,9 +122,13 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
         viewToShow: BusinessInvoiceListView(),
       );
     case BusinessDashboardViewRoute:
+      Business? business;
+      if (settings.arguments != null && settings.arguments is Business) {
+        business = settings.arguments as Business;
+      }
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: BusinessDashBoardView(),
+        viewToShow: BusinessDashBoardView(business: business!),
       );
     //Lessons
     case LessonViewListRoute:

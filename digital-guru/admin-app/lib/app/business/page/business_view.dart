@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/media_types.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
@@ -21,9 +23,9 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:stacked/stacked.dart';
 
 class BusinessView extends StatefulWidget {
-  final Business editingBusiness;
+  final Business? editingBusiness;
 
-  BusinessView({Key key, this.editingBusiness}) : super(key: key);
+  BusinessView({Key? key, this.editingBusiness}) : super(key: key);
 
   @override
   _BusinessViewState createState() => _BusinessViewState();
@@ -45,11 +47,11 @@ class _BusinessViewState extends State<BusinessView> {
 
   var _businessFormKey = GlobalKey<FormState>();
 
-  bool _tocAccepted;
-  bool _privacyPolicyAccepted;
+  bool? _tocAccepted;
+  bool? _privacyPolicyAccepted;
   List<SystemLegal> _legals = List.empty(growable: true);
 
-  BusinessViewModel model;
+  BusinessViewModel? model;
   @override
   void initState() {
     super.initState();
@@ -61,9 +63,7 @@ class _BusinessViewState extends State<BusinessView> {
 
   Future getSystemBusinessLegals() async {
     List<SystemLegal> lgls = List.empty(growable: true);
-    await model
-        .getSystemBusinessOnlyLegals()
-        .then((value) => {lgls.addAll(value)});
+    await model?.getSystemBusinessOnlyLegals().then((value) => {lgls.addAll(value)});
 
     setState(() {
       _legals = lgls;
@@ -74,7 +74,7 @@ class _BusinessViewState extends State<BusinessView> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<BusinessViewModel>.reactive(
-        viewModelBuilder: () => model,
+        viewModelBuilder: () => model!,
         onModelReady: (model) {
           if (widget.editingBusiness != null) {
             // update the text in the controller
@@ -88,7 +88,7 @@ class _BusinessViewState extends State<BusinessView> {
             contactEmailController.text =
                 widget.editingBusiness?.contactEmail ?? '';
             urlController.text = widget.editingBusiness?.url ?? '';
-            model.setEditingBusiness(widget.editingBusiness);
+            model.setEditingBusiness(widget.editingBusiness!);
           }
         },
         builder: (context, model, child) => SafeArea(
@@ -104,7 +104,7 @@ class _BusinessViewState extends State<BusinessView> {
                       child: _buildFields(context, model),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
-                  )),
+                  ), body: Center(),),
             ));
   }
 
@@ -132,7 +132,7 @@ class _BusinessViewState extends State<BusinessView> {
         IntlPhoneField(
           initialValue: phoneController.text,
           initialCountryCode: _country,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyMedium,
           decoration: InputDecoration(
             labelText: Strings.mobileNumber,
             border: OutlineInputBorder(),
@@ -170,18 +170,18 @@ class _BusinessViewState extends State<BusinessView> {
                   mediaType: MediaTypes.IMAGE,
                   localFile: model.logoImage,
                   mediaLink: widget.editingBusiness != null
-                      ? widget.editingBusiness.logoLink
+                      ? widget.editingBusiness!.logoLink
                       : null,
                   onTap: () => model.selectLogoImage(),
                   onDelete: () => {
                     setState(() {
                       widget.editingBusiness != null
-                          ? widget.editingBusiness.logoLink = null
-                          : model.setLogoImage(null);
+                          ? widget.editingBusiness!.logoLink = null
+                          : model.setLogoImage(File(''));
                     })
                   },
                   onView: () =>
-                      {model.viewImage(widget.editingBusiness.logoLink)},
+                      {model.viewImage(widget.editingBusiness!.logoLink!)},
                 ),
                 MediaTile(
                   label: Strings.splash,
@@ -191,18 +191,18 @@ class _BusinessViewState extends State<BusinessView> {
                   mediaType: MediaTypes.IMAGE,
                   localFile: model.bannerImage,
                   mediaLink: widget.editingBusiness != null
-                      ? widget.editingBusiness.bannerLink
+                      ? widget.editingBusiness!.bannerLink
                       : null,
                   onTap: () => model.selectBannerImage(),
                   onDelete: () => {
                     setState(() {
                       widget.editingBusiness != null
-                          ? widget.editingBusiness.bannerLink = null
-                          : model.setBannerImage(null);
+                          ? widget.editingBusiness!.bannerLink = null
+                          : model.setBannerImage(File(''));
                     })
                   },
                   onView: () =>
-                      {model.viewImage(widget.editingBusiness.logoLink)},
+                      {model.viewImage(widget.editingBusiness!.bannerLink!)},
                 ),
               ],
             )),
@@ -225,7 +225,7 @@ class _BusinessViewState extends State<BusinessView> {
           title: Strings.save,
           busy: model.busy,
           onPressed: () {
-            if (_businessFormKey.currentState.validate()) {
+            if (_businessFormKey.currentState!.validate()) {
               model.save(
                 name: bnameController.text,
                 punchLine: punchLineController.text,
@@ -263,7 +263,7 @@ class _BusinessViewState extends State<BusinessView> {
             TextLink(
               Strings.accept + legal.title,
               onPressed: () {
-                model.viewPdf(legal.pdfDoc);
+                model.viewPdf(legal.pdfDoc!);
               },
             ),
           ],

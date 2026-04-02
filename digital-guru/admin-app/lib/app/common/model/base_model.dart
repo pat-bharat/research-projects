@@ -74,18 +74,18 @@ class BaseModel extends ChangeNotifier {
   }
 
   void viewImage(String url) {
-    if (url != null && url.length > 0)
+    if (url.length > 0)
       _navigationService.navigateTo(ViewImageRoute, arguments: url);
   }
 
   void viewPdf(String url) {
-    if (url != null && url.length > 0)
+    if (url.length > 0)
       _navigationService.navigateTo(ViewPdfRoute, arguments: url);
   }
 
   void viewVideo(VideoInfo video) {
-    if (video != null && video.videoUrl != null && video.videoUrl.length > 0) {
-      if (video.youtube == null || !video.youtube) {
+    if (video.videoUrl!.isNotEmpty) {
+      if (video.youtube == null || !video.youtube!) {
         _navigationService.navigateTo(ViewVideoRoute,
             arguments: video.videoUrl);
       } else {
@@ -96,8 +96,8 @@ class BaseModel extends ChangeNotifier {
   }
 
   void downloadVideo(VideoInfo videoInfo) {
-    if (!videoInfo.youtube) {
-      _downloadService.requestDownload(videoInfo.videoUrl, videoInfo.title);
+    if (videoInfo.youtube == null || !videoInfo.youtube!) {
+      _downloadService.requestDownload(videoInfo.videoUrl!, videoInfo.title!);
     }
   }
 

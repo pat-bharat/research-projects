@@ -35,7 +35,8 @@ class _InvoiceViewState extends State<InvoiceView> {
                   //bottomNavigationBar: businessBottomNavBar(context, 1),
                   bodyData: SingleChildScrollView(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                  )),
+                  )
+                  ,body:Center()),
             ));
   }
 

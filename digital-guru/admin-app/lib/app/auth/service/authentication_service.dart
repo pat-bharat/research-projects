@@ -36,13 +36,13 @@ class AuthenticationService extends BaseService {
       if (authResult.user != null) {
         await _populateCurrentUser(authResult.user!);
       }
-      BaseService.currentUser.lastLoginTimestamp =
+      BaseService.currentUser!.lastLoginTimestamp =
           DateTime.now().toIso8601String();
       if (businessId != null) {
-        BaseService.currentUser.businessId = businessId;
+        BaseService.currentUser!.businessId = businessId;
       }
       _userService.updateUser(
-          BaseService.currentUser.documentId, BaseService.currentUser);
+          BaseService.currentUser!.documentId ?? '', BaseService.currentUser!);
       if (authResult.user != null) {
         await _populateCurrentBusiness(authResult.user!);
       }
@@ -56,7 +56,7 @@ class AuthenticationService extends BaseService {
     try {
       await _firebaseAuth.signOut();
       BaseService.currentUserToken = "";
-      BaseService.currentUser = u.User();
+      BaseService.currentUser = u.User(userId: '');
       BaseService.currentBusiness = Business();
     } catch (e) {
       return handleException(e is Exception ? e : Exception(e.toString()));
@@ -85,7 +85,7 @@ class AuthenticationService extends BaseService {
       await _userService.createUser(_cUser);
       await _analyticsService.setUserProperties(
         userId: authResult.user!.uid,
-        userRole: _cUser.userRole,
+        userRole: _cUser.userRole ?? '',
       );
       BaseService.currentUser = _cUser;
       //update user count
@@ -135,7 +135,7 @@ class AuthenticationService extends BaseService {
       await _userService.createUser(_cUser);
       await _analyticsService.setUserProperties(
         userId: user.uid,
-        userRole: _cUser.userRole,
+        userRole: _cUser.userRole ?? '',
       );
       BaseService.currentUser = _cUser;
       BaseService.currentFirebaseUser = user;
@@ -196,25 +196,29 @@ class AuthenticationService extends BaseService {
     BaseService.currentFirebaseUser = user;
     await _analyticsService.setUserProperties(
       userId: user.uid,
-      userRole: BaseService.currentUser.userRole,
+      userRole: BaseService.currentUser!.userRole ?? '',
     );
     }
 
   Future getBusinessByEmail() async {
     if (BaseService.currentUser != null) {
-      if (BaseService.currentUser.userRole == "Admin") {
-        return await _businessService
-            .getBusinessByEmail(BaseService.currentUser.email);
+      if (BaseService.currentUser!.userRole == "Admin") {
+        if (BaseService.currentUser!.email != null) {
+          return await _businessService
+              .getBusinessByEmail(BaseService.currentUser!.email!);
+        }
       }
       //TODo analytics
     }
   }
 
   Future _populateCurrentBusiness(User user) async {
-    if (BaseService.currentUser.userRole == UserRole.admin) {
-      BaseService.currentBusiness =
-          await _businessService.getBusinessByEmail(user.email!);
-    } else if (BaseService.currentUser.userRole == UserRole.user) {
+    if (BaseService.currentUser!.userRole == UserRole.admin) {
+      if (user.email != null) {
+        BaseService.currentBusiness =
+            await _businessService.getBusinessByEmail(user.email!);
+      }
+    } else if (BaseService.currentUser!.userRole == UserRole.user) {
       BaseService.currentBusiness = Business();
       BaseService.currentBusiness.documentId = businessId!;
     }

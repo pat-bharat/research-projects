@@ -1,17 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Course {
-  int id;
-  String title;
-  String description;
-  DocumentReference instructorId;
-  String instructorName;
-  String backgroundImage;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? title;
+  String? description;
+  String? instructorId;
+  String? instructorName;
+  String? backgroundImage;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Course(
       {this.id,

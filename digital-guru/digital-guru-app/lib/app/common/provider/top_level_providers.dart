@@ -1,4 +1,4 @@
-import 'package:digital_guru/app/common/service/firestore_database.dart';
+import 'package:digital_guru_app/app/common/service/firestore_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';

@@ -56,6 +56,7 @@ class InstructorViewModel extends BaseModel {
     setBusy(true);
 
     Instructor course = Instructor(
+        documentId: _edittingInstructor!.documentId,
         businessId: currentBusiness.documentId ?? '',
         introduction: introduction,
         fullName: fullName,

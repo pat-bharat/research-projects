@@ -228,7 +228,7 @@ class CourseViewModel extends BaseModel {
       mediaService.uploadVideo(course.courseVideo!, uploadPath,
           onComplete: () async {
         String downloadURL = await FirebaseStorage.instance
-            .ref(uploadPath + '/' + course.courseVideo!.title)
+            .ref(uploadPath + '/' + course.courseVideo!.title!)
             .getDownloadURL();
         course.courseVideo!.videoUrl = downloadURL;
         _courseService.updateCourse(course.documentId!, course);

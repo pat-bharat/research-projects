@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class BusinessLegalListView extends StatefulWidget {
-  BusinessLegalListView({Key key}) : super(key: key);
+  BusinessLegalListView({Key? key}) : super(key: key);
 
   @override
   _BusinessListViewState createState() => _BusinessListViewState();
@@ -72,13 +72,13 @@ class _BusinessListViewState extends State<BusinessLegalListView> {
                         )
                       : Center(
                           child: Text(Strings.noBusinessLegasFound,
-                              style: Theme.of(context).textTheme.headline2),
+                              style: Theme.of(context).textTheme.bodyMedium),
                         )),
               // _buildBottomButtonRaw(model),
               verticalSpaceSmall,
             ],
           ),
-        ),
+        ), body: Center(),
       )),
     );
   }

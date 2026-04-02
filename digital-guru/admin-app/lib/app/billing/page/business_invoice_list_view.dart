@@ -67,7 +67,7 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
                                 ),
                               ])
                         : buildCircularLoader(context)),
-              ),
+              body: Center(),),
             ));
   }
 

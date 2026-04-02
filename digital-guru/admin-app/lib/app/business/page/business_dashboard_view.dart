@@ -13,7 +13,7 @@ import 'package:stacked/stacked.dart';
 class BusinessDashBoardView extends StatefulWidget {
   final Business business;
 
-  BusinessDashBoardView({Key key, this.business}) : super(key: key);
+  BusinessDashBoardView({Key? key, required this.business}) : super(key: key);
 
   @override
   _BusinessDashBoardViewState createState() => _BusinessDashBoardViewState();
@@ -21,8 +21,8 @@ class BusinessDashBoardView extends StatefulWidget {
 
 class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
   List<BusinessLegal> _legals = List.empty(growable: true);
-  BusinessProfile profile;
-  BusinessDashBoardViewModel model;
+  late BusinessProfile profile;
+  late BusinessDashBoardViewModel model;
   @override
   void initState() {
     super.initState();
@@ -78,7 +78,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
                           _buildBusinessLegals(context, profile),
                           verticalSpaceSmall,
                         ],
-                      ))),
+                      )), body: Center(),),
             ));
   }
 
@@ -86,20 +86,20 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
     if (profile == null) {
       return Container();
     }
-    var status = (model.currentBusiness.locked != null)
-        ? (model.currentBusiness.locked
-            ? Text("Locked", style: TextStyle(color: Colors.red))
-            : Text("Active", style: TextStyle(color: Colors.green)))
-        : Text("Unavailable", style: TextStyle(color: Colors.red));
-    var nonPurchassedUsers = profile.userCounts.trialUsers;
-    var purchasedUsers = profile.userCounts.purchasedUsers;
+    var status = (model.currentBusiness.locked != null && model.currentBusiness.locked!)
+        ? Text("Locked", style: TextStyle(color: Colors.red))
+        : (model.currentBusiness.locked != null)
+            ? Text("Active", style: TextStyle(color: Colors.green))
+            : Text("Unavailable", style: TextStyle(color: Colors.red));
+    var nonPurchassedUsers = profile.userCounts?.trialUsers;
+    var purchasedUsers = profile.userCounts?.purchasedUsers;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
           Text(
-            model.currentBusiness.name,
-            style: Theme.of(context).textTheme.headline2,
+            model.currentBusiness.name ?? '',
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           IconButton(
             icon: Icon(Icons.edit),
@@ -115,11 +115,11 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildWrappedText(
-                    context, 'Mobile # ' + model.currentBusiness.mobilePhone,
-                    style: Theme.of(context).textTheme.headline4),
+                    context, 'Mobile # ' + (model.currentBusiness.mobilePhone ?? ''),
+                    style: Theme.of(context).textTheme.bodyMedium),
                 buildWrappedText(
-                    context, 'Email: ' + model.currentBusiness.contactEmail,
-                    style: Theme.of(context).textTheme.headline4),
+                    context, 'Email: ' + (model.currentBusiness.contactEmail ?? ''),
+                    style: Theme.of(context).textTheme.bodyMedium),
                 Row(
                   children: [Text("Status:"), status],
                 ),
@@ -138,7 +138,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
       return Container();
     }
     List<Widget> legals = List.empty(growable: true);
-    profile.businessLegal.forEach((legal) {
+    profile.businessLegal!.forEach((legal) {
       legals.add(Row(
         children: [
           buildWrappedText(context, legal.title),
@@ -151,7 +151,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         Row(children: [
           Text(
             "Published Legals",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           IconButton(
             icon: Icon(Icons.edit),
@@ -175,7 +175,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
     if (profile == null) {
       return Container();
     }
-    BusinessSetting businessSetting = profile.businessSetting;
+    BusinessSetting? businessSetting = profile.businessSetting;
     if (businessSetting == null) {
       return Container();
     }
@@ -185,7 +185,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         Row(children: [
           Text(
             "Business Settings",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -234,7 +234,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         Row(children: [
           Text(
             "Publications",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -243,20 +243,20 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Courses:" + profile.publication.courseCounts.toString(),
+                  "Courses:" + profile.publication!.courseCounts.toString(),
                 ),
                 Text(
                   "Modules (trial):" +
-                      (profile.publication.totalModuleCounts -
-                              profile.publication.purchasedModuleCounts)
+                      ((profile.publication?.totalModuleCounts ?? 0) -
+                              (profile.publication?.purchasedModuleCounts ?? 0))
                           .toString(),
                 ),
                 Text(
                   "Modules (purchased):" +
-                      profile.publication.purchasedModuleCounts.toString(),
+                      (profile.publication?.purchasedModuleCounts ?? 0).toString(),
                 ),
                 Text(
-                  "Lessons:" + profile.publication.lessonCounts.toString(),
+                  "Lessons:" + (profile.publication?.lessonCounts ?? 0).toString(),
                 ),
               ],
             ))
@@ -272,7 +272,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         Row(children: [
           Text(
             "Financial",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ]),
         commonContainer(
@@ -296,7 +296,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         Row(children: [
           Text(
             "Branding & Theming",
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           IconButton(
             icon: Icon(Icons.edit),

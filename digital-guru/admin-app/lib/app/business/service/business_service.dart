@@ -66,7 +66,7 @@ class BusinessService extends BaseService {
       var userData = await _businessesCollectionReference.doc(id).get();
       return new Business.fromJson(userData.data() as Map<String, dynamic>, id);
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -88,7 +88,7 @@ class BusinessService extends BaseService {
             userData.docs.single.data() as Map<String, dynamic>, userData.docs.single.id);
       }
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -106,7 +106,7 @@ class BusinessService extends BaseService {
               });
       return businesses;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -122,7 +122,7 @@ class BusinessService extends BaseService {
               });
       return businesses;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -134,7 +134,7 @@ class BusinessService extends BaseService {
       List<SystemLegal> consLegals =
           await _systemService.getConsumerOnlyLegals();
       consLegals.forEach((legal) async {
-        await _downloadService.requestDownload(legal.pdfDoc, legal.title);
+        await _downloadService.requestDownload(legal.pdfDoc!, legal.title);
         String toUpload = business.documentId! +
             "/legals/" +
             _downloadService.localDir +
@@ -152,7 +152,7 @@ class BusinessService extends BaseService {
             business,
             BusinessLegal(
                 businessId: business.documentId!,
-                legalId: legal.documentId,
+                legalId: legal.documentId!,
                 pdfDoc: storageResult.mediaUrl,
                 title: legal.title));
               //now add default besiness settings
@@ -167,7 +167,7 @@ class BusinessService extends BaseService {
         await _businessProfileCollectionReference.add(profile.toJson());
       });
         } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -260,7 +260,7 @@ class BusinessService extends BaseService {
     try {
       await _businessesCollectionReference.doc(bid).update(business.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -335,7 +335,7 @@ class BusinessService extends BaseService {
           .doc(bldocId)
           .update(businessLegal.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -346,7 +346,7 @@ class BusinessService extends BaseService {
       return await _businessesLegalCollectionReference
           .add(businessLegal.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -356,7 +356,7 @@ class BusinessService extends BaseService {
           .doc(profile.documentId)
           .set(profile.toJson());
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 
@@ -430,7 +430,7 @@ class BusinessService extends BaseService {
           .get()
           .then((snap) => {
                 setting = BusinessSetting.fromJson(
-                    snap.docs.first.id, snap.docs.first.data())
+                    snap.docs.first.id, snap.docs.first.data() as Map<String, dynamic>)
               });
       //legals
       List<BusinessLegal> businessLegalList = [];
@@ -440,7 +440,7 @@ class BusinessService extends BaseService {
           .then((snap) => {
                 snap.docs.forEach((legal) {
                   businessLegalList
-                      .add(BusinessLegal.fromJson(legal.id, legal.data()));
+                      .add(BusinessLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>));
                 })
               });
       //totalRevenue
@@ -450,7 +450,7 @@ class BusinessService extends BaseService {
           .get()
           .then((snap) => {
                 snap.docs.forEach((doc) {
-                  UserModule um = UserModule.fromJson(doc.id, doc.data());
+                  UserModule um = UserModule.fromJson(doc.id, doc.data() as Map<String, dynamic>);
                   revenue = revenue + um.purchaseAmount;
                 })
               });
@@ -479,10 +479,10 @@ class BusinessService extends BaseService {
           .where("business_id", isEqualTo: bid)
           .get()
           .then((snapshot) => bSetting = BusinessSetting.fromJson(
-              snapshot.docs.first.id, snapshot.docs.first.data()));
+              snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>));
       return bSetting;
     } catch (e) {
-      return handleException(e);
+      return handleException(e as Exception);
     }
   }
 }
