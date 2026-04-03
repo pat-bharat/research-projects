@@ -1,10 +1,10 @@
 class Legal {
-  int id;
-  String description;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? description;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Legal(
       {this.id,

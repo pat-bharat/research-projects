@@ -1,11 +1,11 @@
 class Instructor {
-  String fullName;
-  String introduction;
-  String profilePic;
-  String url;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
+  String? fullName;
+  String? introduction;
+  String? profilePic;
+  String? url;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
 
   Instructor(
       {this.fullName,
@@ -27,7 +27,7 @@ class Instructor {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['full_name'] = this.fullName;
     data['introduction'] = this.introduction;
     data['profile_pic'] = this.profilePic;

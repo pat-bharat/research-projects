@@ -1,20 +1,20 @@
 class Lesson {
-  int id;
-  String title;
-  String description;
-  String instructorNotes;
-  String groupId;
-  String moduleId;
-  String instructorId;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? title;
+  String? description;
+  String? instructorNotes;
+  String? groupId;
+  String? moduleId;
+  String? instructorId;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Lesson(
-      {this.id,
+      {required this.id,
       this.title,
       this.description,
       this.instructorNotes,

@@ -1,7 +1,7 @@
-import 'package:digital_guru/app/common/widget/dg_scaffold.dart';
-import 'package:digital_guru/app/common/widget/list_items_builder.dart';
-import 'package:digital_guru/app/course/model/course.dart';
-import 'package:digital_guru/app/course/provider/course_provider.dart';
+import 'package:digital_guru_app/app/common/widget/dg_scaffold.dart';
+import 'package:digital_guru_app/app/common/widget/list_items_builder.dart';
+import 'package:digital_guru_app/app/course/model/course.dart';
+import 'package:digital_guru_app/app/course/provider/course_provider.dart';
 
 import 'package:flutter/material.dart';
 
@@ -16,8 +16,8 @@ class CoursePage extends ConsumerWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(course.title, style: TextStyle(fontSize: 15)),
-              Text(course.instructorName)
+              Text(course.title!, style: TextStyle(fontSize: 15)),
+              Text(course.instructorName!)
             ],
           ),
           // trailing: Text(author),
@@ -26,12 +26,12 @@ class CoursePage extends ConsumerWidget {
 
           subtitle: Padding(
               padding: EdgeInsets.only(top: 10, bottom: 5),
-              child: Text(course.description)),
+              child: Text(course.description!)),
         ));
   }
 
-  Widget _courseList(BuildContext context, ScopedReader watch) {
-    final coursesAsyncValue = watch(coursesStreamProvider);
+  Widget _courseList(BuildContext context, WidgetRef watch) {
+    final coursesAsyncValue = watch.read(coursesStreamProvider);
 
     return Expanded(
         child: Padding(
@@ -52,7 +52,7 @@ class CoursePage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  Widget build(BuildContext context, WidgetRef watch) {
     return DGScaffold(
         child: Padding(
       padding: const EdgeInsets.all(16.0),
@@ -62,7 +62,7 @@ class CoursePage extends ConsumerWidget {
         children: [
           Text(
             'All courses',
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           _courseList(context, watch),
         ],

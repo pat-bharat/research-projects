@@ -1,85 +1,79 @@
-class UserMedia {
-  String userId;
-  String moduleId;
-  List<UserMedia> userMedia;
 
-  UserMedia({this.userId, this.moduleId, this.userMedia});
+class UserMediaContainer {
+  String? userId;
+  String? moduleId;
+  List<UserMedia>? userMedia;
 
-  UserMedia.fromJson(Map<String, dynamic> json) {
-    userId = json['user_id'];
-    moduleId = json['module_id'];
-    if (json['user_media'] != null) {
-      userMedia = new List<UserMedia>();
-      json['user_media'].forEach((v) {
-        userMedia.add(new UserMedia.fromJson(v));
-      });
-    }
-  }
+  UserMediaContainer({this.userId, this.moduleId, this.userMedia});
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user_id'] = this.userId;
-    data['module_id'] = this.moduleId;
-    if (this.userMedia != null) {
-      data['user_media'] = this.userMedia.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+  factory UserMediaContainer.fromJson(Map<String, dynamic> json) => UserMediaContainer(
+        userId: json['user_id'] as String?,
+        moduleId: json['module_id'] as String?,
+        userMedia: (json['user_media'] as List<dynamic>?)
+            ?.map((v) => UserMedia.fromJson(v as Map<String, dynamic>))
+            .toList(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'user_id': userId,
+        'module_id': moduleId,
+        if (userMedia != null)
+          'user_media': userMedia!.map((v) => v.toJson()).toList(),
+      };
 }
 
 class UserMedia {
-  String title;
-  String description;
-  String mediaType;
-  String mediaPath;
-  String nediaUrl;
-  String mediaSize;
-  String mediaLength;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  String? title;
+  String? description;
+  String? mediaType;
+  String? mediaPath;
+  String? nediaUrl;
+  String? mediaSize;
+  String? mediaLength;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
-  UserMedia(
-      {this.title,
-      this.description,
-      this.mediaType,
-      this.mediaPath,
-      this.nediaUrl,
-      this.mediaSize,
-      this.mediaLength,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.deletedTimestamp,
-      this.modifyBy});
+  UserMedia({
+    this.title,
+    this.description,
+    this.mediaType,
+    this.mediaPath,
+    this.nediaUrl,
+    this.mediaSize,
+    this.mediaLength,
+    this.createdTimestamp,
+    this.updatedTimestamp,
+    this.deletedTimestamp,
+    this.modifyBy,
+  });
 
-  UserMedia.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    description = json['description'];
-    mediaType = json['media_type'];
-    mediaPath = json['media_path'];
-    nediaUrl = json['nedia_url'];
-    mediaSize = json['media_size'];
-    mediaLength = json['media_length'];
-    createdTimestamp = json['created_timestamp'];
-    updatedTimestamp = json['updated_timestamp'];
-    deletedTimestamp = json['deleted_timestamp'];
-    modifyBy = json['modify_by'];
-  }
+  factory UserMedia.fromJson(Map<String, dynamic> json) => UserMedia(
+        title: json['title'] as String?,
+        description: json['description'] as String?,
+        mediaType: json['media_type'] as String?,
+        mediaPath: json['media_path'] as String?,
+        nediaUrl: json['nedia_url'] as String?,
+        mediaSize: json['media_size'] as String?,
+        mediaLength: json['media_length'] as String?,
+        createdTimestamp: json['created_timestamp'] as String?,
+        updatedTimestamp: json['updated_timestamp'] as String?,
+        deletedTimestamp: json['deleted_timestamp'] as String?,
+        modifyBy: json['modify_by'] as String?,
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['media_type'] = this.mediaType;
-    data['media_path'] = this.mediaPath;
-    data['nedia_url'] = this.nediaUrl;
-    data['media_size'] = this.mediaSize;
-    data['media_length'] = this.mediaLength;
-    data['created_timestamp'] = this.createdTimestamp;
-    data['updated_timestamp'] = this.updatedTimestamp;
-    data['deleted_timestamp'] = this.deletedTimestamp;
-    data['modify_by'] = this.modifyBy;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        'title': title,
+        'description': description,
+        'media_type': mediaType,
+        'media_path': mediaPath,
+        'nedia_url': nediaUrl,
+        'media_size': mediaSize,
+        'media_length': mediaLength,
+        'created_timestamp': createdTimestamp,
+        'updated_timestamp': updatedTimestamp,
+        'deleted_timestamp': deletedTimestamp,
+        'modify_by': modifyBy,
+      };
 }

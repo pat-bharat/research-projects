@@ -1,22 +1,23 @@
 class Legal {
-  String businessId;
-  String title;
-  String description;
-  String active;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  String? businessId;
+  String? title;
+  String? description;
+  String? active;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
-  Legal(
-      {this.businessId,
-      this.title,
-      this.description,
-      this.active,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.deletedTimestamp,
-      this.modifiedBy});
+  Legal({
+    this.businessId,
+    this.title,
+    this.description,
+    this.active,
+    this.createdTimestamp,
+    this.updatedTimestamp,
+    this.deletedTimestamp,
+    this.modifiedBy,
+  });
 
   Legal.fromJson(Map<String, dynamic> json) {
     businessId = json['business_id'];
@@ -30,15 +31,15 @@ class Legal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['business_id'] = this.businessId;
-    data['title'] = this.title;
-    data['description'] = this.description;
-    data['active'] = this.active;
-    data['created_timestamp'] = this.createdTimestamp;
-    data['updated_timestamp'] = this.updatedTimestamp;
-    data['deleted_timestamp'] = this.deletedTimestamp;
-    data['modified_by'] = this.modifiedBy;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (businessId != null) data['business_id'] = businessId;
+    if (title != null) data['title'] = title;
+    if (description != null) data['description'] = description;
+    if (active != null) data['active'] = active;
+    if (createdTimestamp != null) data['created_timestamp'] = createdTimestamp;
+    if (updatedTimestamp != null) data['updated_timestamp'] = updatedTimestamp;
+    if (deletedTimestamp != null) data['deleted_timestamp'] = deletedTimestamp;
+    if (modifiedBy != null) data['modified_by'] = modifiedBy;
     return data;
   }
 }

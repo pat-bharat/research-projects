@@ -1,19 +1,19 @@
 class Module {
-  String courseId;
-  String title;
-  String description;
-  String discountPercentage;
-  int locked;
-  int deleted;
-  int displayOrder;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  List<Tags> tags;
-  List<PricePlan> pricePlan;
-  List<ModuleMedia> moduleMedia;
-  String lessonCount;
+  String? courseId;
+  String? title;
+  String? description;
+  String? discountPercentage;
+  int? locked;
+  int? deleted;
+  int? displayOrder;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  List<Tags>? tags;
+  List<PricePlan>? pricePlan;
+  List<ModuleMedia>? moduleMedia;
+  String? lessonCount;
 
   Module(
       {this.courseId,
@@ -45,21 +45,21 @@ class Module {
     deletedTimestamp = json['deleted_timestamp'];
     modifiedBy = json['modified_by'];
     if (json['tags'] != null) {
-      tags = new List<Tags>();
+      tags = <Tags>[];
       json['tags'].forEach((v) {
-        tags.add(new Tags.fromJson(v));
+        tags!.add(Tags.fromJson(v));
       });
     }
     if (json['price_plan'] != null) {
-      pricePlan = new List<PricePlan>();
+      pricePlan = <PricePlan>[];
       json['price_plan'].forEach((v) {
-        pricePlan.add(new PricePlan.fromJson(v));
+        pricePlan!.add(PricePlan.fromJson(v));
       });
     }
     if (json['module_media'] != null) {
-      moduleMedia = new List<ModuleMedia>();
+      moduleMedia = <ModuleMedia>[];
       json['module_media'].forEach((v) {
-        moduleMedia.add(new ModuleMedia.fromJson(v));
+        moduleMedia!.add(ModuleMedia.fromJson(v));
       });
     }
     lessonCount = json['lesson_count'];
@@ -79,13 +79,13 @@ class Module {
     data['deleted_timestamp'] = this.deletedTimestamp;
     data['modified_by'] = this.modifiedBy;
     if (this.tags != null) {
-      data['tags'] = this.tags.map((v) => v.toJson()).toList();
+      data['tags'] = this.tags!.map((v) => v.toJson()).toList();
     }
     if (this.pricePlan != null) {
-      data['price_plan'] = this.pricePlan.map((v) => v.toJson()).toList();
+      data['price_plan'] = this.pricePlan!.map((v) => v.toJson()).toList();
     }
     if (this.moduleMedia != null) {
-      data['module_media'] = this.moduleMedia.map((v) => v.toJson()).toList();
+      data['module_media'] = this.moduleMedia!.map((v) => v.toJson()).toList();
     }
     data['lesson_count'] = this.lessonCount;
     return data;
@@ -93,7 +93,7 @@ class Module {
 }
 
 class Tags {
-  String name;
+  String? name;
 
   Tags({this.name});
 
@@ -109,8 +109,8 @@ class Tags {
 }
 
 class PricePlan {
-  String name;
-  String price;
+  String? name;
+  String? price;
 
   PricePlan({this.name, this.price});
 
@@ -128,15 +128,15 @@ class PricePlan {
 }
 
 class ModuleMedia {
-  String title;
-  String mediaType;
-  String mediaPath;
-  String mediaSize;
-  String mediaLength;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  String? title;
+  String? mediaType;
+  String? mediaPath;
+  String? mediaSize;
+  String? mediaLength;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
   ModuleMedia(
       {this.title,

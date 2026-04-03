@@ -1,115 +1,111 @@
+
 class User {
-  String businessId;
-  String loginId;
-  int userType;
-  String fullName;
-  String address;
-  String city;
-  String zipCode;
-  String state;
-  String country;
-  String birthDate;
-  String email;
-  String mobilePhone;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  String lastLoginTimestamp;
-  Preferances preferances;
+  String? businessId;
+  String? loginId;
+  int? userType;
+  String? fullName;
+  String? address;
+  String? city;
+  String? zipCode;
+  String? state;
+  String? country;
+  String? birthDate;
+  String? email;
+  String? mobilePhone;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  String? lastLoginTimestamp;
+  Preferences? preferences;
 
-  User(
-      {this.businessId,
-      this.loginId,
-      this.userType,
-      this.fullName,
-      this.address,
-      this.city,
-      this.zipCode,
-      this.state,
-      this.country,
-      this.birthDate,
-      this.email,
-      this.mobilePhone,
-      this.locked,
-      this.deleted,
-      this.createdTimestamp,
-      this.updatedTimestamp,
-      this.deletedTimestamp,
-      this.modifiedBy,
-      this.lastLoginTimestamp,
-      this.preferances});
+  User({
+    this.businessId,
+    this.loginId,
+    this.userType,
+    this.fullName,
+    this.address,
+    this.city,
+    this.zipCode,
+    this.state,
+    this.country,
+    this.birthDate,
+    this.email,
+    this.mobilePhone,
+    this.locked,
+    this.deleted,
+    this.createdTimestamp,
+    this.updatedTimestamp,
+    this.deletedTimestamp,
+    this.modifiedBy,
+    this.lastLoginTimestamp,
+    this.preferences,
+  });
 
-  User.fromJson(Map<String, dynamic> json) {
-    businessId = json['business_id'];
-    loginId = json['login_id'];
-    userType = json['user_type'];
-    fullName = json['full_name'];
-    address = json['address'];
-    city = json['city'];
-    zipCode = json['zip_code'];
-    state = json['state'];
-    country = json['country'];
-    birthDate = json['birth_date'];
-    email = json['email'];
-    mobilePhone = json['mobile_phone'];
-    locked = json['locked'];
-    deleted = json['deleted'];
-    createdTimestamp = json['created_timestamp'];
-    updatedTimestamp = json['updated_timestamp'];
-    deletedTimestamp = json['deleted_timestamp'];
-    modifiedBy = json['modified_by'];
-    lastLoginTimestamp = json['last_login_timestamp'];
-    preferances = json['preferances'] != null
-        ? new Preferances.fromJson(json['preferances'])
-        : null;
-  }
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        businessId: json['business_id'] as String?,
+        loginId: json['login_id'] as String?,
+        userType: json['user_type'] as int?,
+        fullName: json['full_name'] as String?,
+        address: json['address'] as String?,
+        city: json['city'] as String?,
+        zipCode: json['zip_code'] as String?,
+        state: json['state'] as String?,
+        country: json['country'] as String?,
+        birthDate: json['birth_date'] as String?,
+        email: json['email'] as String?,
+        mobilePhone: json['mobile_phone'] as String?,
+        locked: json['locked'] as int?,
+        deleted: json['deleted'] as int?,
+        createdTimestamp: json['created_timestamp'] as String?,
+        updatedTimestamp: json['updated_timestamp'] as String?,
+        deletedTimestamp: json['deleted_timestamp'] as String?,
+        modifiedBy: json['modified_by'] as String?,
+        lastLoginTimestamp: json['last_login_timestamp'] as String?,
+        preferences: json['preferences'] != null
+          ? Preferences.fromJson(json['preferences'] as Map<String, dynamic>)
+          : null,
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['business_id'] = this.businessId;
-    data['login_id'] = this.loginId;
-    data['user_type'] = this.userType;
-    data['full_name'] = this.fullName;
-    data['address'] = this.address;
-    data['city'] = this.city;
-    data['zip_code'] = this.zipCode;
-    data['state'] = this.state;
-    data['country'] = this.country;
-    data['birth_date'] = this.birthDate;
-    data['email'] = this.email;
-    data['mobile_phone'] = this.mobilePhone;
-    data['locked'] = this.locked;
-    data['deleted'] = this.deleted;
-    data['created_timestamp'] = this.createdTimestamp;
-    data['updated_timestamp'] = this.updatedTimestamp;
-    data['deleted_timestamp'] = this.deletedTimestamp;
-    data['modified_by'] = this.modifiedBy;
-    data['last_login_timestamp'] = this.lastLoginTimestamp;
-    if (this.preferances != null) {
-      data['preferances'] = this.preferances.toJson();
-    }
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        'business_id': businessId,
+        'login_id': loginId,
+        'user_type': userType,
+        'full_name': fullName,
+        'address': address,
+        'city': city,
+        'zip_code': zipCode,
+        'state': state,
+        'country': country,
+        'birth_date': birthDate,
+        'email': email,
+        'mobile_phone': mobilePhone,
+        'locked': locked,
+        'deleted': deleted,
+        'created_timestamp': createdTimestamp,
+        'updated_timestamp': updatedTimestamp,
+        'deleted_timestamp': deletedTimestamp,
+        'modified_by': modifiedBy,
+        'last_login_timestamp': lastLoginTimestamp,
+        if (preferences != null) 'preferences': preferences!.toJson(),
+      };
 }
 
-class Preferances {
-  int downloadLessons;
-  int wifiDownloadOnly;
+class Preferences {
+  int? downloadLessons;
+  int? wifiDownloadOnly;
 
-  Preferances({this.downloadLessons, this.wifiDownloadOnly});
+  Preferences({this.downloadLessons, this.wifiDownloadOnly});
 
-  Preferances.fromJson(Map<String, dynamic> json) {
-    downloadLessons = json['download_lessons'];
-    wifiDownloadOnly = json['wifi_download_only'];
-  }
+  factory Preferences.fromJson(Map<String, dynamic> json) => Preferences(
+        downloadLessons: json['download_lessons'] as int?,
+        wifiDownloadOnly: json['wifi_download_only'] as int?,
+      );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['download_lessons'] = this.downloadLessons;
-    data['wifi_download_only'] = this.wifiDownloadOnly;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        'download_lessons': downloadLessons,
+        'wifi_download_only': wifiDownloadOnly,
+      };
 }

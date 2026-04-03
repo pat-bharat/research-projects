@@ -1,19 +1,19 @@
 class Invoice {
-  String businessId;
-  String invoiceDate;
-  String invoiceAmount;
-  String currancyCode;
-  String startDate;
-  String endDate;
-  String dueDate;
-  String paidDate;
-  String paidBy;
-  String paidVia;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
-  List<BillingItems> billingItems;
+  String? businessId;
+  String? invoiceDate;
+  String? invoiceAmount;
+  String? currancyCode;
+  String? startDate;
+  String? endDate;
+  String? dueDate;
+  String? paidDate;
+  String? paidBy;
+  String? paidVia;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
+  List<BillingItems>? billingItems;
 
   Invoice(
       {this.businessId,
@@ -48,15 +48,15 @@ class Invoice {
     deletedTimestamp = json['deleted_timestamp'];
     modifyBy = json['modify_by'];
     if (json['billing_items'] != null) {
-      billingItems = new List<BillingItems>();
+      billingItems = <BillingItems>[];
       json['billing_items'].forEach((v) {
-        billingItems.add(new BillingItems.fromJson(v));
+        billingItems!.add(BillingItems.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['business_id'] = this.businessId;
     data['invoice_date'] = this.invoiceDate;
     data['Invoice_amount'] = this.invoiceAmount;
@@ -72,22 +72,22 @@ class Invoice {
     data['deleted_timestamp'] = this.deletedTimestamp;
     data['modify_by'] = this.modifyBy;
     if (this.billingItems != null) {
-      data['billing_items'] = this.billingItems.map((v) => v.toJson()).toList();
+      data['billing_items'] = this.billingItems!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BillingItems {
-  String itemType;
-  String description;
-  String quantity;
-  String rate;
-  String amount;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifyBy;
+  String? itemType;
+  String? description;
+  String? quantity;
+  String? rate;
+  String? amount;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifyBy;
 
   BillingItems(
       {this.itemType,
@@ -113,7 +113,7 @@ class BillingItems {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['item_type'] = this.itemType;
     data['description'] = this.description;
     data['quantity'] = this.quantity;

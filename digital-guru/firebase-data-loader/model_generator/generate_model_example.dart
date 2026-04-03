@@ -1,5 +1,4 @@
 import 'dart:io';
-import "package:path/path.dart" show dirname, join, normalize;
 import '../lib/json_to_dart.dart';
 
 String _scriptPath() {

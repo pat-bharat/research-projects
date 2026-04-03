@@ -1,16 +1,16 @@
 class Course {
-  String businessId;
-  String title;
-  String description;
-  String instructorId;
-  String backgroundImage;
-  int deleted;
-  int displayOrder;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  List<CourseModule> courseModule;
+  String? businessId;
+  String? title;
+  String? description;
+  String? instructorId;
+  String? backgroundImage;
+  int? deleted;
+  int? displayOrder;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  List<CourseModule>? courseModule;
 
   Course(
       {this.businessId,
@@ -39,15 +39,15 @@ class Course {
     deletedTimestamp = json['deleted_timestamp'];
     modifiedBy = json['modified_by'];
     if (json['course_module'] != null) {
-      courseModule = new List<CourseModule>();
+      courseModule = <CourseModule>[];
       json['course_module'].forEach((v) {
-        courseModule.add(new CourseModule.fromJson(v));
+        courseModule!.add(CourseModule.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['business_id'] = this.businessId;
     data['title'] = this.title;
     data['description'] = this.description;
@@ -60,16 +60,16 @@ class Course {
     data['deleted_timestamp'] = this.deletedTimestamp;
     data['modified_by'] = this.modifiedBy;
     if (this.courseModule != null) {
-      data['course_module'] = this.courseModule.map((v) => v.toJson()).toList();
+      data['course_module'] = this.courseModule!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class CourseModule {
-  String moduleId;
-  String moduleName;
-  String lessonCount;
+  String? moduleId;
+  String? moduleName;
+  String? lessonCount;
 
   CourseModule({this.moduleId, this.moduleName, this.lessonCount});
 
@@ -80,7 +80,7 @@ class CourseModule {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['module_id'] = this.moduleId;
     data['module_name'] = this.moduleName;
     data['lesson_count'] = this.lessonCount;

@@ -1,5 +1,7 @@
-import 'package:json_ast/json_ast.dart' show Node;
+import 'package:squint_json/squint_json.dart';
 import 'package:json_to_dart/helpers.dart';
+
+import 'helpers.dart';
 
 const String emptyListWarn = "list is empty";
 const String ambiguousListWarn = "list is ambiguous";
@@ -37,7 +39,7 @@ class TypeDefinition {
   bool isAmbiguous = false;
   bool _isPrimitive = false;
 
-  factory TypeDefinition.fromDynamic(dynamic obj, Node astNode) {
+  factory TypeDefinition.fromDynamic(dynamic obj, JsonNode astNode) {
     bool isAmbiguous = false;
     final type = getTypeName(obj);
     if (type == 'List') {
@@ -55,24 +57,14 @@ class TypeDefinition {
         // when array is empty insert Null just to warn the user
         elemType = "Null";
       }
-      return new TypeDefinition(type,
+        return new TypeDefinition(type,
           astNode: astNode, subtype: elemType, isAmbiguous: isAmbiguous);
     }
-    return new TypeDefinition(type, astNode: astNode, isAmbiguous: isAmbiguous);
+    return new TypeDefinition(type, astNode: astNode, isAmbiguous: isAmbiguous, subtype: '');
   }
 
-  TypeDefinition(this.name, {this.subtype, this.isAmbiguous, Node astNode}) {
-    if (subtype == null) {
-      _isPrimitive = isPrimitiveType(this.name);
-      if (this.name == 'int' && isASTLiteralDouble(astNode)) {
-        this.name = 'double';
-      }
-    } else {
+  TypeDefinition(this.name, {required this.subtype, this.isAmbiguous = false, JsonNode? astNode}) {
       _isPrimitive = isPrimitiveType('$name<$subtype>');
-    }
-    if (isAmbiguous == null) {
-      isAmbiguous = false;
-    }
   }
 
   bool operator ==(other) {
@@ -151,19 +143,19 @@ class Dependency {
 }
 
 class ClassDefinition {
-  final String _name;
-  final bool _privateFields;
+  final String? _name;
+  final bool? _privateFields;
   final Map<String, TypeDefinition> fields = new Map<String, TypeDefinition>();
 
-  String get name => _name;
-  bool get privateFields => _privateFields;
+  String get name => _name ?? '';
+  bool get privateFields => _privateFields ?? false;
 
   List<Dependency> get dependencies {
-    final dependenciesList = new List<Dependency>();
+    final dependenciesList = <Dependency>[];
     final keys = fields.keys;
     keys.forEach((k) {
       final f = fields[k];
-      if (!f.isPrimitive) {
+      if (f!.isPrimitive) {
         dependenciesList.add(new Dependency(k, f));
       }
     });
@@ -184,9 +176,9 @@ class ClassDefinition {
     final List<String> keys = this.fields.keys.toList();
     final int len = keys.length;
     for (int i = 0; i < len; i++) {
-      TypeDefinition otherTypeDef = other.fields[keys[i]];
+      TypeDefinition? otherTypeDef = other.fields[keys[i]];
       if (otherTypeDef != null) {
-        TypeDefinition typeDef = this.fields[keys[i]];
+        TypeDefinition? typeDef = this.fields[keys[i]];
         if (typeDef != otherTypeDef) {
           return false;
         }
@@ -199,7 +191,8 @@ class ClassDefinition {
 
   hasField(TypeDefinition otherField) {
     return fields.keys
-            .firstWhere((k) => fields[k] == otherField, orElse: () => null) !=
+            // ignore: unnecessary_null_comparison
+            .firstWhere((k) => fields[k] == otherField, orElse: null) !=
         null;
   }
 
@@ -209,10 +202,8 @@ class ClassDefinition {
 
   void _addTypeDef(TypeDefinition typeDef, StringBuffer sb) {
     sb.write('${typeDef.name}');
-    if (typeDef.subtype != null) {
-      sb.write('<${typeDef.subtype}>');
+    sb.write('<${typeDef.subtype}>');
     }
-  }
 
   String get _fieldList {
     return fields.keys.map((key) {
@@ -221,7 +212,7 @@ class ClassDefinition {
           fixFieldName(key, typeDef: f, privateField: privateFields);
       final sb = new StringBuffer();
       sb.write('\t');
-      _addTypeDef(f, sb);
+      _addTypeDef(f!, sb);
       sb.write(' $fieldName;');
       return sb.toString();
     }).join('\n');
@@ -236,7 +227,7 @@ class ClassDefinition {
           fixFieldName(key, typeDef: f, privateField: true);
       final sb = new StringBuffer();
       sb.write('\t');
-      _addTypeDef(f, sb);
+      _addTypeDef(f!, sb);
       sb.write(
           ' get $publicFieldName => $privateFieldName;\n\tset $publicFieldName(');
       _addTypeDef(f, sb);
@@ -254,7 +245,7 @@ class ClassDefinition {
       final f = fields[key];
       final publicFieldName =
           fixFieldName(key, typeDef: f, privateField: false);
-      _addTypeDef(f, sb);
+      _addTypeDef(f!, sb);
       sb.write(' $publicFieldName');
       if (i != len) {
         sb.write(', ');
@@ -298,7 +289,7 @@ class ClassDefinition {
     sb.write('\t$name');
     sb.write('.fromJson(Map<String, dynamic> json) {\n');
     fields.keys.forEach((k) {
-      sb.write('\t\t${fields[k].jsonParseExpression(k, privateFields)}\n');
+      sb.write('\t\t${fields[k]?.jsonParseExpression(k, privateFields)}\n');
     });
     sb.write('\t}');
     return sb.toString();
@@ -309,7 +300,7 @@ class ClassDefinition {
     sb.write(
         '\tMap<String, dynamic> toJson() {\n\t\tfinal Map<String, dynamic> data = new Map<String, dynamic>();\n');
     fields.keys.forEach((k) {
-      sb.write('\t\t${fields[k].toJsonExpression(k, privateFields)}\n');
+      sb.write('\t\t${fields[k]?.toJsonExpression(k, privateFields)}\n');
     });
     sb.write('\t\treturn data;\n');
     sb.write('\t}');

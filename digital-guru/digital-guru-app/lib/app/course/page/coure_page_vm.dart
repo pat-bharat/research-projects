@@ -1,6 +1,6 @@
-import 'package:digital_guru/app/course/model/course.dart';
+import 'package:digital_guru_app/app/course/model/course.dart';
 
-import 'package:digital_guru/app/course/service/course_service.dart';
+import 'package:digital_guru_app/app/course/service/course_service.dart';
 
 class CourePageViewModel {
   CourePageViewModel(this._service);

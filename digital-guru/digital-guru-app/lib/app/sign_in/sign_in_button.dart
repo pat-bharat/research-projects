@@ -1,7 +1,7 @@
-import 'package:custom_buttons/custom_buttons.dart';
+import 'package:digital_guru_app/app/common/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
-class SignInButton extends CustomRaisedButton {
+class SignInButton extends CustomButton {
   SignInButton({
     Key? key,
     required String text,
@@ -11,10 +11,9 @@ class SignInButton extends CustomRaisedButton {
     double height = 50.0,
   }) : super(
           key: key,
-          child: Text(text, style: TextStyle(color: textColor, fontSize: 16.0)),
+          label: text,
           color: color,
           textColor: textColor,
-          height: height,
           onPressed: onPressed,
         );
 }

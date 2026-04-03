@@ -1,4 +1,4 @@
-import 'package:digital_guru/app/common/widget/empty_content.dart';
+import 'package:digital_guru_app/app/common/widget/empty_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,9 +6,9 @@ typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
 class ListItemsBuilder<T> extends StatelessWidget {
   const ListItemsBuilder({
-    Key key,
-    @required this.data,
-    @required this.itemBuilder,
+    Key? key,
+    required this.data,
+    required this.itemBuilder,
   }) : super(key: key);
   final AsyncValue<List<T>> data;
   final ItemWidgetBuilder<T> itemBuilder;

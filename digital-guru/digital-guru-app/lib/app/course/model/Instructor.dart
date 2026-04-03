@@ -1,15 +1,15 @@
 class Instructor {
-  int id;
-  String fullName;
-  String introduction;
-  String profilePic;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? fullName;
+  String? introduction;
+  String? profilePic;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Instructor(
-      {this.id,
+      {required this.id,
       this.fullName,
       this.introduction,
       this.profilePic,

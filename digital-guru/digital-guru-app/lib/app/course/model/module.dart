@@ -1,18 +1,18 @@
 class Module {
-  int id;
-  String title;
-  String description;
-  String price;
-  String discountPercentage;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  int? id;
+  String? title;
+  String? description;
+  String? price;
+  String? discountPercentage;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   Module(
-      {this.id,
+      {required this.id,
       this.title,
       this.description,
       this.price,

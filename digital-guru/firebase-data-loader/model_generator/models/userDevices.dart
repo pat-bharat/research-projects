@@ -1,15 +1,15 @@
-class UserDevice {
-  String userId;
-  List<UserDevice> userDevice;
+class UserDevices {
+  String? userId;
+  List<UserDevice>? userDevice;
 
-  UserDevice({this.userId, this.userDevice});
+  UserDevices({this.userId, this.userDevice});
 
-  UserDevice.fromJson(Map<String, dynamic> json) {
+  UserDevices.fromJson(Map<String, dynamic> json) {
     userId = json['user_id'];
     if (json['user_device'] != null) {
-      userDevice = new List<UserDevice>();
+      userDevice = <UserDevice>[];
       json['user_device'].forEach((v) {
-        userDevice.add(new UserDevice.fromJson(v));
+        userDevice!.add(UserDevice.fromJson(v));
       });
     }
   }
@@ -18,20 +18,20 @@ class UserDevice {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['user_id'] = this.userId;
     if (this.userDevice != null) {
-      data['user_device'] = this.userDevice.map((v) => v.toJson()).toList();
+      data['user_device'] = this.userDevice!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class UserDevice {
-  String deviceType;
-  String appVersion;
-  String osVersion;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
+  String? deviceType;
+  String? appVersion;
+  String? osVersion;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
 
   UserDevice(
       {this.deviceType,

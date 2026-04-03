@@ -1,21 +1,19 @@
-import 'package:digital_guru_app/app/common/service/firestore_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 final firebaseAuthProvider =
     Provider<FirebaseAuth>((ref) => FirebaseAuth.instance);
 
-final authStateChangesProvider = StreamProvider<User>(
+final authStateChangesProvider = StreamProvider<User?>(
     (ref) => ref.watch(firebaseAuthProvider).authStateChanges());
 
-final databaseProvider = Provider<FirestoreDatabase>((ref) {
-  final auth = ref.watch(authStateChangesProvider);
-
-  if (auth.data?.value?.uid != null) {
-    return FirestoreDatabase(uid: auth.data?.value?.uid);
-  }
-  return null;
+final databaseProvider = Provider<FirebaseFirestore>((ref) {
+  // Optionally, you can use auth if you need user-specific logic
+  // final auth = ref.watch(authStateChangesProvider);
+  return FirebaseFirestore.instance;
 });
 
 final loggerProvider = Provider<Logger>((ref) => Logger(

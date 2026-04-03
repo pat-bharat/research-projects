@@ -1,9 +1,13 @@
 import 'dart:collection';
 
+import 'helpers.dart';
+import 'syntax.dart';
+export 'syntax.dart';
+import 'package:squint_json/squint_json.dart';
+import 'package:squint_json/src/analyzer/analyzer.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:json_ast/json_ast.dart' show parse, Settings, Node;
-import 'package:json_to_dart/helpers.dart';
-import 'package:json_to_dart/syntax.dart';
+import 'package:pub_semver/pub_semver.dart';
+
 
 class DartCode extends WithWarning<String> {
   DartCode(String result, List<Warning> warnings) : super(result, warnings);
@@ -22,29 +26,29 @@ class Hint {
 class ModelGenerator {
   final String _rootClassName;
   final bool _privateFields;
-  List<ClassDefinition> allClasses = new List<ClassDefinition>();
-  final Map<String, String> sameClassMapping = new HashMap<String, String>();
-  List<Hint> hints;
+  List<ClassDefinition> allClasses = <ClassDefinition>[];
+  final Map<String, String> sameClassMapping = HashMap<String, String>();
+  late List<Hint> hints;
 
   ModelGenerator(this._rootClassName, [this._privateFields = false, hints]) {
     if (hints != null) {
       this.hints = hints;
     } else {
-      this.hints = new List<Hint>();
+      this.hints = <Hint>[];
     }
   }
 
   Hint _hintForPath(String path) {
-    return this.hints.firstWhere((h) => h.path == path, orElse: () => null);
+    return this.hints.firstWhere((h) => h.path == path, orElse:  null);
   }
 
-  List<Warning> _generateClassDefinition(
-      String className, dynamic jsonRawDynamicData, String path, Node astNode) {
-    List<Warning> warnings = new List<Warning>();
+    List<Warning> _generateClassDefinition(
+      String className, dynamic jsonRawDynamicData, String path, JsonNode astNode) {
+    List<Warning> warnings = <Warning>[];
     if (jsonRawDynamicData is List) {
       // if first element is an array, start in the first element.
       final node = navigateNode(astNode, '0');
-      _generateClassDefinition(className, jsonRawDynamicData[0], path, node);
+      _generateClassDefinition(className, jsonRawDynamicData[0], path, node!);
     } else {
       final Map<dynamic, dynamic> jsonRawData = jsonRawDynamicData;
       final keys = jsonRawData.keys;
@@ -54,11 +58,7 @@ class ModelGenerator {
         TypeDefinition typeDef;
         final hint = _hintForPath('$path/$key');
         final node = navigateNode(astNode, key);
-        if (hint != null) {
-          typeDef = new TypeDefinition(hint.type, astNode: node);
-        } else {
-          typeDef = new TypeDefinition.fromDynamic(jsonRawData[key], node);
-        }
+          typeDef = new TypeDefinition(hint.type, astNode: node, subtype: '');
         if (typeDef.name == 'Class') {
           typeDef.name = camelCase(key);
         }
@@ -74,17 +74,13 @@ class ModelGenerator {
         classDefinition.addField(key, typeDef);
       });
       final similarClass = allClasses.firstWhere((cd) => cd == classDefinition,
-          orElse: () => null);
-      if (similarClass != null) {
+          orElse: null);
         final similarClassName = similarClass.name;
         final currentClassName = classDefinition.name;
         sameClassMapping[currentClassName] = similarClassName;
-      } else {
-        allClasses.add(classDefinition);
-      }
       final dependencies = classDefinition.dependencies;
       dependencies.forEach((dependency) {
-        List<Warning> warns;
+        List<Warning> warns = <Warning>[];
         if (dependency.typeDef.name == 'List') {
           // only generate dependency class if the array is not empty
           if (jsonRawData[dependency.name].length > 0) {
@@ -101,17 +97,15 @@ class ModelGenerator {
             }
             final node = navigateNode(astNode, dependency.name);
             warns = _generateClassDefinition(dependency.className, toAnalyze,
-                '$path/${dependency.name}', node);
+                '$path/${dependency.name}', node!);
           }
         } else {
           final node = navigateNode(astNode, dependency.name);
           warns = _generateClassDefinition(dependency.className,
-              jsonRawData[dependency.name], '$path/${dependency.name}', node);
+              jsonRawData[dependency.name], '$path/${dependency.name}', node!);
         }
-        if (warns != null) {
-          warnings.addAll(warns);
-        }
-      });
+        warnings.addAll(warns);
+            });
     }
     return warnings;
   }
@@ -121,21 +115,24 @@ class ModelGenerator {
   /// formatted JSON string. The dart code is not validated so invalid dart code
   /// might be returned
   DartCode generateUnsafeDart(String rawJson) {
+    // Reset allClasses for each call to avoid accumulation across calls
+    allClasses = <ClassDefinition>[];
     final jsonRawData = decodeJSON(rawJson);
-    final astNode = parse(rawJson, Settings());
+    final analysis = analyze(fileContent: rawJson);
+    final astNode = analysis.parent as JsonNode;
     List<Warning> warnings =
         _generateClassDefinition(_rootClassName, jsonRawData, "", astNode);
-    // after generating all classes, replace the omited similar classes.
-    allClasses.forEach((c) {
+    // after generating all classes, replace the omitted similar classes.
+    for (final c in allClasses) {
       final fieldsKeys = c.fields.keys;
-      fieldsKeys.forEach((f) {
+      for (final f in fieldsKeys) {
         final typeForField = c.fields[f];
-        if (sameClassMapping.containsKey(typeForField.name)) {
-          c.fields[f].name = sameClassMapping[typeForField.name];
+        if (typeForField != null && sameClassMapping.containsKey(typeForField.name)) {
+          c.fields[f]?.name = sameClassMapping[typeForField.name] ?? typeForField.name;
         }
-      });
-    });
-    return new DartCode(
+      }
+    }
+    return DartCode(
         allClasses.map((c) => c.toString()).join('\n'), warnings);
   }
 
@@ -144,8 +141,8 @@ class ModelGenerator {
   /// formatted JSON string. If the generated dart is invalid it will throw an error.
   DartCode generateDartClasses(String rawJson) {
     final unsafeDartCode = generateUnsafeDart(rawJson);
-    final formatter = new DartFormatter();
-    return new DartCode(
-        formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
+    final formatter = DartFormatter(languageVersion: Version(3, 0, 0));
+    return DartCode(
+      formatter.format(unsafeDartCode.code), unsafeDartCode.warnings);
   }
 }

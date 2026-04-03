@@ -1,26 +1,26 @@
 class Business {
-  String name;
-  String punchLine;
-  String description;
-  String splashScreen;
-  String logoLink;
-  String bannerLink;
-  String url;
-  String contactEmail;
-  String address;
-  String city;
-  String zipCode;
-  String state;
-  String country;
-  String emailId;
-  int mobilePhone;
-  int locked;
-  int deleted;
-  String createdTimestamp;
-  String updatedTimestamp;
-  String deletedTimestamp;
-  String modifiedBy;
-  List<BusinessLegal> businessLegal;
+  String? name;
+  String? punchLine;
+  String? description;
+  String? splashScreen;
+  String? logoLink;
+  String? bannerLink;
+  String? url;
+  String? contactEmail;
+  String? address;
+  String? city;
+  String? zipCode;
+  String? state;
+  String? country;
+  String? emailId;
+  int? mobilePhone;
+  int? locked;
+  int? deleted;
+  String? createdTimestamp;
+  String? updatedTimestamp;
+  String? deletedTimestamp;
+  String? modifiedBy;
+  List<BusinessLegal>? businessLegal;
 
   Business(
       {this.name,
@@ -69,15 +69,15 @@ class Business {
     deletedTimestamp = json['deleted_timestamp'];
     modifiedBy = json['modified_by'];
     if (json['business_legal'] != null) {
-      businessLegal = new List<BusinessLegal>();
+      businessLegal = <BusinessLegal>[];
       json['business_legal'].forEach((v) {
-        businessLegal.add(new BusinessLegal.fromJson(v));
+        businessLegal!.add(BusinessLegal.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = this.name;
     data['punch_line'] = this.punchLine;
     data['description'] = this.description;
@@ -101,15 +101,15 @@ class Business {
     data['modified_by'] = this.modifiedBy;
     if (this.businessLegal != null) {
       data['business_legal'] =
-          this.businessLegal.map((v) => v.toJson()).toList();
+          this.businessLegal!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class BusinessLegal {
-  String legalId;
-  String title;
+  String? legalId;
+  String? title;
 
   BusinessLegal({this.legalId, this.title});
 
@@ -119,7 +119,7 @@ class BusinessLegal {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['legal_id'] = this.legalId;
     data['title'] = this.title;
     return data;

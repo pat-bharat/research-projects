@@ -1,16 +1,17 @@
-import 'package:alert_dialogs/alert_dialogs.dart';
-import 'package:digital_guru/app/common/constants/strings.dart';
-import 'package:digital_guru/app/common/provider/top_level_providers.dart';
+import 'dart:async' show unawaited;
+
+import 'alert_helpers.dart';
+import 'package:digital_guru_app/app/common/constants/strings.dart';
+import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
 class DGScaffold extends ConsumerWidget {
   DGScaffold({this.child});
-  Widget child;
+  Widget? child;
 
   Future<void> _signOut(BuildContext context, FirebaseAuth firebaseAuth) async {
     try {
@@ -19,7 +20,7 @@ class DGScaffold extends ConsumerWidget {
       unawaited(showExceptionAlertDialog(
         context: context,
         title: Strings.logoutFailed,
-        exception: e,
+        exception: e as Exception,
       ));
     }
   }
@@ -40,8 +41,8 @@ class DGScaffold extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final firebaseAuth = context.read(firebaseAuthProvider);
+  Widget build(BuildContext context, WidgetRef watch) {
+    final firebaseAuth = watch.read(firebaseAuthProvider);
     return Scaffold(
         appBar: AppBar(
           title: Text("Digital Guru"),

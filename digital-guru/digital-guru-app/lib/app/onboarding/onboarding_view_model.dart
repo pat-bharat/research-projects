@@ -1,10 +1,9 @@
-import 'package:digital_guru/app/common/service/shared_preferences_service.dart';
+import 'package:digital_guru_app/app/common/service/shared_preferences_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:state_notifier/state_notifier.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 final onboardingViewModelProvider =
-    StateNotifierProvider<OnboardingViewModel>((ref) {
+    StateNotifierProvider<OnboardingViewModel, bool>((ref) {
   final sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
   return OnboardingViewModel(sharedPreferencesService);
 });

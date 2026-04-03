@@ -1,11 +1,13 @@
-import 'package:digital_guru/app/common/provider/top_level_providers.dart';
-import 'package:digital_guru/app/course/model/course.dart';
-import 'package:digital_guru/app/course/page/coure_page_vm.dart';
-import 'package:digital_guru/app/course/service/course_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
+import 'package:digital_guru_app/app/course/model/course.dart';
+import 'package:digital_guru_app/app/course/page/coure_page_vm.dart';
+import 'package:digital_guru_app/app/course/service/course_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final courseServiceProvider = Provider<CourseService>(
-    (ref) => CourseService(ref.watch(databaseProvider).service));
+  (ref) => CourseService(ref.watch(databaseProvider)),
+);
 
 final courseViewModelProvider = Provider<CourePageViewModel>((ref) {
   return CourePageViewModel(ref.watch(courseServiceProvider));

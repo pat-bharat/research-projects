@@ -1,17 +1,14 @@
 import 'dart:math' hide SizedBox;
-
-import 'package:alert_dialogs/alert_dialogs.dart';
-import 'package:digital_guru/app/common/constants/keys.dart';
-import 'package:digital_guru/app/common/constants/strings.dart';
-import 'package:digital_guru/app/common/provider/top_level_providers.dart';
-import 'package:digital_guru/app/routing/app_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:digital_guru/app/sign_in/sign_in_view_model.dart';
-import 'package:digital_guru/app/sign_in/sign_in_button.dart';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:digital_guru_app/app/common/widget/alert_helpers.dart';
+import 'package:digital_guru_app/app/common/constants/keys.dart';
+import 'package:digital_guru_app/app/common/constants/strings.dart';
+import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
+import 'package:digital_guru_app/app/routing/app_router.dart';
+import 'package:digital_guru_app/app/sign_in/sign_in_view_model.dart';
+import 'package:digital_guru_app/app/sign_in/sign_in_button.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 final signInModelProvider = ChangeNotifierProvider<SignInViewModel>(
   (ref) => SignInViewModel(auth: ref.watch(firebaseAuthProvider)),
@@ -19,32 +16,31 @@ final signInModelProvider = ChangeNotifierProvider<SignInViewModel>(
 
 class SignInPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final signInModel = watch(signInModelProvider);
-    return ProviderListener<SignInViewModel>(
-      provider: signInModelProvider,
-      onChange: (context, model) async {
-        if (model.error != null) {
-          await showExceptionAlertDialog(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final signInModel = ref.watch(signInModelProvider);
+
+    ref.listen<SignInViewModel>(signInModelProvider, (previous, model) {
+      if (model.error != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showExceptionAlertDialog(
             context: context,
             title: Strings.signInFailed,
-            exception: model.error,
+            exception: model.error!,
           );
-        }
-      },
-      child: SignInPageContents(
-        viewModel: signInModel,
-        title: 'Digital Guru LMS',
-      ),
+        });
+      }
+    });
+
+    return SignInPageContents(
+      viewModel: signInModel,
+      title: 'Digital Guru LMS',
     );
   }
 }
 
 class SignInPageContents extends StatelessWidget {
-  const SignInPageContents(
-      {Key key, this.viewModel, this.title = 'Architecture Demo'})
-      : super(key: key);
-  final SignInViewModel viewModel;
+  const SignInPageContents({Key? key, required this.viewModel, this.title = 'Architecture Demo'}) : super(key: key);
+  final SignInViewModel? viewModel;
   final String title;
 
   static const Key emailPasswordButtonKey = Key(Keys.emailPassword);
@@ -61,22 +57,16 @@ class SignInPageContents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   elevation: 2.0,
-      //   title: Text(title),
-      // ),
-      // backgroundColor: Colors.grey[200],
       body: _buildSignIn(context),
     );
   }
 
   Widget _buildHeader() {
-    if (viewModel.isLoading) {
+    if (viewModel?.isLoading ?? false) {
       return const Center(
         child: CircularProgressIndicator(),
       );
     }
-
     return const Text(
       Strings.signIn,
       textAlign: TextAlign.center,
@@ -86,53 +76,53 @@ class SignInPageContents extends StatelessWidget {
 
   Widget _buildSignIn(BuildContext context) {
     return Center(
-      child: LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          width: min(constraints.maxWidth, 600),
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(
-                height: 50.0,
-                child: _buildHeader(),
-              ),
-              SizedBox(height: 50.0),
-              FractionallySizedBox(
-                widthFactor: 0.7,
-                child: Image.asset('assets/sign_in.png'),
-              ),
-              const SizedBox(height: 32.0),
-              const SizedBox(height: 32.0),
-              SignInButton(
-                key: emailPasswordButtonKey,
-                text: Strings.signInWithEmailPassword,
-                onPressed: viewModel.isLoading
-                    ? null
-                    : () => _showEmailPasswordSignInPage(context),
-                textColor: Colors.white,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                Strings.or,
-                style: TextStyle(fontSize: 14.0, color: Colors.black87),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              SignInButton(
-                key: anonymousButtonKey,
-                text: Strings.goAnonymous,
-                color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
-                onPressed:
-                    viewModel.isLoading ? null : viewModel.signInAnonymously,
-              ),
-            ],
-          ),
-        );
-      }),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            width: min(constraints.maxWidth, 600),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(
+                  height: 50.0,
+                  child: _buildHeader(),
+                ),
+                const SizedBox(height: 50.0),
+                FractionallySizedBox(
+                  widthFactor: 0.7,
+                  child: Image.asset('assets/sign_in.png'),
+                ),
+                const SizedBox(height: 32.0),
+                SignInButton(
+                  key: emailPasswordButtonKey,
+                  text: Strings.signInWithEmailPassword,
+                  onPressed: viewModel!.isLoading
+                      ? () {}
+                      : () => _showEmailPasswordSignInPage(context),
+                  textColor: Colors.white,
+                  color: Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  Strings.or,
+                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+                SignInButton(
+                  key: anonymousButtonKey,
+                  text: Strings.goAnonymous,
+                  color: Theme.of(context).primaryColor,
+                  textColor: Colors.white,
+                    onPressed: viewModel!.isLoading ? () {} : viewModel!.signInAnonymously,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

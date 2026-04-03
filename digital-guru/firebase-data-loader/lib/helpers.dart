@@ -1,8 +1,7 @@
 import 'dart:convert' as Convert;
 import 'dart:math';
-import 'package:json_ast/json_ast.dart'
-    show Node, ObjectNode, ArrayNode, LiteralNode;
 import 'package:json_to_dart/syntax.dart';
+import 'package:squint_json/squint_json.dart';
 
 const Map<String, bool> PRIMITIVE_TYPES = const {
   'int': true,
@@ -31,7 +30,7 @@ MergeableListType mergeableListType(List<dynamic> list) {
   ListType t = ListType.Null;
   bool isAmbigous = false;
   list.forEach((e) {
-    ListType inferredType;
+    ListType inferredType = ListType.Null;
     if (e.runtimeType == 'int') {
       inferredType = ListType.Int;
     } else if (e.runtimeType == 'double') {
@@ -51,7 +50,7 @@ MergeableListType mergeableListType(List<dynamic> list) {
 
 String camelCase(String text) {
   String capitalize(Match m) =>
-      m[0].substring(0, 1).toUpperCase() + m[0].substring(1);
+      m[0]!.substring(0, 1).toUpperCase() + m[0]!.substring(1);
   String skip(String s) => "";
   return text.splitMapJoin(new RegExp(r'[a-zA-Z0-9]+'),
       onMatch: capitalize, onNonMatch: skip);
@@ -69,7 +68,7 @@ decodeJSON(String rawJson) {
 }
 
 WithWarning<Map> mergeObj(Map obj, Map other, String path) {
-  List<Warning> warnings = new List<Warning>();
+  List<Warning> warnings = <Warning>[];
   final Map clone = Map.from(obj);
   other.forEach((k, v) {
     if (clone[k] == null) {
@@ -113,8 +112,8 @@ WithWarning<Map> mergeObj(Map obj, Map other, String path) {
 
 WithWarning<Map> mergeObjectList(List<dynamic> list, String path,
     [int idx = -1]) {
-  List<Warning> warnings = new List<Warning>();
-  Map obj = new Map();
+  List<Warning> warnings = <Warning>[];
+  Map<String, dynamic> obj = <String, dynamic>{};
   for (var i = 0; i < list.length; i++) {
     final toMerge = list[i];
     if (toMerge is Map) {
@@ -185,10 +184,10 @@ isPrimitiveType(String typeName) {
 }
 
 String fixFieldName(String name,
-    {TypeDefinition typeDef, bool privateField = false}) {
+    {TypeDefinition? typeDef, bool privateField = false}) {
   var properName = name;
   if (name.startsWith('_') || name.startsWith(new RegExp(r'[0-9]'))) {
-    final firstCharType = typeDef.name.substring(0, 1).toLowerCase();
+    final firstCharType = typeDef?.name.substring(0, 1).toLowerCase() ?? '';
     properName = '$firstCharType$name';
   }
   final fieldName = camelCaseFirstLower(properName);
@@ -217,48 +216,40 @@ String getTypeName(dynamic obj) {
   }
 }
 
-Node navigateNode(Node astNode, String path) {
-  Node node;
-  if (astNode is ObjectNode) {
-    final ObjectNode objectNode = astNode;
-    final propertyNode = objectNode.children.firstWhere((final prop) {
-      return prop.key.value == path;
-    }, orElse: () {
-      return null;
-    });
-    if (propertyNode != null) {
-      node = propertyNode.value;
+JsonNode? navigateNode(JsonNode astNode, String path) {
+  if (astNode is JsonObject) {
+    if (astNode.data.containsKey(path)) {
+      return astNode.data[path];
     }
   }
-  if (astNode is ArrayNode) {
-    final ArrayNode arrayNode = astNode;
-    final index = int.tryParse(path) ?? null;
-    if (index != null && arrayNode.children.length > index) {
-      node = arrayNode.children[index];
+  if (astNode is JsonArray) {
+    final index = int.tryParse(path);
+    if (index != null && index < astNode.data.length) {
+      return astNode.data[index];
     }
   }
-  return node;
+  return null;
 }
 
 final _pattern = RegExp(r"([0-9]+)\.{0,1}([0-9]*)e(([-0-9]+))");
 
-bool isASTLiteralDouble(Node astNode) {
-  if (astNode != null && astNode is LiteralNode) {
-    final LiteralNode literalNode = astNode;
-    final containsPoint = literalNode.raw.contains('.');
-    final containsExponent = literalNode.raw.contains('e');
-    if (containsPoint || containsExponent) {
-      var isDouble = containsPoint;
-      if (containsExponent) {
-        final matches = _pattern.firstMatch(literalNode.raw);
-        if (matches != null) {
-          final integer = matches[1];
-          final comma = matches[2];
-          final exponent = matches[3];
-          isDouble = _isDoubleWithExponential(integer, comma, exponent);
-        }
+bool isASTLiteralDouble(JsonNode astNode) {
+  // squint_json uses JsonFloatingNumber for doubles
+  if (astNode is JsonFloatingNumber) {
+    return true;
+  }
+  // Optionally, check for string representations of doubles
+  if (astNode is JsonString) {
+    final raw = astNode.data;
+    final containsPoint = raw.contains('.') || raw.contains('e');
+    if (containsPoint) {
+      final matches = _pattern.firstMatch(raw);
+      if (matches != null) {
+        final integer = matches[1] ?? '';
+        final comma = matches[2] ?? '';
+        final exponent = matches[3] ?? '';
+        return _isDoubleWithExponential(integer, comma, exponent);
       }
-      return isDouble;
     }
   }
   return false;
