@@ -4,7 +4,7 @@ import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:digiguru/app/firebase_services/service/analytics_service.dart';
+import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';

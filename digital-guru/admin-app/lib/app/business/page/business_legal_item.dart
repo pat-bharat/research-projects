@@ -10,7 +10,7 @@ import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:flutter/material.dart';
 
 class BusinessLegalItem extends StatefulWidget {

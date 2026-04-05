@@ -1,7 +1,7 @@
 import 'package:digiguru/app/AppConfig.dart';
 import 'package:digiguru/app/common/constants/dialog_manager.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/firebase_services/service/analytics_service.dart';
+import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/routing/router.dart';
 import 'package:digiguru/app/startup/page/startup_view.dart';
 import 'package:digiguru/app/theme/service/theme_service.dart';
@@ -12,11 +12,19 @@ import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FlutterDownloader.initialize(debug: true);
+   WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: "SUPABASE_URL",
+    anonKey: "SUPABASE_ANON_KEY",
+  );
+
   Intl.defaultLocale = 'en_US';
   // Register all the models and services before the app starts
   await setupLocator();

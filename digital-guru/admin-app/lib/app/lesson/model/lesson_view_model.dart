@@ -5,7 +5,7 @@ import 'package:digiguru/app/common/util/general.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/module/model/module.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/lesson/service/lesson_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
@@ -107,7 +107,7 @@ class LessonViewModel extends BaseModel {
       await _lessonService.updateLesson(_edittingLesson.documentId!, lesson);
     }
     //upload  to firestore
-    CloudStorageResult? lessonDocResult;
+    CloudStorageResult lessonDocResult;
 
     lessonDocResult = await _cloudStorageService.uploadFile(
       fileToUpload: _lessonDetailDocument,

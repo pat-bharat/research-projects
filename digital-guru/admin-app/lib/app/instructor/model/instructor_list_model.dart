@@ -1,7 +1,7 @@
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/instructor/service/instructor_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';

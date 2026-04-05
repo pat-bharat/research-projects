@@ -3,7 +3,7 @@ import 'package:digiguru/app/AppConfig.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/model/enums.dart';
-import 'package:digiguru/app/firebase_services/service/analytics_service.dart';
+import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';

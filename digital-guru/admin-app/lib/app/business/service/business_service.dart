@@ -11,7 +11,7 @@ import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/model/publication.dart';
 import 'package:digiguru/app/common/model/user_count.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';

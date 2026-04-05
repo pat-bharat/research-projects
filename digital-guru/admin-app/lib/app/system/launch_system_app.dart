@@ -3,7 +3,7 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:digiguru/app/firebase_services/service/analytics_service.dart';
+import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/system/page/system_profile_view.dart';
 import 'package:digiguru/app/theme/service/theme_service.dart';
 import 'package:digiguru/app/theme/theme_colors.dart';

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/video/model/firebase_upload_item.dart';
 import 'package:digiguru/app/video/model/video_info.dart';

@@ -6,10 +6,10 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/auth/service/authentication_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
-import 'package:digiguru/app/firebase_services/service/dynamic_link_service.dart';
+import 'package:digiguru/app/shared_services/dynamic_link_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:digiguru/app/firebase_services/service/push_notification_service.dart';
-import 'package:digiguru/app/firebase_services/service/remote_config_service.dart';
+import 'package:digiguru/app/shared_services/push_notification_service.dart';
+import 'package:digiguru/app/shared_services/remote_config_service.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
 import 'package:digiguru/app/system/service/system_service.dart';
 

@@ -8,7 +8,7 @@ import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/user/model/user.dart';
 import 'package:digiguru/app/auth/service/authentication_service.dart';
-import 'package:digiguru/app/firebase_services/service/remote_config_service.dart';
+import 'package:digiguru/app/shared_services/remote_config_service.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/download_service.dart';
 import 'package:flutter/widgets.dart';

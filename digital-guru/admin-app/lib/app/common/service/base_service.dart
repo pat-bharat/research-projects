@@ -1,11 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/erors.dart';
 import 'package:digiguru/app/user/model/user.dart' as u;
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
 class BaseService {
   static u.User? currentUser;
   static String currentUserToken = "";

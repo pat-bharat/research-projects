@@ -4,7 +4,7 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/util/general.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
-import 'package:digiguru/app/firebase_services/service/cloud_storage_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/course/service/course_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';

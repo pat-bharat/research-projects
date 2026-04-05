@@ -22,6 +22,7 @@ dependencies:
 
   # The following adds the cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  supabase_flutter: ^2.12.2
   cupertino_icons: ^1.0.0
   # http request
   http: ^1.6.0
