@@ -7,6 +7,7 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/shared_services/analytics_service.dart';
+import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/user/service/user_service.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -168,9 +169,7 @@ final supabaseDataService = SupabaseDataService();
       profile.userCounts!.consumerUsers =
           (profile.userCounts?.consumerUsers ?? 0) + 1;
     }
-
-    DocumentReference bpRef =
-        _businessProfileCollectionReference.doc(profile.documentId);
-    await _businessService.updateBusinessProfileStats(profile);
+     await supabaseDataService.update("business_profile", profile.documentId, profile.toJson());
+    
   }
 }
