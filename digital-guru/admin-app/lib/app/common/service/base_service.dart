@@ -2,6 +2,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/erors.dart';
+import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/user/model/user.dart' as u;
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,8 @@ class BaseService {
   static User? currentFirebaseUser;
 
   static bool isPreviewAsUser = false;
+  static final supabaseDataService = SupabaseDataService();
+   
 
   String get baseUploadUrl => _baseUploadUrl;
   static late Business currentBusiness;

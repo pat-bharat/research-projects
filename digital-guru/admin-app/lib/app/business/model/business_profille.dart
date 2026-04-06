@@ -17,7 +17,7 @@ class BusinessProfile {
   BusinessSetting? businessSetting = BusinessSetting();
   List<BusinessLegal>? businessLegal;
 
-  String? documentId;
+  String? id;
 
   BusinessProfile(
       {this.businessId,
@@ -32,8 +32,8 @@ class BusinessProfile {
       this.businessSetting,
       this.businessLegal});
 
-  BusinessProfile.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
+  BusinessProfile.fromJson(String id, Map<String, dynamic> json) {
+    this.id = id;
     businessId = json['business_id'];
     businessName = json['business_name'];
     businessPhone = json['business_phone'];

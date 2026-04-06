@@ -1,5 +1,5 @@
 class BusinessLegal {
-  String businessId;
+  String id;
   String title;
   String legalId;
   String? pdfDoc;
@@ -12,7 +12,7 @@ class BusinessLegal {
   String? documentId;
 
   BusinessLegal(
-      {required this.businessId,
+      {required this.id,
       required this.title,
       required this.legalId,
       this.pdfDoc,
@@ -23,7 +23,7 @@ class BusinessLegal {
       this.modifiedBy});
 
   BusinessLegal.fromJson(String docId, Map<String, dynamic> json)
-      : businessId = json['business_id'],
+      : id = json['business_id'],
         title = json['title'],
         legalId = json['legal_id'],
         documentId = docId,
@@ -36,7 +36,7 @@ class BusinessLegal {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['business_id'] = this.businessId;
+    data['business_id'] = this.id;
     data['title'] = this.title;
     data['legal_id'] = this.legalId;
     data['pdf_doc'] = this.pdfDoc;

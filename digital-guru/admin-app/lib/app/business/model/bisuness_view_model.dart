@@ -95,12 +95,12 @@ class BusinessViewModel extends BaseModel {
         );
         return;
       }
-      business.documentId = result.userId;
+      business.id = result.userId;
       BaseService.currentBusiness = business;
     } else {
-      business.documentId = _edittingBusiness.documentId;
+      business.id = _edittingBusiness.id;
       await _businessService.updateBusiness(
-          _edittingBusiness.documentId!, business);
+          _edittingBusiness.id!, business);
       BaseService.currentBusiness = business;
     }
 
@@ -109,7 +109,7 @@ class BusinessViewModel extends BaseModel {
     if (_logoImage != null) {
       logoResult = await _cloudStorageService.uploadFile(
         fileToUpload: _logoImage!,
-        title: (_editting ? _edittingBusiness.documentId : result.userId) +
+        title: (_editting ? _edittingBusiness.id : result.userId) +
             "/" +
             p.basename(_logoImage!.path),
       );
@@ -118,7 +118,7 @@ class BusinessViewModel extends BaseModel {
     if (_bannerImage != null) {
       bannerResult = await _cloudStorageService.uploadFile(
         fileToUpload: _bannerImage!,
-        title: (_editting ? _edittingBusiness.documentId : result.userId) +
+        title: (_editting ? _edittingBusiness.id : result.userId) +
             "/" +
             p.basename(_bannerImage!.path),
       );
@@ -130,7 +130,7 @@ class BusinessViewModel extends BaseModel {
 
     if (logoResult != null || bannerResult != null) {
       _businessService.updateBusiness(
-          _editting ? _edittingBusiness.documentId : result.userId, business);
+          _editting ? _edittingBusiness.id : result.userId, business);
       BaseService.currentBusiness = business;
     }
 

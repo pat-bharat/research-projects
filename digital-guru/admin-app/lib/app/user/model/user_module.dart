@@ -13,7 +13,7 @@ class UserModule {
   String? moduleTitle;
   List<String>? lessonIds;
   List<Lesson>? lessons;
-  String? documentId;
+  String? id;
 
   UserModule({
     required this.userId,
@@ -31,7 +31,7 @@ class UserModule {
   });
 
   UserModule.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
+    this.id = docId;
     userId = json['user_id'];
     purchaseDate = json['purchase_date'];
     purchaseAmount = json['purchase_amount'];

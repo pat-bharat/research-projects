@@ -6,7 +6,8 @@ import 'package:digiguru/app/routing/router.dart';
 import 'package:digiguru/app/startup/page/startup_view.dart';
 import 'package:digiguru/app/theme/service/theme_service.dart';
 import 'package:digiguru/app/theme/theme_colors.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:digiguru/configure_supabase.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
@@ -16,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await configureApp();
   await FlutterDownloader.initialize(debug: true);
    WidgetsFlutterBinding.ensureInitialized();
 

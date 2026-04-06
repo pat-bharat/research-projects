@@ -76,7 +76,7 @@ class SystemDashBoardViewModel extends BaseModel {
   void listenToBusinessInvoices() async {
     setBusy(true);
     _businessBillingService
-        .listenToInvoiceesRealTime(currentBusiness.documentId!)
+        .listenToInvoiceesRealTime(currentBusiness.id!)
         .listen((invoices) {
       List<BusinessInvoice> bInvoices = invoices;
       if (bInvoices.isNotEmpty) {

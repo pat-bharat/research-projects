@@ -1,38 +1,29 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 const String _ShowMainBanner = "show_main_banner";
+const String _ConfigTable = "app_config";
 
 class RemoteConfigService {
-  final FirebaseRemoteConfig _remoteConfig;
-  final defaults = <String, dynamic>{_ShowMainBanner: false};
+  static RemoteConfigService? _instance;
+  final SupabaseClient _client = Supabase.instance.client;
+  Map<String, dynamic> _config = {};
 
-  static RemoteConfigService? _instance = null;
   static Future<RemoteConfigService> getInstance() async {
-    if (_instance == null) {
-      _instance = RemoteConfigService(
-        remoteConfig: FirebaseRemoteConfig.instance,
-      );
-    }
-
+    _instance ??= RemoteConfigService();
+    await _instance!.initialise();
     return _instance!;
   }
 
-  RemoteConfigService({required FirebaseRemoteConfig remoteConfig})
-      : _remoteConfig = remoteConfig;
-
-  bool get showMainBanner => _remoteConfig.getBool(_ShowMainBanner);
+  bool get showMainBanner => _config[_ShowMainBanner] ?? false;
 
   Future initialise() async {
     try {
-      await _remoteConfig.setDefaults(defaults);
-      await _fetchAndActivate();
+      final response = await _client.from(_ConfigTable).select().single();
+      _config = response;
     } catch (e) {
-      print(
-          'Unable to fetch remote config. Cached or default values will be used');
+      print('Unable to fetch remote config from Supabase. Default values will be used.');
+      _config = {_ShowMainBanner: false};
     }
-  }
-
-  Future _fetchAndActivate() async {
-    await _remoteConfig.fetchAndActivate();
   }
 }

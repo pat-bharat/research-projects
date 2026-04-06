@@ -30,7 +30,7 @@ class BusinessLegalListModel extends BaseModel {
   void listenToBusinessLegals() async {
     setBusy(true);
     _businessService
-        .listenToBusinessLegalRealTime(currentBusiness.documentId!)
+        .listenToBusinessLegalRealTime(currentBusiness.id!)
         .listen((businessLegal) {
       List<BusinessLegal> businessLegals = businessLegal;
       if (businessLegals != null && businessLegals.length > 0) {
@@ -83,7 +83,7 @@ class BusinessLegalListModel extends BaseModel {
   }
 
   Future getAllBusinessLegals() {
-    return _businessService.getAllBusinessLegals(currentBusiness.documentId!);
+    return _businessService.getAllBusinessLegals(currentBusiness.id!);
   }
 
   Future updateBusinessLegal(BusinessLegal businessLegal) async {
@@ -107,7 +107,7 @@ class BusinessLegalListModel extends BaseModel {
       CloudStorageResult storageResult = await _cloudStorageService.uploadFile(
           fileToUpload: pdfFile,
           title:
-              businessLegal.businessId + "/legals/" + p.basename(pdfFile.path));
+              businessLegal.id + "/legals/" + p.basename(pdfFile.path));
       //nowupdate collection
       var colResult;
       if (storageResult != null) {

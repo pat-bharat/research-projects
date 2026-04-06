@@ -183,7 +183,7 @@ class _LessonViewState extends State<LessonView> {
               onPressed: () {
                 if (_lessonViewKey.currentState?.validate() ?? false) {
                   model.save(
-                      moduleId: _module.documentId,
+                      moduleId: _module.id,
                       moduleTitle: _module.title,
                       courseTitle: _course.title,
                       instructorName: _course.instructorName,

@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/course/model/course.dart';
@@ -20,14 +20,14 @@ class YoutubeCourseBuilderService extends BaseService {
   ModuleService _moduleService = locator<ModuleService>();
   LessonService _lessonService = locator<LessonService>();
   InstructorService _instructorService = locator<InstructorService>();
-  final CollectionReference _courseCollectionReference =
-      FirebaseFirestore.instance.collection('courses');
-  final CollectionReference _lessonCollectionReference =
-      FirebaseFirestore.instance.collection('lessons');
-  final CollectionReference _moduleCollectionReference =
-      FirebaseFirestore.instance.collection('modules');
-  final CollectionReference _instructorsCollectionReference =
-      FirebaseFirestore.instance.collection('instructors');
+  // final CollectionReference _courseCollectionReference =
+  //     FirebaseFirestore.instance.collection('courses');
+  // final CollectionReference _lessonCollectionReference =
+  //     FirebaseFirestore.instance.collection('lessons');
+  // final CollectionReference _moduleCollectionReference =
+  //     FirebaseFirestore.instance.collection('modules');
+ // final CollectionReference _instructorsCollectionReference =
+  //    FirebaseFirestore.instance.collection('instructors');
 
   APIService api = locator<APIService>();
 
@@ -39,7 +39,7 @@ class YoutubeCourseBuilderService extends BaseService {
     Instructor instructor =
         await _instructorService.getInstructorByName(info.instructorName);
     if (instructor == null) {
-      DocumentSnapshot snapshot = await _instructorService.addInstructor(
+      var snapshot = await _instructorService.addInstructor(
           Instructor(
               businessId: info.businessId,
               fullName: info.instructorName,
@@ -59,12 +59,12 @@ class YoutubeCourseBuilderService extends BaseService {
       youtube: true,
     );
 
-    DocumentReference _courseDocRef = await _courseService.addCourse(course);
+    var _courseDocRef = await _courseService.addCourse(course);
 
     List<Module> modules = List.empty(growable: true);
     int index = 1;
     channel.playLists?.forEach((pl) async {
-      DocumentReference _moduleDocRef;
+      var _moduleDocRef;
       Module m = Module(
         courseId: _courseDocRef.id,
         businessId: info.businessId, //BaseService.currentBusiness.documentId,
@@ -101,21 +101,10 @@ class YoutubeCourseBuilderService extends BaseService {
   }
 
   Future deleteCourse(String courseId) async {
-    var batch = FirebaseFirestore.instance.batch();
-
-    await _lessonCollectionReference
-        .where('course_id', isEqualTo: courseId)
-        .get()
-        .then((snapshot) =>
-            snapshot.docs.forEach((doc) => {batch.delete(doc.reference)}));
-
-    await _moduleCollectionReference
-        .where('course_id', isEqualTo: courseId)
-        .get()
-        .then((snapshot) =>
-            snapshot.docs.forEach((doc) => {batch.delete(doc.reference)}));
-    batch.commit();
-    return await _courseCollectionReference.doc(courseId).delete();
+   _lessonService.deleteCourseLessions(courseId);
+   _moduleService.deleteCourseModules(courseId);
+   _courseService.deleteCourseById(courseId);
+     
   }
 }
 

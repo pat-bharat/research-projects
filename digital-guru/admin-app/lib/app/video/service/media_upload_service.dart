@@ -7,9 +7,9 @@ import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/video/model/firebase_upload_item.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
-import 'package:digiguru/app/video/page/firebase_upload_item_view.dart';
+import 'package:digiguru/app/video/page/supabase_upload_item_view.dart';
 import 'package:digiguru/app/video/service/media_upload_background_handler.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 import 'package:video_compress/video_compress.dart';
@@ -30,11 +30,11 @@ class MediaUploadService extends BaseService {
   final CloudStorageService _cloudStorageService =
       locator<CloudStorageService>();
   static MediaUploadService? _instance;
-  static List<FirebaseUploadItem> _tasks = [];
-  static List<FirebaseUploadItem> get tasks => _tasks;
+  static List<SupabaseUploadItem> _tasks = [];
+  static List<SupabaseUploadItem> get tasks => _tasks;
 
-  final StreamController<List<FirebaseUploadItem>> _uploadItemController =
-      StreamController<List<FirebaseUploadItem>>.broadcast();
+  final StreamController<List<SupabaseUploadItem>> _uploadItemController =
+      StreamController<List<SupabaseUploadItem>>.broadcast();
   factory MediaUploadService() {
     return _instance ??= MediaUploadService.private();
   }
@@ -154,17 +154,17 @@ Future<String> get _destinationFile(String fileName) async {
       tag: tag,
     );
 */
-    UploadTask _uploadTask = FirebaseStorage.instance
-        .ref()
-        .child(uploadDir + '/' + fileName)
-        .putFile(File(videoInfo.rawVideoPath!));
+    Future<CloudStorageResult> _uploadTask = _cloudStorageService.uploadFile(fileToUpload: File(videoInfo.rawVideoPath!), title:uploadDir + '/' + fileName);
 
-    FirebaseUploadItem uplaodItem = FirebaseUploadItem(videoInfo.title,
+    SupabaseUploadItem uplaodItem = SupabaseUploadItem(videoInfo.title,
         fileToUpload: videoInfo.rawVideoPath,
         destPath: uploadDir,
         uploadProgress: 0,
         onComplete: onComplete,
-        uploadTask: _uploadTask);
+        errorMessage: null,
+        status: 'uploading',
+        supabaseUrl: null,        
+);
     addUploadItem(uplaodItem);
     if (onComplete != null) {
       _uploadTask.whenComplete(() => onComplete());
@@ -174,11 +174,11 @@ Future<String> get _destinationFile(String fileName) async {
     //await _uploader.enqueue(upload);
   }
 
-  void addUploadItem(FirebaseUploadItem item) {
+  void addUploadItem(SupabaseUploadItem item) {
     _tasks.add(item);
   }
 
-  void removeUploadItem(FirebaseUploadItem item) {
+  void removeUploadItem(SupabaseUploadItem item) {
       _tasks.remove(item);
   }
 

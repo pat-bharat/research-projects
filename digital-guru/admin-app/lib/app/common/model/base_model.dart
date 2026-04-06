@@ -58,7 +58,7 @@ class BaseModel extends ChangeNotifier {
   }
 
   void signOut() async {
-    var result = await _authenticationService.signOff();
+    var result = await _authenticationService.signOut();
     if (result is String) {
       await _dialogService.showDialog(
         title: 'Error!',

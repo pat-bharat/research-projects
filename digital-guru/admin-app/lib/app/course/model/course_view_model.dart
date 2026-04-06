@@ -13,7 +13,7 @@ import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:video_compress/video_compress.dart';
 import '../../common/model/base_model.dart';
@@ -101,7 +101,7 @@ class CourseViewModel extends BaseModel {
     setBusy(true);
 
     Course course = Course(
-        businessId: super.currentBusiness.documentId!,
+        businessId: super.currentBusiness.id!,
         title: title,
         description: description,
         language: language,
@@ -116,12 +116,12 @@ class CourseViewModel extends BaseModel {
     var result;
     if (!isEditingCourse) {
       result = await _courseService.addCourse(course);
-      course.documentId = result.userId;
+      course.id = result.userId;
       //await _analyticsService.logPostCreated(hasImage: _logoImage != null);
     } else {
-      course.documentId = _edittingCourse!.documentId!;
-      await _courseService.updateCourse(_edittingCourse!.documentId!, course);
-      course.documentId = _edittingCourse!.documentId!;
+      course.id = _edittingCourse!.id!;
+      await _courseService.updateCourse(_edittingCourse!.id!, course);
+      course.id = _edittingCourse!.id!;
     }
     //upload  to firestore
     CloudStorageResult backgroundResult, syllabusResult;
@@ -129,9 +129,9 @@ class CourseViewModel extends BaseModel {
     if (_backgroundImage != null) {
       backgroundResult = await _cloudStorageService.uploadFile(
         fileToUpload: _backgroundImage,
-        title: super.currentBusiness.documentId! +
+        title: super.currentBusiness.id! +
             "/" +
-            (isEditingCourse ? _edittingCourse!.documentId! : result.userId) +
+            (isEditingCourse ? _edittingCourse!.id! : result.userId) +
             "/" +
             p.basename(_backgroundImage.path),
       );
@@ -145,9 +145,9 @@ class CourseViewModel extends BaseModel {
     if (_syllabusDocument != null) {
       syllabusResult = await _cloudStorageService.uploadFile(
         fileToUpload: _syllabusDocument,
-        title: super.currentBusiness.documentId! +
+        title: super.currentBusiness.id! +
             "/" +
-            (isEditingCourse ? _edittingCourse!.documentId : result.userId) +
+            (isEditingCourse ? _edittingCourse!.id! : result.userId) +
             "/" +
             p.basename(_syllabusDocument.path),
       );
@@ -161,7 +161,7 @@ class CourseViewModel extends BaseModel {
     if (_videoFile != null) {
       await handleVideoUpload(_videoFile, course);
     } else {
-      result = await _courseService.updateCourse(course.documentId!, course);
+      result = await _courseService.updateCourse(course.id!, course);
     }
 
     setBusy(false);
@@ -195,9 +195,9 @@ class CourseViewModel extends BaseModel {
         CloudStorageResult videoThumbnailResult =
             await _cloudStorageService.uploadFile(
           fileToUpload: thumbnailFile,
-          title: super.currentBusiness.documentId! +
+          title: super.currentBusiness.id! +
               "/" +
-              course.documentId! +
+              course.id! +
               "/" +
               p.basename(thumbnailFile.path),
         );
@@ -216,22 +216,21 @@ class CourseViewModel extends BaseModel {
       /* CloudStorageResult videofileResult =
           await _cloudStorageService.uploadFile(
         fileToUpload: videoFile,
-        title: super.currentBusiness.documentId +
+        title: super.currentBusiness.id! +
             "/" +
-            course.documentId! +
+            course.id! +
             "/" +
             p.basename(videoFile.path),
       );*/
       String uploadPath =
-          super.currentBusiness.documentId! + "/" + course.documentId! + "/";
+          super.currentBusiness.id! + "/" + course.id! + "/";
 
       mediaService.uploadVideo(course.courseVideo!, uploadPath,
           onComplete: () async {
-        String downloadURL = await FirebaseStorage.instance
-            .ref(uploadPath + '/' + course.courseVideo!.title!)
-            .getDownloadURL();
+        String downloadURL =  uploadPath + '/' + course.courseVideo!.title!;
+           // .getDownloadURL();
         course.courseVideo!.videoUrl = downloadURL;
-        _courseService.updateCourse(course.documentId!, course);
+        _courseService.updateCourse(course.id!, course);
       });
     }
   }
@@ -239,7 +238,7 @@ class CourseViewModel extends BaseModel {
   Future<List<Instructor>> getInstructors() async {
     List<Instructor> list = List<Instructor>.empty(growable: true);
     await _businessService
-        .getAllInstructors(currentBusiness.documentId!)
+        .getAllInstructors(currentBusiness.id!)
         .then((instructors) => {list.addAll(instructors)});
     return list;
   }

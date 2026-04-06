@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
@@ -17,9 +17,7 @@ import 'package:digiguru/app/user/model/user_module.dart';
 import 'package:flutter/services.dart';
 
 class UserModuleService extends BaseService {
-  final CollectionReference _userModulesCollectionReference =
-      FirebaseFirestore.instance.collection('user_modules');
-  BusinessService _businessService = locator<BusinessService>();
+    BusinessService _businessService = locator<BusinessService>();
   CourseService _courseService = locator<CourseService>();
   ModuleService _moduleService = locator<ModuleService>();
   LessonService _lessonService = locator<LessonService>();
@@ -33,21 +31,21 @@ class UserModuleService extends BaseService {
 
   static const int PostsLimit = 20;
 
-  late DocumentSnapshot _lastDocument;
+  late Map<String, dynamic> _lastDocument;
   bool _hasMorePosts = true;
 
   Future addUserModule(UserModule userModule) async {
     try {
       //check if it is already purchased?
-      if (userModule.documentId == null) {
+      if (userModule.id == null) {
         return "Invalid module ID";
       }
-      var purchased = await isModuleAlreadyPurchased(userModule.documentId!);
+      var purchased = await isModuleAlreadyPurchased(userModule.id!);
       if (purchased is bool && !purchased) {
         var result =
-            await _userModulesCollectionReference.add(userModule.toJson());
+            await BaseService.supabaseDataService.insert('user_modules', userModule.toJson());
         BusinessProfile bProfile = await _businessService
-            .getBusinessProfile(BaseService.currentBusiness.documentId!);
+            .getBusinessProfile(BaseService.currentBusiness.id!);
         bProfile.userCounts?.purchasedUsers =
             (bProfile.userCounts?.purchasedUsers ?? 0) + 1;
         bProfile.collectedRevenue =
@@ -65,13 +63,16 @@ class UserModuleService extends BaseService {
   }
 
   Future isModuleAlreadyPurchased(String moduleId) async {
-    if (moduleId == null) {
-      return false;
-    }
+    
     try {
       //check if it is already purchased?
       bool purchased = false;
-      await _userModulesCollectionReference
+      await BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'module_id': moduleId}).then((value) => {
+        if (value.isNotEmpty) {
+          purchased = true
+        }
+      });
+      /*await _userModulesCollectionReference   
           .where("module_id", isEqualTo: moduleId)
           .get()
           .then((value) {
@@ -79,6 +80,7 @@ class UserModuleService extends BaseService {
           purchased = true;
         }
       });
+      */
       return purchased;
     } catch (e) {
       return handleException(e as Exception);
@@ -87,8 +89,8 @@ class UserModuleService extends BaseService {
 
   Future getUserModule(String uid) async {
     try {
-      var userData = await _userModulesCollectionReference.doc(uid).get();
-      return UserModule.fromJson(uid, userData.data() as Map<String, dynamic>);
+      var userData = await BaseService.supabaseDataService.fetchById('user_modules', uid);
+      return UserModule.fromJson(uid, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -170,7 +172,7 @@ Future getFreeUserModules() async {
         {
           if (map.containsKey(l.moduleTitle)) {
             UserModule? um = map.remove(l.moduleTitle);
-            um!.lessonIds!.add(l.documentId!);
+            um!.lessonIds!.add(l.id!);
             um.lessons!.add(l);
             map.putIfAbsent(l.moduleTitle!, () => um);
           } else {
@@ -183,7 +185,7 @@ Future getFreeUserModules() async {
                     instructorName: l.instructorName,
                     moduleId: l.moduleId,
                     moduleTitle: l.moduleTitle,
-                    lessonIds: [l.documentId!],
+                    lessonIds: [l.id!],
                     lessons: [l]));
           }
         }
@@ -205,14 +207,14 @@ Future getFreeUserModules() async {
   void _requestPurchasedUserModules(String userId) async {
     // #2: split the query from the actual subscription
     var userModuleListQuery =
-        _userModulesCollectionReference.where("user_id", isEqualTo: userId);
+        BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'user_id': userId});
     // List<UserModule> userModules = List.empty(growable: true);
     List<UserModule> finalUserModules = List.empty(growable: true);
-    userModuleListQuery.snapshots().listen((userModuleSnapshot) {
-      if (userModuleSnapshot.docs.isNotEmpty) {
-        userModuleSnapshot.docs
+    userModuleListQuery.asStream().listen((userModuleSnapshot) {
+      if (userModuleSnapshot.isNotEmpty) {
+        userModuleSnapshot
             .map(
-                (snapshot) => UserModule.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
+                (snapshot) => UserModule.fromJson(snapshot['id'] as String, snapshot as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.userId != null)
             .toList()
             .forEach((um) {
@@ -253,14 +255,10 @@ Future getFreeUserModules() async {
   Future getAllUserModules(String userId) async {
     try {
       List<UserModule> modules = List.empty(growable: true);
-      await _userModulesCollectionReference
-          .where("user_id", isEqualTo: userId)
-          .get()
-          .then((value) => {
-                value.docs.forEach((element) {
-                  modules.add(UserModule.fromJson(element.id, element.data() as Map<String, dynamic>));
-                })
-              });
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'user_id': userId});
+      result.forEach((element) {
+        modules.add(UserModule.fromJson(element['id'] as String, element as Map<String, dynamic>));
+      });
       return modules;
     } catch (e) {
       return handleException(e as Exception);

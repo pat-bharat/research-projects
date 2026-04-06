@@ -22,7 +22,7 @@ class Module {
   VideoInfo? moduleVideo;
   int? lessonCount;
 
-  late String documentId;
+  late String id;
   late Course course;
 
   Module(
@@ -47,7 +47,7 @@ class Module {
        this.lessonCount});
 
   Module.fromJson(Map<String, dynamic> json, String docId) {
-    this.documentId = docId;
+    this.id = docId;
     courseId = json['course_id'];
     businessId = json['business_id'];
     name = json['name'];

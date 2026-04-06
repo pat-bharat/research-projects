@@ -21,7 +21,7 @@ class Business {
   String? updatedTimestamp;
   String? deletedTimestamp;
   String? modifiedBy;
-  String? documentId;
+  String? id;
   Business(
       {this.name,
       this.punchLine,
@@ -47,7 +47,7 @@ class Business {
       this.modifiedBy});
 
   Business.fromJson(Map<String, dynamic> json, String docId) {
-    documentId = docId;
+    id = docId;
     name = json['name'];
     punchLine = json['punch_line'];
     //description = json['description'];

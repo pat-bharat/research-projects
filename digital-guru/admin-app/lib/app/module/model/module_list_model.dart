@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/course/model/course.dart';
@@ -35,7 +35,7 @@ class ModuleListModel extends BaseModel {
   }
   void listenToModules() {
     setBusy(true);
-    _moduleService.listenToModulesRealTime(_course.documentId!).listen((module) {
+    _moduleService.listenToModulesRealTime(_course.id!).listen((module) {
       List<Module> modules = module;
       if (modules.length > 0) {
         _modules = modules;
@@ -56,7 +56,7 @@ class ModuleListModel extends BaseModel {
     if (dialogResponse.confirmed!) {
       // var moduleToDelete = _modules[index];
       setBusy(true);
-      await _moduleService.deleteModule(module.documentId);
+      await _moduleService.deleteModule(module.id);
       // Delete the image after the module is deleted
       if (module.moduleBackground!.imageUrl != null) {
         await _cloudStorageService.deleteFile(module.moduleBackground!.imageUrl!);
@@ -88,7 +88,7 @@ class ModuleListModel extends BaseModel {
         arguments: CourseModuleArgs(course: course, module: module));
   }
 
-  void requestMoreData() => _moduleService.requestMoreData(_course.documentId!);
+  void requestMoreData() => _moduleService.requestMoreData(_course.id!);
 
   void saveModuleDisplayOrder(List<Module> items) async {
     //TODO update in batch
@@ -96,15 +96,15 @@ class ModuleListModel extends BaseModel {
       int index = items.indexOf(item);
       if (index != item.displayOrder) {
         item.displayOrder = index;
-        this._moduleService.updateModule(item.documentId, item);
+        this._moduleService.updateModule(item.id!, item);
       }
     }
   }
 
   purchaseModule(Module module) async {
     UserModule userModule = UserModule(
-      courseId: course.documentId!,
-      moduleId: module.documentId,
+      courseId: course.id!,
+      moduleId: module.id,
       courseName: course.title!,
       instructorName: course.instructorName!,
       moduleName: module.name,
@@ -122,7 +122,7 @@ class ModuleListModel extends BaseModel {
     //nowadd to database
     //TODO work on inditify how to detect succful transaction
     var result = await _userModuleService.addUserModule(userModule);
-    if (result is DocumentReference) {
+    if (result is Map) {
       _dialogService.showDialog(
           title: "Success!",
           buttonTitle: "Conratulations!",

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/startup/model/user_accepted_legal.dart';
@@ -8,10 +8,10 @@ import 'package:digiguru/app/user/model/user.dart';
 import 'package:flutter/services.dart';
 
 class UserService extends BaseService {
-  final CollectionReference _usersCollectionReference =
+  /*final CollectionReference _usersCollectionReference =
       FirebaseFirestore.instance.collection('users');
   final CollectionReference _userAccepedLegalsCollectionReference =
-      FirebaseFirestore.instance.collection('user_accepted_legals');
+      FirebaseFirestore.instance.collection('user_accepted_legals');*/
   final StreamController<List<User>> _postsController =
       StreamController<List<User>>.broadcast();
 
@@ -20,7 +20,7 @@ class UserService extends BaseService {
 
   static const int PostsLimit = 20;
 
- late DocumentSnapshot _lastDocument;
+ late Map<String, dynamic>  _lastDocument;
   bool _hasMorePosts = true;
 
   Future createUser(User user) async {
@@ -30,7 +30,7 @@ class UserService extends BaseService {
           inAppNotifications: true,
           wifiDownloadOnly: true);
       populateCommonFields(object: user, created: true);
-      await _usersCollectionReference.doc(user.userId).set(user.toJson());
+      await BaseService.supabaseDataService.insert('users', user.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -38,8 +38,8 @@ class UserService extends BaseService {
 
   Future getUser(String uid) async {
     try {
-      var userData = await _usersCollectionReference.doc(uid).get();
-      return User.fromJson(uid, userData.data() as Map<String, dynamic>);
+      var userData = await BaseService.supabaseDataService.fetchById('users', uid);
+      return User.fromJson(uid, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -48,10 +48,10 @@ class UserService extends BaseService {
   Future hasUserAcceptedLegals(String uid) async {
     try {
       bool accepted = false;
-      QuerySnapshot snapshot = await _userAccepedLegalsCollectionReference
-          .where("user_id", isEqualTo: uid)
-          .get();
-      return snapshot.docs.length == 2;
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery('user_accepted_legals', where: {'user_id': uid});
+      // await _userAccepedLegalsCollectionReference  
+        
+      return result.length == 2;
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -66,26 +66,22 @@ class UserService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestPosts(String bid) {
     // #2: split the query from the actual subscription
-    var pagePostsQuery = _usersCollectionReference
-        .where("business_id", isEqualTo: bid)
-        .orderBy('fullName')
-        // #3: Limit the amount of results
-        .limit(PostsLimit);
+    var pagePostsQuery = BaseService.supabaseDataService.fetchAllWithQuery('users', where: {'business_id': bid}, orderBy: 'fullName', maxRows: PostsLimit);
 
-    // #5: If we have a document start the query after it
-    if (_lastDocument != null) {
+            // #5: If we have a document start the query after it
+    /*if (_lastDocument != null) {
       pagePostsQuery = pagePostsQuery.startAfterDocument(_lastDocument);
-    }
+    }*/
 
     if (!_hasMorePosts) return;
 
     // #7: Get and store the page index that the results belong to
     var currentRequestIndex = _allPagedResults.length;
 
-    pagePostsQuery.snapshots().listen((postsSnapshot) {
-      if (postsSnapshot.docs.isNotEmpty) {
-        var posts = postsSnapshot.docs
-            .map((snapshot) => User.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
+    pagePostsQuery.asStream().listen((postsSnapshot) {
+      if (postsSnapshot.isNotEmpty) {
+        var posts = postsSnapshot
+            .map((snapshot) => User.fromJson(snapshot['id'], snapshot as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
 
@@ -110,7 +106,7 @@ class UserService extends BaseService {
 
         // #13: Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {
-          _lastDocument = postsSnapshot.docs.last;
+          _lastDocument = postsSnapshot.last;
         }
 
         // #14: Determine if there's more posts to request
@@ -120,7 +116,7 @@ class UserService extends BaseService {
   }
 
   Future deleteUser(String documentId) async {
-    await _usersCollectionReference.doc(documentId).delete();
+    await BaseService.supabaseDataService.delete('users', documentId);
     //TODO delete from fireauth
   }
 
@@ -130,7 +126,7 @@ class UserService extends BaseService {
       if (BaseService.isPreviewAsUser)
         BaseService.currentUser?.userRole = UserRole.admin;
 
-      await _usersCollectionReference.doc(uid).update(user.toJson());
+      await BaseService.supabaseDataService.update('users', uid, user.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }

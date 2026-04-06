@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirebaseProvider {
+import 'package:digiguru/app/common/service/base_service.dart';
+
+class SupabaseProvider {
   /*
   static saveVideo(VideoInfo video) async {
     await FirebaseFirestore.instance
@@ -16,14 +18,16 @@ class FirebaseProvider {
   }
 */
   static saveDownloadUrl(String videoName, String downloadUrl) async {
-    await FirebaseFirestore.instance.collection('videos').doc(videoName).set({
-      'videoUrl': downloadUrl,
-      'finishedProcessing': true,
-    }, SetOptions(merge: true));
-  }
+    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {'video_name': videoName}).then((userData) => {
+      if (userData.isNotEmpty)
+        {
+          BaseService.supabaseDataService.update('videos', userData.first['id'], {'video_url': downloadUrl, 'finished_processing': true})
+        }
+    });
+  } 
 
   static createNewVideo(String videoName, String rawVideoPath) async {
-    await FirebaseFirestore.instance.collection('videos').doc(videoName).set({
+    await BaseService.supabaseDataService.insert('videos', {
       'finishedProcessing': false,
       'videoName': videoName,
       'rawVideoPath': rawVideoPath,
@@ -31,10 +35,12 @@ class FirebaseProvider {
   }
 
   static deleteVideo(String videoName) async {
-    await FirebaseFirestore.instance
-        .collection('videos')
-        .doc(videoName)
-        .delete();
+    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {'video_name': videoName}).then((userData) => {
+      if (userData.isNotEmpty)
+        {
+          BaseService.supabaseDataService.delete('videos', userData.first['id'])
+        }
+    });
   }
 /*
   static listenToVideos(callback) async {

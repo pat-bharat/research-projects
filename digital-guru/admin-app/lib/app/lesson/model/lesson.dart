@@ -19,9 +19,10 @@ class Lesson {
   String? modifiedBy;
   InstructionDoc? instructionDoc;
   VideoInfo? videoInfo;
-  String? documentId;
+  String? id;
   Lesson(
-      {this.moduleId,
+      {
+      this.moduleId,
       this.businessId,
       this.moduleTitle,
       this.courseId,
@@ -40,10 +41,10 @@ class Lesson {
       this.instructionDoc,
       this.videoInfo});
 
-  Lesson.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
+  Lesson.fromJson(String id, Map<String, dynamic> json) {
+    this.id = id;
     moduleId = json['module_id'];
-    businessId = json['busines_id'];
+    businessId = json['business_id'];
     moduleTitle = json['module_title'];
     courseId = json['course_id'];
     courseTitle = json['course_title'];

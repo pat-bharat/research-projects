@@ -2,7 +2,7 @@ import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
 import 'package:digital_guru_app/app/common/service/shared_preferences_service.dart';
 import 'package:digital_guru_app/app/course/page/course_page.dart';
 import 'package:digital_guru_app/app/routing/app_router.dart';
-import 'package:firebase_core/firebase_core.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digital_guru_app/app/auth_widget.dart';
 import 'package:digital_guru_app/app/onboarding/onboarding_page.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(ProviderScope(
     overrides: [
@@ -30,7 +30,7 @@ Future<void> main() async {
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef watch) {
-    final firebaseAuth = watch.read(firebaseAuthProvider);
+    final supabaseClient = watch.read(supabaseClientProvider);
     return MaterialApp(
       theme: ThemeData(
           primarySwatch: Colors.deepOrange, primaryColor: Colors.deepOrange),
@@ -46,7 +46,7 @@ class MyApp extends ConsumerWidget {
         signedInBuilder: (_) => CoursePage(),
       ),
       onGenerateRoute: (settings) =>
-          AppRouter.onGenerateRoute(settings, firebaseAuth),
+          AppRouter.onGenerateRoute(settings, supabaseClient),
     );
   }
 }

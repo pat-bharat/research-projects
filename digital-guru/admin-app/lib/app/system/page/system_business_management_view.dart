@@ -41,8 +41,8 @@ class _SystemBusinessManagementViewState
     setState(() {
       businessList = _businessList;
       business = businessList.first;
-      if (business.documentId != null) {
-        getBusinessProfile(business.documentId!);
+      if (business.id != null) {
+        getBusinessProfile(business.id!);
       }
     });
     return "Success";
@@ -103,8 +103,8 @@ class _SystemBusinessManagementViewState
                       setState(
                         () {
                           business = newBehavior!;
-                          if (business.documentId != null) {
-                            getBusinessProfile(business.documentId!);
+                          if (business.id != null) {
+                            getBusinessProfile(business.id!);
                           }
                         },
                       );

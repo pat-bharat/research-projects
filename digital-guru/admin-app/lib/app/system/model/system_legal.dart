@@ -8,7 +8,7 @@ class SystemLegal {
   late String? updatedTimestamp;
   late String? deletedTimestamp;
   late String? modifiedBy;
-  late String? documentId;
+  late String? id;
   SystemLegal(
       {required this.title,
       this.pdfDoc,
@@ -19,10 +19,10 @@ class SystemLegal {
       this.updatedTimestamp,
       this.deletedTimestamp,
       this.modifiedBy,
-      this.documentId});
+      this.id});
 
   SystemLegal.fromJson(String docId, Map<String, dynamic> json) {
-    this.documentId = docId;
+    this.id = docId;
     title = json['title'];
     pdfDoc = json['pdf_doc'];
     active = json['active'];

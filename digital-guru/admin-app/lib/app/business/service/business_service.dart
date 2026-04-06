@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+// 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/constants/erors.dart';
@@ -14,6 +14,7 @@ import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';
+import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 
 import 'package:digiguru/app/system/model/system_legal.dart';
@@ -23,7 +24,7 @@ import 'package:digiguru/app/video/service/download_service.dart';
 import 'package:flutter/services.dart';
 
 class BusinessService extends BaseService {
-  final CollectionReference _businessesCollectionReference =
+  /*final CollectionReference _businessesCollectionReference =
       FirebaseFirestore.instance.collection('businesses');
   final CollectionReference _businessesLegalCollectionReference =
       FirebaseFirestore.instance.collection('business_legals');
@@ -44,7 +45,7 @@ class BusinessService extends BaseService {
   final CollectionReference _businessLegalsCollectionReference =
       FirebaseFirestore.instance.collection('business_legals');
   final CollectionReference _businessProfileCollectionReference =
-      FirebaseFirestore.instance.collection('business_profile');
+      FirebaseFirestore.instance.collection('business_profile');*/
   final StreamController<List<Business>> _businessController =
       StreamController<List<Business>>.broadcast();
   final StreamController<List<BusinessLegal>> _businessLegalController =
@@ -58,13 +59,14 @@ class BusinessService extends BaseService {
 
   static const int PostsLimit = 20;
 
-  late DocumentSnapshot _lastDocument;
+  late Business _lastDocument;
+  final supabaseDataService = SupabaseDataService();
   bool _hasMorePosts = true;
 
   Future getBusines(String id) async {
     try {
-      var userData = await _businessesCollectionReference.doc(id).get();
-      return new Business.fromJson(userData.data() as Map<String, dynamic>, id);
+      var userData = await supabaseDataService.fetchById('businesses', id);
+      return new Business.fromJson(userData as Map<String, dynamic>, id);
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -72,12 +74,11 @@ class BusinessService extends BaseService {
 
   Future getBusinessByEmail(String email) async {
     try {
-      var userData = await _businessesCollectionReference
-          .where("email_id", isEqualTo: email)
-          .get();
-      if (userData.docs.isEmpty) {
+      var userData = await supabaseDataService.fetchAllWithQuery( 'businesses', where: {"email_id": email});
+        
+      if (userData.isEmpty) {
         return (Strings.noBusinessFoudForEmail + '[' + email + ']');
-      } else if (userData.docs.length > 1) {
+      } else if (userData.length > 1) {
         return (Strings.multipleBusinessFoundError +
             " [" +
             email +
@@ -85,7 +86,7 @@ class BusinessService extends BaseService {
             Strings.contactSystemAdmin);
       } else {
         return new Business.fromJson(
-            userData.docs.single.data() as Map<String, dynamic>, userData.docs.single.id);
+            userData.first as Map<String, dynamic>, userData.first['id']);
       }
     } catch (e) {
       return handleException(e as Exception);
@@ -95,14 +96,13 @@ class BusinessService extends BaseService {
   Future getAllActiveBusinesses() async {
     try {
       List<Business> businesses = new List.empty(growable: true);
-      await _businessesCollectionReference
-          .where("locked", isEqualTo: false)
-          .where("deleted", isEqualTo: false)
-          .orderBy("name")
-          .get()
-          .then((value) => {
-                value.docs.forEach((business) => businesses
-                    .add(Business.fromJson(business.data() as Map<String, dynamic>, business.id)))
+      var userData = await supabaseDataService.fetchAllWithQuery(
+        'businesses',
+        where: {"locked": false, "deleted": false},
+        orderBy: "name",
+      ).then((value) => {
+                value.forEach((business) => businesses
+                    .add(Business.fromJson(business, business['id'])))
               });
       return businesses;
     } catch (e) {
@@ -113,13 +113,13 @@ class BusinessService extends BaseService {
   Future getAllBusinesses() async {
     try {
       List<Business> businesses = new List.empty(growable: true);
-      await _businessesCollectionReference
-          .orderBy("name")
-          .get()
-          .then((value) => {
-                value.docs.forEach((business) => businesses
-                    .add(Business.fromJson(business.data() as Map<String, dynamic>, business.id)))
-              });
+      var userData = await supabaseDataService.fetchAllWithQuery(
+        'businesses',
+        orderBy: "name",
+      );
+      userData.forEach((business) => businesses
+          .add(Business.fromJson(business, business['id'])));
+             
       return businesses;
     } catch (e) {
       return handleException(e as Exception);
@@ -129,13 +129,14 @@ class BusinessService extends BaseService {
   Future addBusiness(Business business) async {
     try {
       super.populateCommonFields(object: business, created: true);
-      var result = await _businessesCollectionReference.add(business.toJson());
+      var result = await supabaseDataService.insert('businesses', business.toJson());
+      Business newBusiness = Business.fromJson(result as Map<String, dynamic>, result['id']);
       //add business legals
       List<SystemLegal> consLegals =
           await _systemService.getConsumerOnlyLegals();
       consLegals.forEach((legal) async {
         await _downloadService.requestDownload(legal.pdfDoc!, legal.title);
-        String toUpload = business.documentId! +
+        String toUpload = business.id! +
             "/legals/" +
             _downloadService.localDir +
             Platform.pathSeparator +
@@ -151,26 +152,26 @@ class BusinessService extends BaseService {
         await addBusinessLegal(
             business,
             BusinessLegal(
-                businessId: business.documentId!,
-                legalId: legal.documentId!,
+                id: business.id!,
+                legalId: legal.id!,
                 pdfDoc: storageResult.mediaUrl,
                 title: legal.title));
               //now add default besiness settings
-        BusinessSetting settings = BusinessSetting(businessId: result.id);
+        BusinessSetting settings = BusinessSetting(businessId: result['id']);
         populateCommonFields(object: settings, created: true);
-        await _businessSettingsCollectionReference.add(settings.toJson());
+        await supabaseDataService.insert('business_settings', settings.toJson());
         //now add businessProfile
         BusinessProfile profile = BusinessProfile(
-            businessId: result.id,
+            businessId: result['id'],
             userCounts: UserCount(adminUsers: 1),
             publication: Publication());
-        await _businessProfileCollectionReference.add(profile.toJson());
+        await supabaseDataService.insert('business_profiles', profile.toJson());
       });
         } catch (e) {
       return handleException(e as Exception);
     }
   }
-
+/*
   Future getBusinessesOnceOff() async {
     try {
       var postDocumentSnapshot =
@@ -185,7 +186,7 @@ class BusinessService extends BaseService {
       return handleException(e as Exception);
     }
   }
-
+*/
   Stream listenToBusinessesRealTime() {
     // Register the handler for when the posts data changes
     _requestBusinesses();
@@ -195,26 +196,29 @@ class BusinessService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestBusinesses() {
     // #2: split the query from the actual subscription
-    var pageBusinessesQuery = _businessesCollectionReference
-        .orderBy('name')
+    var pageBusinessesQuery = supabaseDataService.fetchAllWithQuery(
+      'businesses',
+       orderBy: "name",
+       where: {"locked": false, "deleted": false},
+       maxRows: PostsLimit);
         // #3: Limit the amount of results
-        .limit(PostsLimit);
+       
 
     // #5: If we have a document start the query after it
-    if (_lastDocument != null) {
+   /* if (_lastDocument != null) {
       pageBusinessesQuery =
           pageBusinessesQuery.startAfterDocument(_lastDocument);
-    }
+    }*/
 
     if (!_hasMorePosts) return;
 
     // #7: Get and store the page index that the results belong to
     var currentRequestIndex = _allPagedResults.length;
 
-    pageBusinessesQuery.snapshots().listen((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        var businesses = snapshot.docs
-            .map((snapshot) => Business.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
+    pageBusinessesQuery.asStream().listen((snapshot) {
+      if (snapshot.isNotEmpty) {
+        var businesses = snapshot
+            .map((item) => Business.fromJson(item as Map<String, dynamic>, item['id'] as String))
             .where((mappedItem) => mappedItem.name != null)
             .toList();
 
@@ -240,7 +244,7 @@ class BusinessService extends BaseService {
 
         // #13: Save the last document from the results only if it's the current last page
         if (currentRequestIndex == _allPagedResults.length - 1) {
-          _lastDocument = snapshot.docs.last;
+          _lastDocument = snapshot.last['id'];
         }
 
         // #14: Determine if there's more posts to request
@@ -251,14 +255,13 @@ class BusinessService extends BaseService {
 
   Future deleteBusiness(Business business) async {
     super.populateCommonFields(object: business, deleted: true);
-    await _businessesCollectionReference
-        .doc(business.documentId)
-        .update(business.toJson());
+    await supabaseDataService.update('businesses', business.id!, business.toJson());
+    
   }
 
   Future updateBusiness(String bid, Business business) async {
     try {
-      await _businessesCollectionReference.doc(bid).update(business.toJson());
+      await supabaseDataService.update('businesses', bid, business.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -269,12 +272,13 @@ class BusinessService extends BaseService {
   Future getAllInstructors(String businessId) async {
     try {
       List<String> instructors = new List.empty(growable: true);
-      var userData = await _instructorCollectionReference
-          .where("business_id", isEqualTo: businessId)
-          .get();
-      userData.docs.forEach((instructor) =>
+      var userData = await supabaseDataService.fetchAllWithQuery(
+        'instructors',
+        where: {"business_id": businessId},
+      );
+      userData.forEach((instructor) =>
             instructors.add(
-                Instructor.fromJson(docId: instructor.id, json: instructor.data() as Map<String, dynamic>).fullName!)
+                Instructor.fromJson(docId: instructor['id'] as String, json: instructor as Map<String, dynamic>).fullName!)
           );
       return instructors;
     } catch (e) {
@@ -285,10 +289,11 @@ class BusinessService extends BaseService {
   Future getAllBusinessLegals(String businessId) async {
     try {
       List<BusinessLegal> legals = new List.empty(growable: true);
-      var userData = await _businessesLegalCollectionReference
-          .where("business_id", isEqualTo: businessId)
-          .get();
-      userData.docs.forEach((legal) {legals.add(BusinessLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>));});
+      var userData = await supabaseDataService.fetchAllWithQuery(
+        'business_legals',
+        where: {"business_id": businessId},
+      );
+      userData.forEach((legal) {legals.add(BusinessLegal.fromJson(legal['id'] as String, legal as Map<String, dynamic>));});
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -296,9 +301,7 @@ class BusinessService extends BaseService {
   }
 
   Future deleteBusinessLegal(BusinessLegal bl) async {
-    return await _businessesLegalCollectionReference
-        .doc(bl.documentId)
-        .delete();
+    return await supabaseDataService.delete('business_legals', bl.documentId);
   }
 
   Stream listenToBusinessLegalRealTime(String documentId) {
@@ -309,17 +312,19 @@ class BusinessService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestBusinessesLegals(String businessId) {
     // #2: split the query from the actual subscription
-    var pageBusinessesQuery = _businessesLegalCollectionReference
-        .where("business_id", isEqualTo: businessId);
-
+    var pageBusinessesQuery = supabaseDataService.fetchAllWithQuery(
+      'business_legals',
+      where: {"business_id": businessId},
+    );
+        
     // #5: If we have a document start the query after it
     // #7: Get and store the page index that the results belong to
 
-    pageBusinessesQuery.snapshots().listen((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        var businessLegal = snapshot.docs
+    pageBusinessesQuery.asStream().listen((snapshot) {
+      if (snapshot.isNotEmpty) {
+        var businessLegal = snapshot
             .map((snapshot) =>
-                BusinessLegal.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
+                BusinessLegal.fromJson(snapshot['id'] as String, snapshot as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
         _businessLegalController.add(businessLegal);
@@ -331,9 +336,7 @@ class BusinessService extends BaseService {
       String bldocId, BusinessLegal businessLegal) async {
     try {
       populateCommonFields(object: businessLegal);
-      await _businessesLegalCollectionReference
-          .doc(bldocId)
-          .update(businessLegal.toJson());
+      await supabaseDataService.update('business_legals', bldocId, businessLegal.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -343,8 +346,9 @@ class BusinessService extends BaseService {
       Business business, BusinessLegal businessLegal) async {
     try {
       populateCommonFields(object: businessLegal);
-      return await _businessesLegalCollectionReference
-          .add(businessLegal.toJson());
+      return await supabaseDataService.insert('business_legals', businessLegal.toJson());
+      //await _businessLegalsCollectionReference
+          
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -352,9 +356,7 @@ class BusinessService extends BaseService {
 
   Future updateBusinessProfileStats(BusinessProfile profile) async {
     try {
-      return await _businessProfileCollectionReference
-          .doc(profile.documentId)
-          .set(profile.toJson());
+      return await supabaseDataService.update('business_profiles', profile.id, profile.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -362,15 +364,11 @@ class BusinessService extends BaseService {
 
   Future getBusinessProfile(String bid) async {
     BusinessProfile? profile;
-    await _businessProfileCollectionReference
-        .where("business_id", isEqualTo: bid)
-        .get()
-        .then((snapshot) => {
-              if (snapshot.docs.isNotEmpty)
-                {
-                  profile = BusinessProfile.fromJson(
-                      snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>),
-                }
+    var result = await supabaseDataService.fetchAllWithQuery(
+      'business_profiles',
+       where: {"business_id": bid});
+        result.forEach((snapshot) {
+          profile = BusinessProfile.fromJson(snapshot['id'] as String, snapshot as Map<String, dynamic>);
             });
 
     if (profile != null) {
@@ -475,11 +473,11 @@ class BusinessService extends BaseService {
   Future getBusinessSettings(String bid) async {
     BusinessSetting bSetting = BusinessSetting();
     try {
-      await _businessSettingsCollectionReference
-          .where("business_id", isEqualTo: bid)
-          .get()
-          .then((snapshot) => bSetting = BusinessSetting.fromJson(
-              snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>));
+      await supabaseDataService.fetchAllWithQuery(
+        'business_settings',
+         where: {"business_id": bid}).then((result) => {
+            if(result.isNotEmpty)      bSetting = BusinessSetting.fromJson(result.first['id'] as String, result.first)
+      });
       return bSetting;
     } catch (e) {
       return handleException(e as Exception);

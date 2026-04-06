@@ -2,13 +2,15 @@ import 'package:digiguru/app/common/constants/youtube_channels.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/youtube/service/youtube_course_builder_service.dart';
 import 'package:digiguru/app/youtube/page/home_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:digiguru/configure_supabase.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
+  configureApp();
   await FlutterDownloader.initialize(debug: true);
   await setupLocator();
   YoutubeCourseBuilderService service = locator<YoutubeCourseBuilderService>();

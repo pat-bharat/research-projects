@@ -1,7 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 class AppRoutes {
   static const emailPasswordSignInPage = '/email-password-sign-in-page';
   static const editJobPage = '/edit-job-page';
@@ -10,7 +11,7 @@ class AppRoutes {
 
 class AppRouter {
   static Route<dynamic>? onGenerateRoute(
-      RouteSettings settings, FirebaseAuth firebaseAuth) {
+      RouteSettings settings, SupabaseClient supabaseClient) {
     final args = settings.arguments;
     switch (settings.name) {
       case AppRoutes.emailPasswordSignInPage:

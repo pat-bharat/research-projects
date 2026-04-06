@@ -38,7 +38,7 @@ class TrialUserModuleListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _userModuleService.requestMoreData(currentBusiness.documentId!);
+      _userModuleService.requestMoreData(currentBusiness.id!);
 
   goBack() {
     _navigationService.pop();

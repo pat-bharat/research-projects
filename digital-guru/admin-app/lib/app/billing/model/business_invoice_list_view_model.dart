@@ -32,7 +32,7 @@ class BusinessInvoiceListModel extends BaseModel {
     setBusy(true);
 
     _businessBillinService
-        .listenToInvoiceesRealTime(currentBusiness.documentId!)
+        .listenToInvoiceesRealTime(currentBusiness.id!)
         .listen((invocies) {
       List<BusinessInvoice> invoiceList = invocies;
       if (invoiceList != null && invoiceList.length > 0) {
@@ -60,7 +60,7 @@ class BusinessInvoiceListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _businessBillinService.requestMoreData(currentBusiness.documentId!);
+      _businessBillinService.requestMoreData(currentBusiness.id!);
 
   void navigateToBusiness() {
     _navigationService.navigateTo(CreateBusinessViewRoute,

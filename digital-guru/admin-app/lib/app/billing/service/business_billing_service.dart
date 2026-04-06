@@ -1,15 +1,14 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/billing/model/business_invoice.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
+import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class BusinessBillingService extends BaseService {
-  final CollectionReference _invoiceCollectionReference =
-      FirebaseFirestore.instance.collection('business_invoices');
-
+  final supabaseDataService = SupabaseDataService();
   final StreamController<List<BusinessInvoice>> _invoiceController =
       StreamController<List<BusinessInvoice>>.broadcast();
 
@@ -22,8 +21,8 @@ class BusinessBillingService extends BaseService {
 
   Future getInvoice(String documentId) async {
     try {
-      var userData = await _invoiceCollectionReference.doc(documentId).get();
-      return new BusinessInvoice.fromJson(documentId, userData.data() as Map<String, dynamic>);
+      var userData = await supabaseDataService.fetchById('business_billing',documentId);
+      return new BusinessInvoice.fromJson(documentId, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -32,7 +31,7 @@ class BusinessBillingService extends BaseService {
   Future addInvoice(BusinessInvoice invoice) async {
     try {
       super.populateCommonFields(object: invoice, created: true);
-      return await _invoiceCollectionReference.add(invoice.toJson());
+      return await supabaseDataService.insert('business_billing', invoice.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -47,17 +46,14 @@ class BusinessBillingService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestInvoices(String businessId) {
     // #2: split the query from the actual subscription
-    var pageInvoiceQuery = _invoiceCollectionReference
-        .where("business_id", isEqualTo: businessId)
-        .orderBy('created_timestamp', descending: true)
-        // #3: Limit the amount of results
-        .limit(InvoiceLimit);
+    var invoices = supabaseDataService.fetchAllWithQuery("business_billing", where: {"business_id": businessId}, orderBy: "created_timestamp", ascending: false);
+    
 
-    pageInvoiceQuery.snapshots().listen((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        var cources = snapshot.docs
-            .map((snapshot) =>
-                BusinessInvoice.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
+    invoices.asStream(). listen((invoices) {
+      if (invoices.isNotEmpty) {
+        var cources = invoices
+            .map((invoice) =>
+                BusinessInvoice.fromJson(invoice['id'], invoice))
             .toList();
         // #12: Broadcase all Invoice
         _invoiceController.add(cources);
@@ -68,7 +64,7 @@ class BusinessBillingService extends BaseService {
   Future updateInvoice(String invoiceId, BusinessInvoice invoice) async {
     try {
       super.populateCommonFields(object: invoice, created: false);
-      await _invoiceCollectionReference.doc(invoiceId).update(invoice.toJson());
+      await supabaseDataService.update('business_billing', invoiceId, invoice.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }

@@ -109,7 +109,7 @@ class _LessonListViewState extends State<LessonListView> {
     if (!youtube) {
       return Card(
         //color: Colors.blueGrey,
-        key: ValueKey(item.documentId),
+        key: ValueKey(item.id),
         elevation: 2,
         child: CreationAwareListItem(
           itemCreated: () {
@@ -118,7 +118,7 @@ class _LessonListViewState extends State<LessonListView> {
           child: GestureDetector(
             // onTap: () => model.editCourse(index),
             child: LessonItem(
-              key: ValueKey(item.documentId),
+              key: ValueKey(item.id),
               isAdmin: model.isAdmin,
               lesson: item,
               onDeleteItem: () => model.deleteLesson(item),
@@ -137,7 +137,7 @@ class _LessonListViewState extends State<LessonListView> {
     } else {
       return Card(
         //color: Colors.blueGrey,
-        key: ValueKey(item.documentId),
+        key: ValueKey(item.id),
         elevation: 2,
         child: CreationAwareListItem(
           itemCreated: () {
@@ -146,7 +146,7 @@ class _LessonListViewState extends State<LessonListView> {
           child: GestureDetector(
             // onTap: () => model.editCourse(index),
             child: LessonItem(
-              key: ValueKey(item.documentId),
+              key: ValueKey(item.id),
               isAdmin: model.isAdmin,
               lesson: item,
               onPlayVideo: () => model.viewVideo(item.videoInfo!),

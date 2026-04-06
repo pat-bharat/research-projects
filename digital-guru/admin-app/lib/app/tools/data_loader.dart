@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/billing/model/business_invoice.dart';
 import 'package:digiguru/app/billing/service/business_billing_service.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:digiguru/configure_supabase.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -14,7 +15,7 @@ class DataLoaderService extends BaseService {
       locator<BusinessBillingService>();
   loadBusinessInvoice() async {
     var binvoice = BusinessInvoice(
-        businessId: BaseService.currentBusiness.documentId!,
+        businessId: BaseService.currentBusiness.id!,
         createdTimestamp: DateTime.now().toIso8601String(),
         updatedTimestamp: DateTime.now().toIso8601String(),
         startDate: DateTime.now(),
@@ -47,21 +48,23 @@ class DataLoaderService extends BaseService {
   }
 
   void updateLessonsBusinessId(String bid) {
-    final CollectionReference _lessonCollectionReference =
-        FirebaseFirestore.instance.collection('lessons');
-    _lessonCollectionReference.snapshots().forEach((element) {
-      element.docs.forEach((element) {
-        Lesson l = Lesson.fromJson(element.id, element.data() as Map<String, dynamic>);
+
+    BaseService.supabaseDataService.fetchAllWithQuery(  'lessons', where: {'business_id': bid}).then((lessonsData) {
+      lessonsData.forEach((element) {
+        Lesson l = Lesson.fromJson(element['id'] as String, element);
         l.businessId = bid;
-        _lessonCollectionReference.doc(element.id).update(l.toJson());
+        BaseService.supabaseDataService.update('lessons', l.id!, l.toJson());
       });
     });
+    
+    
+   
   }
 }
 
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await configureApp();
   //await FlutterDownloader.initialize(debug: true);
   Intl.defaultLocale = 'en_US';
   // Register all the models and services before the app starts

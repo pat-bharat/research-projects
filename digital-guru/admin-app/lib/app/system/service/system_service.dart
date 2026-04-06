@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/model/enums.dart';
@@ -15,7 +15,7 @@ import 'package:digiguru/app/system/model/system_profile.dart';
 import 'package:digiguru/app/user/model/user_module.dart';
 
 class SystemService extends BaseService {
-  final CollectionReference _legalCollectionReference =
+  /*final CollectionReference _legalCollectionReference =
       FirebaseFirestore.instance.collection('legals');
   final CollectionReference _systemProfileCollectionReference =
       FirebaseFirestore.instance.collection('system_profile');
@@ -39,16 +39,15 @@ class SystemService extends BaseService {
       FirebaseFirestore.instance.collection('user_modules');
   final CollectionReference _userAcceptedLegalsCollectionReference =
       FirebaseFirestore.instance.collection('user_accepted_legals');
-
+*/
   Future loadBusinesOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      var userData = await _legalCollectionReference
-          .where("legal_type", isEqualTo: "business")
-          .get();
+      var userData = await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'business'});
+        
 
-      userData.docs.forEach((legal) =>
-          legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>)));
+      userData.forEach((legal) =>
+          legals.add(SystemLegal.fromJson(legal['id'], legal as Map<String, dynamic>)));
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -58,12 +57,11 @@ class SystemService extends BaseService {
   Future getConsumerOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      var userData = await _legalCollectionReference
-          .where("legal_type", isEqualTo: LegalFor.consumer)
-          .get();
+      var userData = await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'consumer'});
+         
 
-      userData.docs.forEach((legal) =>
-          legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>)));
+      userData.forEach((legal) =>
+          legals.add(SystemLegal.fromJson(legal['id'], legal)));
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -73,14 +71,9 @@ class SystemService extends BaseService {
   Future getBusinessOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      await _legalCollectionReference
-          .where('user_type', isEqualTo: LegalFor.business)
-          .get()
-          .then((snapshot) => {
-                snapshot.docs.forEach((legal) =>
-                    {legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>))})
-              });
-
+      await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'business'}).then((userData) => {
+         userData.forEach((legal) {legals.add(SystemLegal.fromJson(legal['id'], legal));})
+      });
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -88,14 +81,12 @@ class SystemService extends BaseService {
   }
 
   Future deleteSystemLegal(SystemLegal legal) async {
-    return _legalCollectionReference.doc(legal.documentId).delete();
+    return BaseService.supabaseDataService.delete('legals', legal.id);
   }
 
   Future updateBusinessSettings(BusinessSetting businessSetting) async {
     try {
-      await _businessSettingsCollectionReference
-          .doc(businessSetting.documentId)
-          .update(businessSetting.toJson());
+      await BaseService.supabaseDataService.update('business_settings', businessSetting.documentId!, businessSetting.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -104,11 +95,12 @@ class SystemService extends BaseService {
   Future getBusinessSettings(String businessId) async {
     BusinessSetting bSetting = BusinessSetting();
     try {
-      await _businessSettingsCollectionReference
-          .where("business_id", isEqualTo: businessId)
-          .get()
-          .then((snapshot) => bSetting = BusinessSetting.fromJson(
-              snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>));
+      await BaseService.supabaseDataService.fetchAllWithQuery('business_settings', where: {'business_id': businessId}).then((userData) => {
+        if (userData.isNotEmpty)
+          {
+            bSetting = BusinessSetting.fromJson(userData.first['id'], userData.first)
+          }
+      });
       return bSetting;
     } catch (e) {
       return handleException(e as Exception);
@@ -117,11 +109,10 @@ class SystemService extends BaseService {
 
   Future getSystemProfile() async {
     SystemProfile? profile;;
-    await _systemProfileCollectionReference.get().then((snapshot) => {
-          if (snapshot.docs.isNotEmpty)
+    await BaseService.supabaseDataService.fetchAllWithQuery('system_profile').then((userData) => {
+          if (userData.isNotEmpty)
             {
-              profile = SystemProfile.fromJson(
-                  snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>)
+              profile = SystemProfile.fromJson(userData.first['id'], userData.first)
             }
         });
     return profile;
@@ -163,28 +154,21 @@ class SystemService extends BaseService {
   Future getAllBusinessesList() async {
     List<Business> businessList = List.empty(growable: true);
 
-    await _businessCollectionReference
-        .get()
-        .then((snapshot) => snapshot.docs.forEach((doc) {
-              businessList.add(Business.fromJson(doc.data() as Map<String, dynamic>, doc.id));
-            }));
+    await BaseService.supabaseDataService.fetchAllWithQuery('businesses').then((userData) => {
+      userData.forEach((business) {businessList.add(Business.fromJson( business, business['id']));})
+    });
     return businessList;
   }
 
   Future getBusinessProfile(String bid) async {
     BusinessProfile? profile;
-    await _businessProfileCollectionReference
-        .where("business_id", isEqualTo: bid)
-        .get()
-        .then((snapshot) async => {
-              if (snapshot.docs.isNotEmpty)
-                {
-                  profile = BusinessProfile.fromJson(
-                      snapshot.docs.first.id, snapshot.docs.first.data() as Map<String, dynamic>),
-                  await getBusinessSettings(bid)
-                      .then((value) => profile!.businessSetting = value)
-                }
-            });
+    await BaseService.supabaseDataService.fetchAllWithQuery('business_profile', where: {'business_id': bid}).then((userData) => {
+          if (userData.isNotEmpty)
+            {
+              profile = BusinessProfile.fromJson(userData.first['id'], userData.first),
+              getBusinessSettings(bid).then((value) => profile!.businessSetting = value)
+            }
+        });   
     return profile;
   }
 
@@ -198,7 +182,7 @@ class SystemService extends BaseService {
             legalType: l.legalType,
             pdfDoc: l.pdfDoc,
             acceptedTimestamp: DateTime.now().toIso8601String());
-        await _userAcceptedLegalsCollectionReference.add(ual.toJson());
+        await BaseService.supabaseDataService.insert('user_accepted_legals', ual.toJson());
       });
     } catch (e) {
       handleException(e as Exception);

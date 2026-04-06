@@ -1,22 +1,21 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
+import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:flutter/services.dart';
 
 class BusinessLegalService extends BaseService {
-  final CollectionReference _legalCollectionReference =
-      FirebaseFirestore.instance.collection('business_legals');
-
+  final supabaseDataService = SupabaseDataService();
   Future getConsumerLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      var userData = await _legalCollectionReference.get();
+      var userData = await supabaseDataService.fetchAll('business_legals');
 
-      userData.docs.forEach((legal) =>
-          legals.add(SystemLegal.fromJson(legal.id, legal.data() as Map<String, dynamic>)));
+      userData.forEach((legal) =>
+          legals.add(SystemLegal.fromJson(legal['id'], legal)));
       return legals;
     } catch (e) {
       // TODO: Find or create a way to repeat error handling without so much repeated code

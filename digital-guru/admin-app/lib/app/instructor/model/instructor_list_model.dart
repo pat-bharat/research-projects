@@ -26,7 +26,7 @@ class InstructorListModel extends BaseModel {
   void listenToInstructors() async {
     setBusy(true);
     _instructorService
-        .listenToInstructoresRealTime(currentBusiness.documentId!)
+        .listenToInstructoresRealTime(currentBusiness.id!)
         .listen((instructor) {
       List<Instructor> instructors = instructor;
       if (instructors.isNotEmpty) {
@@ -67,7 +67,7 @@ class InstructorListModel extends BaseModel {
   }
 
   void requestMoreData() =>
-      _instructorService.requestMoreData(currentBusiness.documentId!);
+      _instructorService.requestMoreData(currentBusiness.id!);
 
   Future navigateToAddInstructorToBusiness() async {
     _navigationService.navigateTo(AddEditInstructorViewRoute);

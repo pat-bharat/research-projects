@@ -134,7 +134,7 @@ class _ModuleListViewState extends State<ModuleListView> {
 */
     return Card(
       //color: Colors.blueGrey,
-      key: ValueKey(item!.documentId),
+      key: ValueKey(item!.id),
       elevation: 2,
       child: CreationAwareListItem(
         itemCreated: () {
@@ -143,7 +143,7 @@ class _ModuleListViewState extends State<ModuleListView> {
         child: GestureDetector(
           child: ModuleItem(
             isAdmin: model.isAdmin,
-            canPurchase: !_userModules.contains(item.documentId),
+            canPurchase: !_userModules.contains(item.id),
             module: item,
             onDeleteItem: () => model.deleteModule(module: item),
             onEditItem: () => model.editModule(item),

@@ -52,7 +52,7 @@ class SignUpViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
-        description: result,
+        description: "Sign Up Failure",
       );
     }
   }
@@ -77,7 +77,7 @@ class SignUpViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
-        description: result,
+        description: "Sign Up Failure",
       );
     }
   }
@@ -102,7 +102,7 @@ class SignUpViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
-        description: result,
+        description: "Sign Up Failure",
       );
     }
   }

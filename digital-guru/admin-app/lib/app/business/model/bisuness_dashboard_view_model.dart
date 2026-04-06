@@ -22,13 +22,13 @@ class BusinessDashBoardViewModel extends BaseModel {
 
   Future<List<BusinessLegal>> getConsumerLegals() async {
     return await _businessService
-        .getAllBusinessLegals(currentBusiness.documentId!);
+        .getAllBusinessLegals(currentBusiness.id!);
   }
 
   void listenToBusinessInvoices() async {
     setBusy(true);
     _businessBillingService
-        .listenToInvoiceesRealTime(currentBusiness.documentId!)
+        .listenToInvoiceesRealTime(currentBusiness.id!)
         .listen((invoices) {
       List<BusinessInvoice> bInvoices = invoices;
       if (bInvoices != null && bInvoices.length > 0) {
@@ -43,7 +43,7 @@ class BusinessDashBoardViewModel extends BaseModel {
     BusinessProfile? profile;
     setBusy(true);
     profile = await _businessService
-        .getBusinessProfile(currentBusiness.documentId!);
+        .getBusinessProfile(currentBusiness.id!);
     // notifyListeners();
     setBusy(false);
     return profile;

@@ -23,7 +23,7 @@ class CourseListModel extends BaseModel {
     setBusy(true);
     String? businessId;
     if (currentBusiness != null) {
-      businessId = currentBusiness!.documentId;
+      businessId = currentBusiness!.id;
     }
     _courseService.listenToCourseesRealTime(businessId!).listen((coursessData) {
       List<Course> updatedCourses = coursessData;
@@ -83,7 +83,7 @@ class CourseListModel extends BaseModel {
   }
 
   void requestMoreData() => _courseService.requestMoreData(
-      currentBusiness.documentId!);
+      currentBusiness.id!);
 
   Future saveCoursesDisplayOrder(List<Course> courses) async {
     bool result = false;
@@ -91,7 +91,7 @@ class CourseListModel extends BaseModel {
       int index = courses.indexOf(course);
       if (index != course.displayOrder) {
         course.displayOrder = index;
-        this._courseService.updateCourse(course.documentId!, course);
+        this._courseService.updateCourse(course.id!, course);
         result = true;
       }
     }

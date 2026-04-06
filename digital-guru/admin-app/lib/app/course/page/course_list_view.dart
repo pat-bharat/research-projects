@@ -132,7 +132,7 @@ class _CourseListViewState extends State<CourseListView> {
   _buildCourseItemCard(CourseListModel model, Course item) {
     return Card(
       //color: Colors.blueGrey,
-      key: ValueKey(item.documentId),
+      key: ValueKey(item.id),
       elevation: 2,
       child: CreationAwareListItem(
         itemCreated: () {

@@ -57,7 +57,7 @@ class InstructorViewModel extends BaseModel {
 
     Instructor course = Instructor(
         documentId: _edittingInstructor!.documentId,
-        businessId: currentBusiness.documentId ?? '',
+        businessId: currentBusiness.id ?? '',
         introduction: introduction,
         fullName: fullName,
         mobileNumber: mobileNumber,
@@ -82,7 +82,7 @@ class InstructorViewModel extends BaseModel {
     if (_profilePicFile != null) {
       profilePicResult = await _cloudStorageService.uploadFile(
         fileToUpload: _profilePicFile!,
-        title: super.currentBusiness.documentId! +
+        title: super.currentBusiness.id! +
             "/" +
             "instructors" +
             "/" +

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
@@ -13,17 +13,18 @@ import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:flutter/services.dart';
 
 class LessonService extends BaseService {
-  final CollectionReference _lessonCollectionReference =
+ /* final CollectionReference _lessonCollectionReference =
       FirebaseFirestore.instance.collection('lessons');
-  final ModuleService _moduleService = locator<ModuleService>();
-  final CourseService _courseService = locator<CourseService>();
-  final BusinessService _businessService = locator<BusinessService>();
   final CollectionReference _moduleCollectionReference =
       FirebaseFirestore.instance.collection('modules');
   final CollectionReference _courseCollectionReference =
       FirebaseFirestore.instance.collection('courses');
   final CollectionReference _businessProfileCollectionReference =
-      FirebaseFirestore.instance.collection('business_profile');
+      FirebaseFirestore.instance.collection('business_profile');*/
+  final ModuleService _moduleService = locator<ModuleService>();
+  final CourseService _courseService = locator<CourseService>();
+  final BusinessService _businessService = locator<BusinessService>();
+  
   final StreamController<List<Lesson>> _moduleController =
       StreamController<List<Lesson>>.broadcast();
 
@@ -33,13 +34,13 @@ class LessonService extends BaseService {
   ModuleService _modeuleService = locator<ModuleService>();
   static const int LessonsLimit = 20;
 
-  late DocumentSnapshot _lastDocument;
+  late Map<String, dynamic> _lastDocument;
   bool _hasMoreLessons = true;
 
   Future getLesson(String lessonId) async {
     try {
-      var userData = await _lessonCollectionReference.doc(lessonId).get();
-      return new Lesson.fromJson(lessonId, userData.data() as Map<String, dynamic>);
+      var userData = await BaseService.supabaseDataService.fetchById('lessons', lessonId);
+      return new Lesson.fromJson(lessonId, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -48,18 +49,12 @@ class LessonService extends BaseService {
   Future getAllBusinessFreeLessons() async {
     try {
       List<Lesson> lessons = new List.empty(growable: true);
-      await _lessonCollectionReference
-          .where("free_trial", isEqualTo: true)
-          .orderBy("created_timestamp", descending: true)
-          .get()
-          .then((value) => {
-                value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
-              });
+     var result=  await BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'business_id': BaseService.currentBusiness.id, 'free_trial': true}, orderBy: 'created_timestamp', ascending: false);
+    result.forEach((value) =>  lessons.add(Lesson.fromJson(value['id'], value as Map<String, dynamic>)));
       Map<String, bool> modules = {};
       await _modeuleService
           .getAllBusinessPublishedModules(
-              BaseService.currentBusiness.documentId!)
+              BaseService.currentBusiness.id!)
           .then((mods) => mods.forEach((m) {
                 modules.putIfAbsent(m.documentId, () => m.published);
               }));
@@ -85,13 +80,9 @@ class LessonService extends BaseService {
   Future getAllFreeLessonsForCourse(String courseId) async {
     try {
       List<Lesson> lessons = new List.empty(growable: true);
-      await _lessonCollectionReference
-          .where("course_id", isEqualTo: courseId)
-          .get()
-          .then((value) => {
-                value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
-              });
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'course_id': courseId, 'free_trial': true}, orderBy: 'created_timestamp', ascending: false);
+      result.forEach((value) =>  lessons.add(Lesson.fromJson(value['id'], value as Map<String, dynamic>)));
+              
       return lessons;
     } catch (e) {
       return handleException(e as Exception);
@@ -101,13 +92,8 @@ class LessonService extends BaseService {
   Future getModuleLessons(String moduleId) async {
     try {
       List<Lesson> lessons = new List.empty(growable: true);
-      await _lessonCollectionReference
-          .where("module_id", isEqualTo: moduleId)
-          .get()
-          .then((value) => {
-                value.docs.forEach(
-                    (c) => lessons.add(Lesson.fromJson(c.id, c.data() as Map<String, dynamic>)))
-              });
+        var result = await BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'module_id': moduleId}, orderBy: 'created_timestamp', ascending: false);
+      result.forEach((value) =>  lessons.add(Lesson.fromJson(value['id'], value as Map<String, dynamic>)));
       return lessons;
     } catch (e) {
       return handleException(e as Exception);
@@ -118,29 +104,24 @@ class LessonService extends BaseService {
     try {
       populateCommonFields(object: lesson, created: true);
       //update module lesson count,
-
-      var batch = FirebaseFirestore.instance.batch();
+BaseService.supabaseDataService.insert('lessons', lesson.toJson());
+     // var batch = FirebaseFirestore.instance.batch();
       Module mod = await _moduleService.getModule(lesson.moduleId!);
       mod.lessonCount = mod.lessonCount! + 1;
-      DocumentReference mRef = _moduleCollectionReference.doc(mod.documentId);
-      batch.update(mRef, mod.toJson());
+     // var module = BaseService.supabaseDataService.fetchById('modules', mod.id!);
+     _moduleService.updateModule(mod.id, mod);
+      //batch.update(mRef, mod.toJson());
 //update Course Lesson count
       Course course = await _courseService.getCourse(lesson.courseId!);
       course.lessonCount = (course.lessonCount! + 1);
-      DocumentReference cRef =
-          _courseCollectionReference.doc(course.documentId);
-      batch.update(cRef, course.toJson());
+     _courseService.updateCourse(course.id!, course);
 //update business lesson count
       BusinessProfile profile =
           await _businessService.getBusinessProfile(lesson.businessId!);
       profile.publication!.lessonCounts = (profile.publication!.lessonCounts) + 1;
-      DocumentReference bpRef =
-          _businessProfileCollectionReference.doc(profile.documentId);
-      batch.update(bpRef, profile.toJson());
-
-      DocumentReference ref =
-          await _lessonCollectionReference.add(lesson.toJson());
-      batch.commit();
+      _businessService.updateBusinessProfileStats( profile);
+      var ref =
+          await BaseService.supabaseDataService.insert('lessons', lesson.toJson());
       return ref;
     } catch (e) {
       return handleException(e as Exception);
@@ -150,10 +131,10 @@ class LessonService extends BaseService {
   Future getModulesOnceOff() async {
     try {
       var lessonDocumentSnapshot =
-          await _lessonCollectionReference.limit(LessonsLimit).get();
-      if (lessonDocumentSnapshot.docs.isNotEmpty) {
-        return lessonDocumentSnapshot.docs
-            .map((snapshot) => Module.fromJson(snapshot.data() as Map<String, dynamic>, snapshot.id))
+          await BaseService.supabaseDataService.fetchAllWithQuery('lessons', maxRows: LessonsLimit);
+      if (lessonDocumentSnapshot.isNotEmpty) {
+        return lessonDocumentSnapshot
+            .map((snapshot) => Module.fromJson(snapshot , snapshot['id']))
             // ignore: unnecessary_null_comparison
             .where((mappedItem) => mappedItem.title != null)
             .toList();
@@ -172,9 +153,10 @@ class LessonService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestLessons(String moduleId) {
     // #2: split the query from the actual subscription
-    var pageModulesQuery = _lessonCollectionReference
-        .where("module_id", isEqualTo: moduleId)
-        .orderBy('display_order');
+    var pageModulesQuery = BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {"module_id": moduleId}, orderBy: "display_order");
+        //.from('lessons')
+        //.where("module_id", isEqualTo: moduleId)
+        //.orderBy('display_order');
     // #3: Limit the amount of results
     //.limit(LessonsLimit);
 
@@ -188,10 +170,10 @@ class LessonService extends BaseService {
     // #7: Get and store the page index that the results belong to
     var currentRequestIndex = _allPagedResults.length;
 */
-    pageModulesQuery.snapshots().listen((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        var modules = snapshot.docs
-            .map((snapshot) => Lesson.fromJson(snapshot.id, snapshot.data() as Map<String, dynamic>))
+    pageModulesQuery.asStream().listen((snapshot) {
+      if (snapshot.isNotEmpty) {
+        var modules = snapshot
+            .map((snapshot) => Lesson.fromJson(snapshot['id'], snapshot as Map<String, dynamic>))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
 /*
@@ -228,17 +210,33 @@ class LessonService extends BaseService {
 
   Future deleteLesson(String lessonId) async {
     //decement lesson count from module, course and business profile.
-    await _lessonCollectionReference.doc(lessonId).delete();
+    await BaseService.supabaseDataService.delete('lessons', lessonId);
   }
 
   Future updateLesson(String lessonId, Lesson lesson) async {
     try {
       populateCommonFields(object: lesson);
-      await _lessonCollectionReference.doc(lessonId).update(lesson.toJson());
+      await BaseService.supabaseDataService.update('lessons', lessonId, lesson.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
   }
 
   void requestMoreData(String moduleId) => _requestLessons(moduleId);
+
+  Future<dynamic> getLessonsByCourseId(String courseId) async {
+    BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'course_id': courseId}, orderBy: 'display_order').then((snapshot) {
+     List<Lesson> lessons = snapshot
+            .map((snapshot) => Lesson.fromJson(snapshot['id'], snapshot as Map<String, dynamic>))
+               .where((mappedItem) => mappedItem.title != null)
+            .toList();
+      return lessons;     
+    });
+  }
+
+  void deleteCourseLessions(String courseId) {
+    BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'course_id': courseId}).then((snapshot) {
+     snapshot.forEach((doc) => BaseService.supabaseDataService.delete('lessons', doc['id']));
+    });
+  }
 }

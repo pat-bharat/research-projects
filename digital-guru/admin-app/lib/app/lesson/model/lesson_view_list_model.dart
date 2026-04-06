@@ -33,7 +33,7 @@ class LessonListModel extends BaseModel {
 
   void listenToLessons() async {
     setBusy(true);
-    _lessonService.listenToLessonsRealTime(_module.documentId).listen((lesson) {
+    _lessonService.listenToLessonsRealTime(_module.id).listen((lesson) {
       List<Lesson> lessons = lesson;
       if (lessons != null && lessons.length > 0) {
         _lessons = lessons;
@@ -53,7 +53,7 @@ class LessonListModel extends BaseModel {
 
     if (dialogResponse.confirmed!) {
       setBusy(true);
-      await _lessonService.deleteLesson(lesson.documentId!);
+      await _lessonService.deleteLesson(lesson.id!);
       // Delete the image after the post is deleted
       await _cloudStorageService.deleteFile(lesson.videoInfo!.thumbUrl!);
       setBusy(false);
@@ -67,7 +67,7 @@ class LessonListModel extends BaseModel {
             course: _course, module: _module, lesson: lesson));
   }
 
-  void requestMoreData() => _lessonService.requestMoreData(_module.documentId);
+  void requestMoreData() => _lessonService.requestMoreData(_module.id);
 
   Future navigateToAddLessonToModule() async {
     _navigationService.navigateTo(CreateLessonViewRoute,
@@ -80,7 +80,7 @@ class LessonListModel extends BaseModel {
       int index = items.indexOf(item);
       if (index != item.displayOrder) {
         item.displayOrder = index;
-        this._lessonService.updateLesson(item.documentId!, item);
+        this._lessonService.updateLesson(item.id!, item);
       }
     }
   }

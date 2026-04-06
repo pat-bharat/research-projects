@@ -50,7 +50,7 @@ class LoginViewModel extends BaseModel {
     } else {
       await _dialogService.showDialog(
         title: 'Login Failure',
-        description: result,
+        description: "Login Failure",
       );
     }
     _dectateNextRoute();

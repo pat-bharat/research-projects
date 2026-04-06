@@ -1,9 +1,10 @@
 import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
 import 'package:digital_guru_app/app/common/widget/empty_content.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_ui_firestore/firebase_ui_firestore.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthWidget extends ConsumerWidget {
   const AuthWidget({
     Key? key,

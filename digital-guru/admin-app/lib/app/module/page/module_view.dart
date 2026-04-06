@@ -280,7 +280,7 @@ class _ModuleViewState extends State<ModuleView> {
               onPressed: () {
                 if (_moduleViewKey.currentState!.validate()) {
                   model.save(
-                    courseId: course.documentId!,
+                    courseId: course.id!,
                     title: titleController.text,
                     purchaseAmount: double.tryParse(priceController.text),
                     discountPercentage: _discount,

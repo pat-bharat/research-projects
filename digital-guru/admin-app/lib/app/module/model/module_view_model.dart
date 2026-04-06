@@ -13,7 +13,7 @@ import 'package:digiguru/app/common/util/media_selector.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:video_compress/video_compress.dart';
@@ -143,8 +143,8 @@ class ModuleViewModel extends BaseModel {
 
     var result;
     Module module = Module(
-        courseId: course.documentId ?? '',
-        businessId: currentBusiness.documentId ?? '',
+        courseId: course.id ?? '',
+        businessId: currentBusiness.id ?? '',
         name: moduleName ?? '',
         title: title ?? '',
         purchaseAmount: purchaseAmount ?? 0.0,
@@ -158,22 +158,22 @@ class ModuleViewModel extends BaseModel {
         moduleVideo: moduleVideo ?? VideoInfo());
     if (!_editting) {
       result = await _moduleService.addModule(module);
-      module.documentId = result.userId;
+      module.id = result.userId;
       //await _analyticsService.logPostCreated(hasImage: _logoImage != null);
     } else {
-      module.documentId = _edittingModule.documentId;
-      await _moduleService.updateModule(_edittingModule.documentId, module);
+      module.id = _edittingModule.id;
+      await _moduleService.updateModule(_edittingModule.id, module);
     }
     CloudStorageResult? backgroundResult, documentDetailResult, vodeoResult;
 
     if (_backgroundImage != null) {
       backgroundResult = await _cloudStorageService.uploadFile(
         fileToUpload: _backgroundImage,
-        title: super.currentBusiness.documentId! +
+        title: super.currentBusiness.id! +
             "/" +
             courseId +
             "/" +
-            (_editting ? _edittingModule.documentId : result.userId) +
+            (_editting ? _edittingModule.id : result.userId) +
             "/" +
             p.basename(_backgroundImage.path),
       );
@@ -181,9 +181,9 @@ class ModuleViewModel extends BaseModel {
     if (_moduleDetailDocument != null) {
       documentDetailResult = await _cloudStorageService.uploadFile(
         fileToUpload: _moduleDetailDocument,
-        title: super.currentBusiness.documentId! +
+        title: super.currentBusiness.id! +
             "/" +
-            (_editting ? _edittingModule.documentId : result.userId) +
+            (_editting ? _edittingModule.id : result.userId) +
             "/" +
             p.basename(_moduleDetailDocument.path),
       );
@@ -242,11 +242,11 @@ class ModuleViewModel extends BaseModel {
         CloudStorageResult videoThumbnailResult =
             await _cloudStorageService.uploadFile(
           fileToUpload: thumbnailFile,
-          title: super.currentBusiness.documentId! +
+          title: super.currentBusiness.id! +
               "/" +
               module.courseId +
               "/" +
-              module.documentId +
+              module.id +
               "/" +
               p.basename(thumbnailFile.path),
         );
@@ -271,20 +271,18 @@ class ModuleViewModel extends BaseModel {
             "/" +
             p.basename(videoFile.path),
       );*/
-      String uploadPath = super.currentBusiness.documentId! +
+      String uploadPath = super.currentBusiness.id! +
           "/" +
           module.courseId +
           "/" +
-          module.documentId +
+          module.id +
           "/";
       mediaService.uploadVideo(module.moduleVideo!, uploadPath,
           onComplete: () async {
-        String downloadURL = await FirebaseStorage.instance
-            .ref(uploadPath + '/' + module.moduleVideo!.title!)
-            .getDownloadURL();
+        String downloadURL = uploadPath + '/' + module.moduleVideo!.title!;
         module.moduleVideo! .videoUrl = downloadURL;
         // module.moduleVideo.videoUrl = videofileResult.mediaUrl;
-        _moduleService.updateModule(module.documentId, module);
+        _moduleService.updateModule(module.id, module);
       });
 
       //mediaService.uploadVideo(mediaInfo.file, uri + "?auth=" + userAuthToken);

@@ -13,7 +13,7 @@ import 'package:digiguru/app/system/page/system_business_management_view.dart';
 import 'package:digiguru/app/system/page/system_dashboard_view.dart';
 import 'package:digiguru/app/system/page/system_profile_view.dart';
 import 'package:digiguru/app/user/page/user_profile_view.dart';
-import 'package:digiguru/app/video/page/firebase_upload_queue_view.dart';
+import 'package:digiguru/app/video/page/supabase_upload_queue_view.dart';
 import 'package:digiguru/app/video/page/video_player.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
@@ -215,7 +215,7 @@ Route<dynamic> generateRoute({required RouteSettings settings}) {
     case ViewUploadQueueRoute:
       return _getPageRoute(
         routeName: settings.name,
-        viewToShow: FirebaseUploadQueueView(),
+        viewToShow: SupabaseUploadQueueView(),
       );
     //System
     case SystemProfileViewRoute:

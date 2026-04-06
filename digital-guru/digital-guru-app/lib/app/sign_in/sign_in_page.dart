@@ -11,7 +11,7 @@ import 'package:digital_guru_app/app/sign_in/sign_in_button.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 final signInModelProvider = ChangeNotifierProvider<SignInViewModel>(
-  (ref) => SignInViewModel(auth: ref.watch(firebaseAuthProvider)),
+  (ref) => SignInViewModel(auth: ref.watch(supabaseClientProvider)),
 );
 
 class SignInPage extends ConsumerWidget {

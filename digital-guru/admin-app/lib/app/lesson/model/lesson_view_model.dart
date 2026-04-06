@@ -13,7 +13,7 @@ import 'package:digiguru/app/common/util/media_selector.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:video_compress/video_compress.dart';
 import '../../common/model/base_model.dart';
@@ -86,7 +86,7 @@ class LessonViewModel extends BaseModel {
     Lesson lesson = Lesson(
       businessId: module.businessId,
       courseId: module.courseId,
-      moduleId: module.documentId,
+      moduleId: module.id,
       moduleTitle: moduleTitle!,
       courseTitle: courseTitle!,
       instructorName: instructorName!,
@@ -100,22 +100,22 @@ class LessonViewModel extends BaseModel {
     var result;
     if (!isEditting) {
       result = await _lessonService.addLesson(lesson);
-      lesson.documentId = result.id;
+      lesson.id = result.id;
       //await _analyticsService.logPostCreated(hasImage: _logoImage != null);
     } else {
-      lesson.documentId = _edittingLesson.documentId;
-      await _lessonService.updateLesson(_edittingLesson.documentId!, lesson);
+      lesson.id = _edittingLesson.id;
+      await _lessonService.updateLesson(_edittingLesson.id!, lesson);
     }
     //upload  to firestore
     CloudStorageResult lessonDocResult;
 
     lessonDocResult = await _cloudStorageService.uploadFile(
       fileToUpload: _lessonDetailDocument,
-      title: super.currentBusiness.documentId! +
+      title: super.currentBusiness.id! +
           "/" +
-          module.documentId +
+          module.id +
           "/" +
-          (isEditting ? _edittingLesson.documentId : result.userId) +
+          (isEditting ? _edittingLesson.id : result.userId) +
           "/" +
           p.basename(_lessonDetailDocument.path),
     );
@@ -176,13 +176,13 @@ class LessonViewModel extends BaseModel {
     CloudStorageResult videoThumbnailResult =
         await _cloudStorageService.uploadFile(
       fileToUpload: thumbnailFile,
-      title: super.currentBusiness.documentId! +
+      title: super.currentBusiness.id! +
           "/" +
           lesson.courseId! +
           "/" +
           lesson.moduleId! +
           "/" +
-          (isEditting ? _edittingLesson.documentId! : result.userId) +
+          (isEditting ? _edittingLesson.id! : result.userId) +
           "/" +
           p.basename(thumbnailFile.path),
     );
@@ -197,20 +197,19 @@ class LessonViewModel extends BaseModel {
             : p.basename(mediaInfo.path!);
     lesson.videoInfo!.duration = computeDuration(mediaInfo.duration.toString());
     lesson.videoInfo!.rawVideoPath = mediaInfo.path!;
-    String uploadPath = super.currentBusiness.documentId! +
+    String uploadPath = super.currentBusiness.id! +
         "/" +
         lesson.courseId! +
         "/" +
         lesson.moduleId! +
         "/" +
-        (isEditting ? _edittingLesson.documentId! : result.userId);
+        (isEditting ? _edittingLesson.id! : result.userId);
     //compress video
     mediaService.uploadVideo(lesson.videoInfo!, uploadPath,
         onComplete: () async {
-      String downloadURL =
-          await FirebaseStorage.instance.ref(uploadPath + '/' + lesson.videoInfo!.title!).getDownloadURL();
+      String downloadURL = uploadPath + '/' + lesson.videoInfo!.title!;
       lesson.videoInfo!.videoUrl = downloadURL;
-      _lessonService.updateLesson(lesson.documentId!, lesson);
+      _lessonService.updateLesson(lesson.id!, lesson);
     });
     //update videoInfo
     /* await mediaService.compressVideo(path: videoFile.path);

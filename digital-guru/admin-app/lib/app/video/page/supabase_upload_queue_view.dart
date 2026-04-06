@@ -7,7 +7,7 @@ import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/video/model/firebase_upload_item.dart';
 import 'package:digiguru/app/video/model/upload_queue_view_model.dart';
-import 'package:digiguru/app/video/page/firebase_upload_item_view.dart';
+import 'package:digiguru/app/video/page/supabase_upload_item_view.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
@@ -15,24 +15,24 @@ import 'package:light_compressor/light_compressor.dart';
 import 'package:stacked/stacked.dart';
 
 /// Shows the statusresponses for previous uploads.
-class FirebaseUploadQueueView extends StatefulWidget {
-  FirebaseUploadQueueView({
+class SupabaseUploadQueueView extends StatefulWidget {
+  SupabaseUploadQueueView({
     Key? key,
   }) : super(key: key);
 
   final FlutterUploader uploader = MediaUploadService.uploader;
 
   @override
-  _FirebaseUploadQueueViewState createState() =>
-      _FirebaseUploadQueueViewState();
+  _SupabaseUploadQueueViewState createState() =>
+      _SupabaseUploadQueueViewState();
 }
 
-class _FirebaseUploadQueueViewState extends State<FirebaseUploadQueueView> {
+class _SupabaseUploadQueueViewState extends State<SupabaseUploadQueueView> {
   late StreamSubscription<UploadTaskProgress> _progressSubscription;
   late StreamSubscription<UploadTaskResponse> _resultSubscription;
   late Stream<dynamic> _compressionSubscription;
 
-  late List<FirebaseUploadItem> _tasks;
+  late List<SupabaseUploadItem> _tasks;
   late UploadQueueViewModel model;
   @override
   void initState() {
@@ -97,9 +97,13 @@ class _FirebaseUploadQueueViewState extends State<FirebaseUploadQueueView> {
     );
   }
 
-  FirebaseUploadItemView buildUploadItem(
-      UploadQueueViewModel model, FirebaseUploadItem item) {
-    FirebaseUploadItemView view = FirebaseUploadItemView(item: item);
+  SupabaseUploadItemView buildUploadItem(
+      UploadQueueViewModel model, SupabaseUploadItem item) {
+    SupabaseUploadItemView view = SupabaseUploadItemView(
+      title: item.title,
+      fileToUpload: item.fileToUpload,
+      destPath: item.destPath,
+    );
     return view;
   }
 

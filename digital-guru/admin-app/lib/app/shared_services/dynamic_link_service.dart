@@ -1,30 +1,30 @@
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+//import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class DynamicLinkService {
   final NavigationService _navigationService = locator<NavigationService>();
 
   Future handleDynamicLinks() async {
     // Get the initial dynamic link if the app is opened with a dynamic link
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+   // final PendingDynamicLinkData? data =
+    //    await FirebaseDynamicLinks.instance.getInitialLink();
 
     // handle link that has been retrieved
-    _handleDeepLink(data);
+    //_handleDeepLink(data);
 
     // Register a link callback to fire if the app is opened up from the background
     // using a dynamic link.
-    FirebaseDynamicLinks.instance.onLink.listen(
-        (PendingDynamicLinkData dynamicLink) async {
-      // handle link that has been retrieved
-      _handleDeepLink(dynamicLink);
-    }, onError: (exception) async {
-      print('Link Failed: $exception');
-    });
+    //FirebaseDynamicLinks.instance.onLink.listen(
+    //    (PendingDynamicLinkData dynamicLink) async {
+    //  // handle link that has been retrieved
+    //  _handleDeepLink(dynamicLink);
+    //}, onError: (exception) async {
+    //  print('Link Failed: $exception');
+    //});
   }
-
+/**
   void _handleDeepLink(PendingDynamicLinkData? data) {
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
@@ -40,9 +40,9 @@ class DynamicLinkService {
       }
     }
   }
-
+*/
   Future<String> createFirstPostLink(String title) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
+   /** final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://filledstacks.page.link',
       link: Uri.parse('https://www.digiguru.com/post?title=$title'),
       androidParameters: AndroidParameters(
@@ -67,7 +67,8 @@ class DynamicLinkService {
     );
 
     final dynamicUrl = await FirebaseDynamicLinks.instance.buildLink(parameters);
-
-    return dynamicUrl.toString();
+*/
+    //return dynamicUrl.toString();
+    return "";
   }
 }

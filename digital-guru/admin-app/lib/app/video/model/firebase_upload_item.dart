@@ -1,51 +1,56 @@
-// ignore_for_file: public_member_api_docs
-
 import 'package:equatable/equatable.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
-class FirebaseUploadItem extends Equatable {
+class SupabaseUploadItem extends Equatable {
   final String? title;
-  final int? uploadProgress;
-  final TaskState? status;
+  final int? uploadProgress; // 0-100
+  final String? status; // e.g., 'pending', 'uploading', 'success', 'error'
   final String? fileToUpload;
   final String? destPath;
+  final String? supabaseUrl;
+  final String? errorMessage;
   final Function? onComplete;
 
-  /// Store the entire response object.
-  final UploadTask? uploadTask;
+  const SupabaseUploadItem(
+    this.title, {
+    required this.fileToUpload,
+    required this.destPath,
+    this.uploadProgress,
+    this.status,
+    this.supabaseUrl,
+    this.errorMessage,
+    this.onComplete,
+  });
 
-  const FirebaseUploadItem(this.title,
-      {required this.fileToUpload,
-      required this.destPath,
-      this.uploadProgress,
-      this.status,
-      this.uploadTask,
-      this.onComplete});
-
-  FirebaseUploadItem copyWith(
-      {String? title,
-      int? progress,
-      TaskState? status,
-      UploadTask? uploadTask,
-      String? fileToUpload,
-      String? destPath}) {
-    return FirebaseUploadItem(
+  SupabaseUploadItem copyWith({
+    String? title,
+    int? uploadProgress,
+    String? status,
+    String? fileToUpload,
+    String? destPath,
+    String? supabaseUrl,
+    String? errorMessage,
+    Function? onComplete,
+  }) {
+    return SupabaseUploadItem(
       title ?? this.title,
-      uploadProgress: progress ?? this.uploadProgress,
-      status: status ?? this.status,
-      uploadTask: uploadTask ?? this.uploadTask,
       fileToUpload: fileToUpload ?? this.fileToUpload,
       destPath: destPath ?? this.destPath,
+      uploadProgress: uploadProgress ?? this.uploadProgress,
+      status: status ?? this.status,
+      supabaseUrl: supabaseUrl ?? this.supabaseUrl,
+      errorMessage: errorMessage ?? this.errorMessage,
+      onComplete: onComplete ?? this.onComplete,
     );
   }
 
-  bool isCompleted() =>
-      status == TaskState.canceled ||
-      status == TaskState.success ||
-      status == TaskState.error;
-
   @override
-  List<Object?> get props {
-    return [title, uploadProgress, status, uploadTask, fileToUpload, destPath];
-  }
+  List<Object?> get props => [
+        title,
+        uploadProgress,
+        status,
+        fileToUpload,
+        destPath,
+        supabaseUrl,
+        errorMessage,
+      ];
 }

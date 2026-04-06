@@ -1,5 +1,7 @@
 import 'dart:async' show unawaited;
 
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'alert_helpers.dart';
 import 'package:digital_guru_app/app/common/constants/strings.dart';
 import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
@@ -13,9 +15,9 @@ class DGScaffold extends ConsumerWidget {
   DGScaffold({this.child});
   Widget? child;
 
-  Future<void> _signOut(BuildContext context, FirebaseAuth firebaseAuth) async {
+  Future<void> _signOut(BuildContext context, SupabaseClient supabaseClient) async {
     try {
-      await firebaseAuth.signOut();
+      await supabaseClient.auth.signOut();
     } catch (e) {
       unawaited(showExceptionAlertDialog(
         context: context,
@@ -26,7 +28,7 @@ class DGScaffold extends ConsumerWidget {
   }
 
   Future<void> _confirmSignOut(
-      BuildContext context, FirebaseAuth firebaseAuth) async {
+      BuildContext context, SupabaseClient supabaseClient) async {
     final bool didRequestSignOut = await showAlertDialog(
           context: context,
           title: Strings.logout,
@@ -36,13 +38,13 @@ class DGScaffold extends ConsumerWidget {
         ) ??
         false;
     if (didRequestSignOut == true) {
-      await _signOut(context, firebaseAuth);
+      await _signOut(context, supabaseClient);
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef watch) {
-    final firebaseAuth = watch.read(firebaseAuthProvider);
+    final supabaseClient = watch.read(supabaseClientProvider);
     return Scaffold(
         appBar: AppBar(
           title: Text("Digital Guru"),
@@ -51,7 +53,7 @@ class DGScaffold extends ConsumerWidget {
                 padding: EdgeInsets.only(right: 10),
                 child: IconButton(
                   icon: Icon(Icons.logout, size: 30),
-                  onPressed: () => _confirmSignOut(context, firebaseAuth),
+                  onPressed: () => _confirmSignOut(context, supabaseClient),
                 ))
           ],
         ),

@@ -59,7 +59,7 @@ class _CourseViewState extends State<CourseView> {
   Future getInstructors() async {
     List<String> _instructors = List.empty(growable: true);
     await _businessService
-        .getAllInstructors(BaseService.currentBusiness.documentId ?? '')
+        .getAllInstructors(BaseService.currentBusiness.id ?? '')
         .then((instructor) => {_instructors.addAll(instructor)});
 
     setState(() {
