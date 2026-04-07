@@ -1,91 +1,83 @@
-import 'package:digiguru/app/common/service/base_service.dart';
 import 'dart:async';
 import 'dart:io';
-
-import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:digiguru/app/common/service/base_service.dart';
 
 class PurchaseService extends BaseService {
-  StreamSubscription? _purchaseUpdatedSubscription;
-  StreamSubscription? _purchaseErrorSubscription;
-  StreamSubscription? _conectionSubscription;
-  final List<String> _productLists = Platform.isAndroid
-      ? [
-          'android.test.purchased',
-          'point_1000',
-          '5000_point',
-          'android.test.canceled',
-        ]
+  final InAppPurchase _iap = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  final List<String> _productIds = Platform.isAndroid
+      ? ['android.test.purchased', 'point_1000', '5000_point', 'android.test.canceled']
       : ['com.cooni.point1000', 'com.cooni.point5000'];
 
-  String _platformVersion = 'Unknown';
-  List<Purchase> _purchases = [];
-  List<Purchase> _purchasesHistory = [];
-  List<Purchase> _items = [];
+  List<ProductDetails> _products = [];
+  List<PurchaseDetails> _purchases = [];
+  bool? simulated = true;
 
-  bool simulated = true;
+PurchaseService({this.simulated});
   Future<void> initPurchaseService() async {
-    // prepare
-    var result = await FlutterInappPurchase.instance.initConnection;
-    print('result: $result');
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    // refresh items for android
-    try {
-      var products =
-          await FlutterInappPurchase.instance.getAvailablePurchases();
-      _items = products;
-    } catch (err) {
-      print('getProducts error: $err');
+    final bool available = await _iap.isAvailable();
+    if (!available) {
+      print('In-app purchases not available');
+      return;
     }
-
-    _conectionSubscription =
-        FlutterInappPurchase.instance.connectionUpdated.listen((connected) {
-      print('connected: $connected');
-    });
-
-    _purchaseUpdatedSubscription =
-        FlutterInappPurchase.instance.purchaseUpdated.listen((productItem) {
-      print('purchase-updated: $productItem');
-    });
-
-    _purchaseErrorSubscription =
-        FlutterInappPurchase.instance.purchaseError.listen((purchaseError) {
-      print('purchase-error: $purchaseError');
+    await _loadProducts();
+    _subscription = _iap.purchaseStream.listen(_onPurchaseUpdated, onDone: () {
+      _subscription.cancel();
+    }, onError: (error) {
+      print('Purchase stream error: $error');
     });
   }
 
-  Future requestPurchase(Purchase item) async {
-    final props = Platform.isIOS
-        ? RequestPurchaseIosProps(sku: item.productId) as RequestPurchaseProps
-        : RequestPurchaseAndroidProps(skus: List.of([item.productId]))
-            as RequestPurchaseProps;
-    return await FlutterInappPurchase.instance.requestPurchase(props);
-  }
-
-  Future getProducts() async {
-    return this._productLists;
-  }
-
-  Future getPurchases() async {
-    List<Purchase> items =
-        await FlutterInappPurchase.instance.getAvailablePurchases();
-    for (var item in items) {
-      print('${item.toString()}');
-      this._purchases.add(item);
+  Future<void> _loadProducts() async {
+    final ProductDetailsResponse response = await _iap.queryProductDetails(_productIds.toSet());
+    if (response.error != null) {
+      print('Product query error: ${response.error}');
+      return;
     }
-    return this._purchases;
+    _products = response.productDetails;
   }
 
-  Future getPurchaseHistory() async {
-    List<Purchase> items =
-        await FlutterInappPurchase.instance.getAvailablePurchases() ?? [];
-    for (var item in items) {
-      print('${item.toString()}');
-      this._purchasesHistory.add(item);
-    }
+  List<ProductDetails> get products => _products;
+  List<PurchaseDetails> get purchases => _purchases;
+  
+  Future<void> buyProduct(ProductDetails product) async {
+    final PurchaseParam purchaseParam = PurchaseParam(productDetails: product);
+    await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+    // For consumables, use: await _iap.buyConsumable(purchaseParam: purchaseParam);
+  }
 
-    return _purchasesHistory;
+  void _onPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    _purchases = purchaseDetailsList;
+    for (final purchase in purchaseDetailsList) {
+      if (purchase.status == PurchaseStatus.purchased) {
+        // Verify purchase and deliver product
+        _verifyAndDeliver(purchase);
+      } else if (purchase.status == PurchaseStatus.error) {
+        print('Purchase error: ${purchase.error}');
+      }
+      if (purchase.pendingCompletePurchase) {
+        _iap.completePurchase(purchase);
+      }
+    }
+  }
+
+  Future<void> _verifyAndDeliver(PurchaseDetails purchase) async {
+    // TODO: Verify purchase with your backend and deliver the product
+    print('Purchase verified: ${purchase.productID}');
+  }
+/*
+  Future<List<PurchaseDetails>> getPastPurchases() async {
+    final QueryPurchaseDetailsResponse response = await _iap.queryPastPurchases();
+    if (response.error != null) {
+      print('Past purchase query error: ${response.error}');
+      return [];
+    }
+    _purchases = response.pastPurchases;
+    return _purchases;
+  }
+*/
+  void dispose() {
+    _subscription.cancel();
   }
 }

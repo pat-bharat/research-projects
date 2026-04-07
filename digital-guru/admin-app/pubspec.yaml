@@ -100,7 +100,8 @@ dependencies:
   #localization  
   intl: ^0.20.2
   #app purchase
-  flutter_inapp_purchase: ^8.2.8
+  in_app_purchase: ^3.2.3
+  #flutter_inapp_purchase: ^8.2.8
   #youtube
   youtube_player_flutter: ^9.1.3
   page_transition: ^2.2.1

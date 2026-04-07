@@ -11,6 +11,7 @@ import 'package:digiguru/app/common/model/base_model.dart';
 import 'package:digiguru/app/purchase/service/purchase_service.dart';
 import 'package:digiguru/app/user/model/user_module.dart';
 import 'package:digiguru/app/user/service/user_module_service.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'package:intl/intl.dart';
 
@@ -117,9 +118,9 @@ class ModuleListModel extends BaseModel {
           : module.purchaseAmount!,
       purchaseDate: DateTime.now().toIso8601String(),
     );
-    if (!_purchaseService.simulated) {
+    if (!_purchaseService.simulated!) {
       _purchaseService.initPurchaseService();
-      await _purchaseService.requestPurchase(buildIAPItem(userModule));
+      await _purchaseService.buyProduct(buildIAPItem(userModule));
     }
     //nowadd to database
     //TODO work on inditify how to detect succful transaction
@@ -145,7 +146,7 @@ class ModuleListModel extends BaseModel {
     }
   }
 
-  dynamic buildIAPItem(UserModule module) {
+  ProductDetails buildIAPItem(UserModule module) {
     /*
 productId = json['productId'] as String,
         price = json['price'] as String,
@@ -179,16 +180,14 @@ productId = json['productId'] as String,
     String localizedPrice =
         NumberFormat.currency(symbol: '\$', decimalDigits: 2).format(2.99);
     var amount = module.purchaseAmount;
-    return {
-      'productId': 'digigure_module',
-      'price': '$amount',
-      'currency': 'USD',
-      'localizedPrice': '$localizedPrice',
-      'course': '$module.courseName',
-      'name': '$module.moduleName',
-      'title': '$module.moduleTitle',
-      'user': '$module.userId',
-    };
+    return ProductDetails(
+      id: 'digigure_module',
+      title: module.moduleName!,
+      price: '$amount',
+      currencyCode: 'USD',
+      rawPrice: amount!,      
+      description: 'module.courseName - module.moduleName',
+    );
   }
 
   dynamic isModuleAlreadyPurchased(String moduleId) async {

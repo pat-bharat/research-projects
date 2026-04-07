@@ -12,7 +12,7 @@ import 'package:digiguru/app/video/page/supabase_upload_item_view.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_uploader/flutter_uploader.dart';
-import 'package:light_compressor/light_compressor.dart';
+//import 'package:light_compressor/light_compressor.dart';
 import 'package:stacked/stacked.dart';
 
 /// Shows the statusresponses for previous uploads.

@@ -18,9 +18,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:video_compress/video_compress.dart';
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:path/path.dart' as p;
-import 'package:light_compressor/light_compressor.dart' as lc;
+//import 'package:light_compressor/light_compressor.dart' as lc;
 //import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:video_compress/video_compress.dart';
 /**
  * generate thumbnail
  * compress video
@@ -97,9 +97,15 @@ Future<String> get _destinationFile(String fileName) async {
   }
 */
   Future<String> videoCompressLigh(
-      {required VideoInfo videoInfo, lc.VideoQuality? outputQuality}) async {
+      {required VideoInfo videoInfo}) async {
     var fileName = videoInfo.title!.split('.').first;
-    await lc.LightCompressor().compressVideo(
+    await VideoCompress.compressVideo(
+      videoInfo.rawVideoPath!,
+      quality: VideoQuality.HighestQuality,
+      deleteOrigin: false,
+      includeAudio: true,           
+    );
+   /* await lc.LightCompressor().compressVideo(
         path: videoInfo.rawVideoPath!,
         videoQuality: outputQuality ?? lc.VideoQuality.very_high,
         android:
@@ -109,7 +115,7 @@ Future<String> get _destinationFile(String fileName) async {
             videoName: videoInfo.title!,
             keepOriginalResolution: true,
             videoBitrateInMbps: 1000));
-
+    */
     return '$videosDir/$fileName.mp4';
   }
 
@@ -124,7 +130,7 @@ Future<String> get _destinationFile(String fileName) async {
     String outPath = '$videosDir/$fn.mp4';
 
     // Compress
-    await videoCompressLigh(videoInfo: videoInfo, outputQuality: lc.VideoQuality.medium);
+    await videoCompressLigh(videoInfo: videoInfo);
 
     videoInfo.rawVideoPath = outPath;
     String fileName = p.basename(outPath);
