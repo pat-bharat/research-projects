@@ -4,12 +4,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:digiguru/app/common/util/media_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 //import 'package:flutter_uploader_example/server_behavior.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 
 class UploadScreen extends StatefulWidget {
@@ -33,7 +31,7 @@ class _UploadTask {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
-  final ImagePicker imagePicker = ImagePicker();
+  final MediaSelector mediaSelector = MediaSelector();
   final List<_UploadTask> _uploads = [];
   final String bucket = 'your-bucket'; // TODO: set your bucket name
 
@@ -41,14 +39,9 @@ class _UploadScreenState extends State<UploadScreen> {
   void initState() {
     super.initState();
     if (Platform.isAndroid) {
-      imagePicker.retrieveLostData().then((lostData) {
-        if (lostData.type == RetrieveType.image) {
+      mediaSelector.retrieveLostData().then((lostData) {
           _handleFileUpload([File(lostData.file!.path)]);
-        }
-        if (lostData.type == RetrieveType.video) {
-          _handleFileUpload([File(lostData.file!.path)]);
-        }
-      });
+    });
     }
   }
 
@@ -114,7 +107,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
 
   Future getImage() async {
-    var image = await imagePicker.pickImage(source: ImageSource.gallery);
+    var image = await mediaSelector.selectImage();
     if (image != null) {
       _handleFileUpload([File(image.path)]);
     }
@@ -122,7 +115,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
 
   Future getVideo() async {
-    var video = await imagePicker.pickVideo(source: ImageSource.gallery);
+    var video = await mediaSelector.selectVideo();
     if (video != null) {
       _handleFileUpload([File(video.path)]);
     }
@@ -130,10 +123,11 @@ class _UploadScreenState extends State<UploadScreen> {
 
 
   Future getMultiple() async {
-    final files = await FilePicker.pickFiles(allowMultiple: true);
-    if (files != null && files.count > 0) {
-      _handleFileUpload(files.paths.whereType<String>().map((p) => File(p)).toList());
-    }
+    mediaSelector.selectMultipleFiles().then((files) {
+      if (files != null && files.isNotEmpty) {
+        _handleFileUpload(files.map((f) => File(f.path)).toList());
+      }
+    });
   }
 
 

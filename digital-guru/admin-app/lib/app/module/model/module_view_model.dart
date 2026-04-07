@@ -66,7 +66,7 @@ class ModuleViewModel extends BaseModel {
   Future selectModuleDocument() async {
     var tempdoc = await _mediaSelector.selectDocument();
     if (tempdoc != null) {
-      _moduleDetailDocument = File(tempdoc.files.single.path ?? '');
+      _moduleDetailDocument = File(tempdoc.path);
       notifyListeners();
     }
     return _moduleDetailDocument;
@@ -75,7 +75,7 @@ class ModuleViewModel extends BaseModel {
   Future selectModuleVideo() async {
     var tempdoc = await _mediaSelector.selectVideo();
     if (tempdoc != null) {
-      _moduleVideo = File(tempdoc.files.single.path ?? '');
+      _moduleVideo = File(tempdoc.path);
       notifyListeners();
     }
     return _moduleVideo;

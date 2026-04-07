@@ -54,7 +54,7 @@ class LessonViewModel extends BaseModel {
   Future selectLessonDocument() async {
     var tempdoc = await _mediaSelector.selectDocument();
     if (tempdoc != null) {
-      _lessonDetailDocument = File(tempdoc.files.single.path!);
+      _lessonDetailDocument = File(tempdoc.path!);
       notifyListeners();
     }
     return _lessonDetailDocument;
@@ -63,7 +63,7 @@ class LessonViewModel extends BaseModel {
   Future selectLessonVideo() async {
     var tempdoc = await _mediaSelector.selectVideo();
     if (tempdoc != null) {
-      _lessonVideoFile = File(tempdoc.files.single.path!);
+      _lessonVideoFile = File(tempdoc.path!);
       notifyListeners();
     }
     return _lessonVideoFile;

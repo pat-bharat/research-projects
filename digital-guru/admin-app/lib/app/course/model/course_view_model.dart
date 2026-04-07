@@ -69,8 +69,8 @@ class CourseViewModel extends BaseModel {
 
   Future selectCouseSyllabusImage() async {
     var tempdoc = await _mediaSelector.selectDocument();
-    if (tempdoc != null && tempdoc.files.single.path != null) {
-      _syllabusDocument = File(tempdoc.files.single.path!);
+    if (tempdoc != null && tempdoc.path != null) {
+      _syllabusDocument = File(tempdoc.path);
       notifyListeners();
     }
     return _syllabusDocument;
@@ -78,8 +78,8 @@ class CourseViewModel extends BaseModel {
 
   Future selectCourseVideo() async {
     var tempdoc = await _mediaSelector.selectVideo();
-    if (tempdoc != null && tempdoc.files.single.path != null) {
-      _videoFile = File(tempdoc.files.single.path!);
+    if (tempdoc != null && tempdoc.path != null) {
+      _videoFile = File(tempdoc.path);
       notifyListeners();
     }
     return _videoFile;

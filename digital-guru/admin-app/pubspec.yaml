@@ -35,10 +35,10 @@ dependencies:
   # Stacked Arch
   stacked: ^3.5.0
   stacked_services: ^1.6.0  
-  image_picker: ^1.2.1
+  #image_picker: ^1.2.1
   cached_network_image: ^3.4.1
   #xml: ^4.2.0
-  file_picker: ^11.0.2
+  #file_picker: ^11.0.2
   filesize: ^2.0.1
   # general purpose media Utils
   #media_utils: ^1.1.1
@@ -46,7 +46,8 @@ dependencies:
   #flutter_uploader: ^3.0.0-beta.4
   #downloading files
   flutter_downloader: ^1.12.0
-  path_provider: ^2.1.5
+  file_selector: ^1.1.0
+  #path_provider: ^2.1.5
   permission_handler: ^12.0.1
   #video compression
   #light_compressor: ^2.2.0
@@ -59,7 +60,7 @@ dependencies:
   #video_thumbnail: ^0.2.5+1
   #transparent_image: ^1.0.0
   shared_preferences: ^2.5.5
-  flutter_local_notifications: ^21.0.0
+  #flutter_local_notifications: ^21.0.0
 
   #firebase_core: ^3.15.2
   #firebase_storage: ^12.4.10

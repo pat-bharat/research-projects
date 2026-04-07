@@ -90,7 +90,7 @@ class BusinessLegalListModel extends BaseModel {
     File? pdfFile;
     if (tempdoc != null) {
       // setState(() {
-      pdfFile = File(tempdoc.files.single.path ?? '');
+      pdfFile = File(tempdoc.path);
       //});
     }
     if (pdfFile != null) {
