@@ -1,14 +1,12 @@
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/my_reorderable_list.dart';
-import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
-import 'package:digiguru/app/course/page/course_item.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/creation_aware_list_item.dart';
+import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/course/model/course_list_model.dart';
+import 'package:digiguru/app/course/page/course_item.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -49,7 +47,7 @@ class _CourseListViewState extends State<CourseListView> {
               //verticalSpace(5),
               if (model.showMainBanner) _buildRemoteConfigBanner(context),
               Expanded(
-                  child: model.courses != null
+                  child: !model.courses.isEmpty
                       ? ReorderableListView(
                           onReorder: (int oldIndex, int newIndex) {
                             setState(() {
@@ -69,7 +67,9 @@ class _CourseListViewState extends State<CourseListView> {
                           child: !model.busy
                               ? Text(
                                   Strings.addCourse,
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 )
                               : Container(),
                         )),
@@ -146,8 +146,12 @@ class _CourseListViewState extends State<CourseListView> {
             onDeleteItem: () => model.deleteCourse(course: item),
             onEditItem: () => model.editCourse(item),
             onEditModules: () => model.editModules(item),
-            onViewDoc: item.courseDetailDoc?.docUrl != null ? () => model.viewPdf(item.courseDetailDoc!.docUrl!) : null,
-            onPlayVideo: item.courseVideo != null ? () => model.viewVideo(item.courseVideo!) : null,
+            onViewDoc: item.courseDetailDoc?.docUrl != null
+                ? () => model.viewPdf(item.courseDetailDoc!.docUrl!)
+                : null,
+            onPlayVideo: item.courseVideo != null
+                ? () => model.viewVideo(item.courseVideo!)
+                : null,
           ),
         ),
       ),

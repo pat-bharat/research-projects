@@ -12,7 +12,8 @@ class ThemeColor {
   static Color blueColor = const Color.fromARGB(255, 154, 187, 223);
 
   /// Default behavior
-  static ThemeColor green = ThemeColor._('Green', const Color.fromARGB(255, 172, 236, 175));
+  static ThemeColor green =
+      ThemeColor._('Green', const Color.fromARGB(255, 172, 236, 175));
   static ThemeColor red = ThemeColor._('Red', redColor);
   static ThemeColor blue = ThemeColor._('Red', redColor);
 

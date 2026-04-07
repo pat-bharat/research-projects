@@ -7,7 +7,6 @@ import 'package:digiguru/app/instructor/service/instructor_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:flutter/cupertino.dart';
 
 class InstructorListModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();

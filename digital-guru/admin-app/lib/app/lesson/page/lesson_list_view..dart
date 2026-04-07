@@ -1,16 +1,13 @@
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
-import 'package:digiguru/app/course/model/course.dart';
-import 'package:digiguru/app/lesson/model/lesson.dart';
-import 'package:digiguru/app/module/model/module.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/creation_aware_list_item.dart';
-import 'package:digiguru/app/lesson/page/lesson_item.dart';
-import 'package:digiguru/app/common/widget/my_reorderable_list.dart';
+import 'package:digiguru/app/course/model/course.dart';
+import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/lesson/model/lesson_view_list_model.dart';
+import 'package:digiguru/app/lesson/page/lesson_item.dart';
+import 'package:digiguru/app/module/model/module.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -18,7 +15,8 @@ class LessonListView extends StatefulWidget {
   //final List<Course> courses = new List();
   final Module module;
   final Course course;
-  LessonListView({Key? key, required this.course, required this.module}) : super(key: key);
+  LessonListView({Key? key, required this.course, required this.module})
+      : super(key: key);
 
   @override
   _LessonListViewState createState() => _LessonListViewState();
@@ -57,7 +55,7 @@ class _LessonListViewState extends State<LessonListView> {
                   children: <Widget>[
                     if (model.showMainBanner) buildRemoteConfigContainer(),
                     Expanded(
-                        child: model.lessons != null
+                        child: model.lessons.isNotEmpty
                             ? new ReorderableListView(
                                 onReorder: (int oldIndex, int newIndex) {
                                   setState(() {
@@ -77,14 +75,17 @@ class _LessonListViewState extends State<LessonListView> {
                             : Center(
                                 child: Text(
                                   Strings.pleaseAddLessons,
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 ),
                               )),
                     _buildBottomActionBar(model)
                   ],
                 ),
               ),
-            body: Center(),)));
+              body: Center(),
+            )));
   }
 
   Row _buildBottomActionBar(LessonListModel model) {

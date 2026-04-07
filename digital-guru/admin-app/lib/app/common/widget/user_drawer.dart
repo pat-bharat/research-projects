@@ -3,7 +3,6 @@ import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:digiguru/app/user/page/user_profile_view.dart';
 import 'package:flutter/material.dart';
 
 class UserDrawer extends StatefulWidget {

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/video/model/firebase_upload_item.dart';
 import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,7 @@ class SupabaseUploadItemView extends StatefulWidget {
     this.title,
     required this.fileToUpload,
     required this.destPath,
-    this.onComplete,
+    this.onComplete, required int progress, String? status, required Future<dynamic> Function() onCancel,
   }) : super(key: key);
 
   @override

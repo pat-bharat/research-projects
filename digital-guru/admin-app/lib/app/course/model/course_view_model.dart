@@ -1,23 +1,22 @@
 import 'dart:io';
 
-import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/util/general.dart';
-import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
-import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
-import 'package:digiguru/app/course/service/course_service.dart';
+import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
+import 'package:digiguru/app/common/util/general.dart';
 import 'package:digiguru/app/common/util/media_selector.dart';
+import 'package:digiguru/app/course/model/course.dart';
+import 'package:digiguru/app/course/service/course_service.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
-// 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
-import 'package:video_compress/video_compress.dart';
-import '../../common/model/base_model.dart';
 import 'package:path/path.dart' as p;
+import 'package:video_compress/video_compress.dart';
+
+import '../../common/model/base_model.dart';
 
 class CourseViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
@@ -126,43 +125,31 @@ class CourseViewModel extends BaseModel {
     //upload  to firestore
     CloudStorageResult backgroundResult, syllabusResult;
 
-    if (_backgroundImage != null) {
-      backgroundResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _backgroundImage,
-        title: super.currentBusiness.id! +
-            "/" +
-            (isEditingCourse ? _edittingCourse!.id! : result.userId) +
-            "/" +
-            p.basename(_backgroundImage.path),
-      );
-      if (backgroundResult != null) {
-        course.background = new CourseBackground(
-            title: "background",
-            imageUrl: backgroundResult.mediaUrl,
-            imageSize: backgroundResult.size);
-      }
-    }
-    if (_syllabusDocument != null) {
-      syllabusResult = await _cloudStorageService.uploadFile(
-        fileToUpload: _syllabusDocument,
-        title: super.currentBusiness.id! +
-            "/" +
-            (isEditingCourse ? _edittingCourse!.id! : result.userId) +
-            "/" +
-            p.basename(_syllabusDocument.path),
-      );
-      if (syllabusResult != null) {
-        course.courseDetailDoc = new CourseDetailDoc(
-            title: p.basename(_syllabusDocument.path),
-            docUrl: syllabusResult.mediaUrl,
-            docSize: syllabusResult.size);
-      }
-    }
-    if (_videoFile != null) {
-      await handleVideoUpload(_videoFile, course);
-    } else {
-      result = await _courseService.updateCourse(course.id!, course);
-    }
+    backgroundResult = await _cloudStorageService.uploadFile(
+      fileToUpload: _backgroundImage,
+      title: super.currentBusiness.id! +
+          "/" +
+          (isEditingCourse ? _edittingCourse!.id! : result.userId) +
+          "/" +
+          p.basename(_backgroundImage.path),
+    );
+    course.background = new CourseBackground(
+        title: "background",
+        imageUrl: backgroundResult.mediaUrl,
+        imageSize: backgroundResult.size);
+    syllabusResult = await _cloudStorageService.uploadFile(
+      fileToUpload: _syllabusDocument,
+      title: super.currentBusiness.id! +
+          "/" +
+          (isEditingCourse ? _edittingCourse!.id! : result.userId) +
+          "/" +
+          p.basename(_syllabusDocument.path),
+    );
+    course.courseDetailDoc = new CourseDetailDoc(
+        title: p.basename(_syllabusDocument.path),
+        docUrl: syllabusResult.mediaUrl,
+        docSize: syllabusResult.size);
+    await handleVideoUpload(_videoFile, course);
 
     setBusy(false);
 
@@ -184,55 +171,50 @@ class CourseViewModel extends BaseModel {
   }
 
   Future handleVideoUpload(File videoFile, Course course) async {
-    if (videoFile != null) {
-      MediaUploadService mediaService = MediaUploadService();
+    MediaUploadService mediaService = MediaUploadService();
 
-      //create thumbnail
-      File thumbnailFile =
-          await mediaService.getVideoThumbnail(videoFile.path, 30);
-      //upload thumbnail
-      if (thumbnailFile != null) {
-        CloudStorageResult videoThumbnailResult =
-            await _cloudStorageService.uploadFile(
-          fileToUpload: thumbnailFile,
-          title: super.currentBusiness.id! +
-              "/" +
-              course.id! +
-              "/" +
-              p.basename(thumbnailFile.path),
-        );
-        course.courseVideo?.thumbUrl = videoThumbnailResult.mediaUrl;
-      }
+    //create thumbnail
+    File thumbnailFile =
+        await mediaService.getVideoThumbnail(videoFile.path, 30);
+    //upload thumbnail
+    CloudStorageResult videoThumbnailResult =
+        await _cloudStorageService.uploadFile(
+      fileToUpload: thumbnailFile,
+      title: super.currentBusiness.id! +
+          "/" +
+          course.id! +
+          "/" +
+          p.basename(thumbnailFile.path),
+    );
+    course.courseVideo?.thumbUrl = videoThumbnailResult.mediaUrl;
 
-      //compress video
-      MediaInfo mediaInfo = await mediaService.getMediaInfo(videoFile.path);
-      course.courseVideo?.videoSize = filesize(mediaInfo.filesize);
-      course.courseVideo?.title = mediaInfo.title!;
-      course.courseVideo?.duration =
-          computeDuration(mediaInfo.duration.toString());
-      course.courseVideo?.rawVideoPath = mediaInfo.path!;
+    //compress video
+    MediaInfo mediaInfo = await mediaService.getMediaInfo(videoFile.path);
+    course.courseVideo?.videoSize = filesize(mediaInfo.filesize);
+    course.courseVideo?.title = mediaInfo.title!;
+    course.courseVideo?.duration =
+        computeDuration(mediaInfo.duration.toString());
+    course.courseVideo?.rawVideoPath = mediaInfo.path!;
 
-      //upload video
-      /* CloudStorageResult videofileResult =
-          await _cloudStorageService.uploadFile(
-        fileToUpload: videoFile,
-        title: super.currentBusiness.id! +
-            "/" +
-            course.id! +
-            "/" +
-            p.basename(videoFile.path),
-      );*/
-      String uploadPath =
-          super.currentBusiness.id! + "/" + course.id! + "/";
+    //upload video
+    /* CloudStorageResult videofileResult =
+        await _cloudStorageService.uploadFile(
+      fileToUpload: videoFile,
+      title: super.currentBusiness.id! +
+          "/" +
+          course.id! +
+          "/" +
+          p.basename(videoFile.path),
+    );*/
+    String uploadPath = super.currentBusiness.id! + "/" + course.id! + "/";
 
-      mediaService.uploadVideo(course.courseVideo!, uploadPath,
-          onComplete: () async {
-        String downloadURL =  uploadPath + '/' + course.courseVideo!.title!;
-           // .getDownloadURL();
-        course.courseVideo!.videoUrl = downloadURL;
-        _courseService.updateCourse(course.id!, course);
-      });
-    }
+    mediaService.uploadVideoWithProgress(
+        onComplete: () async {
+      String downloadURL = uploadPath + '/' + course.courseVideo!.title!;
+      // .getDownloadURL();
+      course.courseVideo!.videoUrl = downloadURL;
+      _courseService.updateCourse(course.id!, course);
+    }, videoInfo: course.courseVideo!, uploadDir: uploadPath);
   }
 
   Future<List<Instructor>> getInstructors() async {

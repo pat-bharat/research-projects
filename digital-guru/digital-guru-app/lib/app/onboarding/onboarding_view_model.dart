@@ -1,5 +1,4 @@
 import 'package:digital_guru_app/app/common/service/shared_preferences_service.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 final onboardingViewModelProvider =

@@ -1,12 +1,11 @@
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/course/model/course.dart';
-import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
-import 'package:digiguru/app/course/service/course_service.dart';
+import 'package:digiguru/app/common/model/base_model.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:digiguru/app/course/model/course.dart';
+import 'package:digiguru/app/course/service/course_service.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 
 class CourseListModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -22,19 +21,15 @@ class CourseListModel extends BaseModel {
   void listenToCourses() {
     setBusy(true);
     String? businessId;
-    if (currentBusiness != null) {
-      businessId = currentBusiness!.id;
-    }
+    businessId = currentBusiness.id;
     _courseService.listenToCourseesRealTime(businessId!).listen((coursessData) {
       List<Course> updatedCourses = coursessData;
-      if (updatedCourses != null && updatedCourses.length > 0) {
+      if (updatedCourses.length > 0) {
         _courses = updatedCourses;
         notifyListeners();
         setBusy(false);
       }
     });
-
-    
   }
 
   Future deleteCourse({required Course course}) async {
@@ -82,8 +77,7 @@ class CourseListModel extends BaseModel {
     _navigationService.navigateTo(ModuleViewListRoute, arguments: course);
   }
 
-  void requestMoreData() => _courseService.requestMoreData(
-      currentBusiness.id!);
+  void requestMoreData() => _courseService.requestMoreData(currentBusiness.id!);
 
   Future saveCoursesDisplayOrder(List<Course> courses) async {
     bool result = false;

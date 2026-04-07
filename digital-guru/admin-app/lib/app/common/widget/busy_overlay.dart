@@ -11,7 +11,9 @@ class BusyOverlay extends StatelessWidget {
   final bool show;
 
   const BusyOverlay(
-      {required this.child, this.title = Strings.pleaseWait, this.show = false});
+      {required this.child,
+      this.title = Strings.pleaseWait,
+      this.show = false});
 
   @override
   Widget build(BuildContext context) {

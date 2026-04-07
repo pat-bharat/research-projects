@@ -32,7 +32,7 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
 
   Future getBusinessProfile() async {
     BusinessProfile _profile = BusinessProfile();
-    List<BusinessLegal> lgls = List.empty(growable: true);
+    // List<BusinessLegal> lgls = List.empty(growable: true);
     await model.getBusinessProfile().then((value) => {_profile = value});
     // await model.getConsumerLegals().then((value) => {lgls.addAll(value)});
     setState(() {
@@ -60,37 +60,37 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
         onModelReady: (model) {},
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
-                  appTitle: Strings.businessViewTtile,
-                  model: model,
-                  bottomNavBarIndex: 0,
-                  bodyData: SingleChildScrollView(
-                      padding: viewPadding,
-                      child: Column(
-                        children: [
-                          _buildBusinessProfile(context, profile),
-                          verticalSpaceSmall,
-                          _buildBusinessPublication(context, profile),
-                          verticalSpaceSmall,
-                          _buildFinanlcial(context, profile),
-                          _buildBusinessBranding(context, model),
-                          verticalSpaceSmall,
-                          _buildBusinessSettings(context, profile),
-                          _buildBusinessLegals(context, profile),
-                          verticalSpaceSmall,
-                        ],
-                      )), body: Center(),),
+                appTitle: Strings.businessViewTtile,
+                model: model,
+                bottomNavBarIndex: 0,
+                bodyData: SingleChildScrollView(
+                    padding: viewPadding,
+                    child: Column(
+                      children: [
+                        _buildBusinessProfile(context, profile),
+                        verticalSpaceSmall,
+                        _buildBusinessPublication(context, profile),
+                        verticalSpaceSmall,
+                        _buildFinanlcial(context, profile),
+                        _buildBusinessBranding(context, model),
+                        verticalSpaceSmall,
+                        _buildBusinessSettings(context, profile),
+                        _buildBusinessLegals(context, profile),
+                        verticalSpaceSmall,
+                      ],
+                    )),
+                body: Center(),
+              ),
             ));
   }
 
   _buildBusinessProfile(BuildContext context, BusinessProfile profile) {
-    if (profile == null) {
-      return Container();
-    }
-    var status = (model.currentBusiness.locked != null && model.currentBusiness.locked!)
-        ? Text("Locked", style: TextStyle(color: Colors.red))
-        : (model.currentBusiness.locked != null)
-            ? Text("Active", style: TextStyle(color: Colors.green))
-            : Text("Unavailable", style: TextStyle(color: Colors.red));
+    var status =
+        (model.currentBusiness.locked != null && model.currentBusiness.locked!)
+            ? Text("Locked", style: TextStyle(color: Colors.red))
+            : (model.currentBusiness.locked != null)
+                ? Text("Active", style: TextStyle(color: Colors.green))
+                : Text("Unavailable", style: TextStyle(color: Colors.red));
     var nonPurchassedUsers = profile.userCounts?.trialUsers;
     var purchasedUsers = profile.userCounts?.purchasedUsers;
     return Column(
@@ -114,11 +114,11 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildWrappedText(
-                    context, 'Mobile # ' + (model.currentBusiness.mobilePhone ?? ''),
+                buildWrappedText(context,
+                    'Mobile # ' + (model.currentBusiness.mobilePhone ?? ''),
                     style: Theme.of(context).textTheme.bodyMedium),
-                buildWrappedText(
-                    context, 'Email: ' + (model.currentBusiness.contactEmail ?? ''),
+                buildWrappedText(context,
+                    'Email: ' + (model.currentBusiness.contactEmail ?? ''),
                     style: Theme.of(context).textTheme.bodyMedium),
                 Row(
                   children: [Text("Status:"), status],
@@ -134,9 +134,6 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
   }
 
   _buildBusinessLegals(BuildContext context, BusinessProfile profile) {
-    if (profile == null) {
-      return Container();
-    }
     List<Widget> legals = List.empty(growable: true);
     profile.businessLegal!.forEach((legal) {
       legals.add(Row(
@@ -172,9 +169,6 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
   }
 
   _buildBusinessSettings(BuildContext context, BusinessProfile profile) {
-    if (profile == null) {
-      return Container();
-    }
     BusinessSetting? businessSetting = profile.businessSetting;
     if (businessSetting == null) {
       return Container();
@@ -225,9 +219,6 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
   }
 
   _buildBusinessPublication(BuildContext context, BusinessProfile profile) {
-    if (profile == null) {
-      return Container();
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -253,10 +244,12 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
                 ),
                 Text(
                   "Modules (purchased):" +
-                      (profile.publication?.purchasedModuleCounts ?? 0).toString(),
+                      (profile.publication?.purchasedModuleCounts ?? 0)
+                          .toString(),
                 ),
                 Text(
-                  "Lessons:" + (profile.publication?.lessonCounts ?? 0).toString(),
+                  "Lessons:" +
+                      (profile.publication?.lessonCounts ?? 0).toString(),
                 ),
               ],
             ))
@@ -265,7 +258,6 @@ class _BusinessDashBoardViewState extends State<BusinessDashBoardView> {
   }
 
   _buildFinanlcial(BuildContext context, BusinessProfile model) {
-    if (model == null) return Container();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

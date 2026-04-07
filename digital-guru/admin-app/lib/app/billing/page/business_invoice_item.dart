@@ -7,7 +7,8 @@ class BusinessInvoiceItem extends StatelessWidget {
   final Function onView;
   //final bool isAdmin;
 
-  const BusinessInvoiceItem({Key? key, required this.invoice, required this.onView})
+  const BusinessInvoiceItem(
+      {Key? key, required this.invoice, required this.onView})
       : super(key: key);
 
   @override
@@ -32,9 +33,7 @@ class BusinessInvoiceItem extends StatelessWidget {
           icon: Icon(Icons.edit),
           tooltip: "View Invoice",
           onPressed: () {
-            if (onView != null) {
-              onView();
-            }
+            onView();
           },
         ),
       ],

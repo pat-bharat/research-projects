@@ -8,7 +8,6 @@ import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/media_selector.dart';
-import 'package:flutter/foundation.dart';
 import '../../common/model/base_model.dart';
 import 'package:path/path.dart' as p;
 
@@ -74,7 +73,7 @@ class InstructorViewModel extends BaseModel {
       if (_edittingInstructor != null) {
         course.documentId = _edittingInstructor!.documentId;
         await _instructorService.updateInstructor(
-            _edittingInstructor!.documentId!, course);
+            _edittingInstructor!.documentId, course);
       }
     }
     CloudStorageResult profilePicResult;
@@ -91,7 +90,7 @@ class InstructorViewModel extends BaseModel {
 
       if (_profilePicFile != null) {
         course.profilePic = profilePicResult.mediaUrl;
-        _instructorService.updateInstructor(course.documentId!, course);
+        _instructorService.updateInstructor(course.documentId, course);
       }
     }
 

@@ -19,7 +19,8 @@ class UserProfileModel extends BaseModel {
 
   void save(User profile) async {
     setBusy(true);
-    var result = await _userService.updateUser(profile.documentId ?? '', profile);
+    var result =
+        await _userService.updateUser(profile.documentId ?? '', profile);
     notifyListeners();
     setBusy(false);
     if (result is String) {

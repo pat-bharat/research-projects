@@ -1,9 +1,7 @@
 import 'package:digiguru/app/common/service/base_service.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 class PurchaseService extends BaseService {
@@ -35,7 +33,8 @@ class PurchaseService extends BaseService {
     // setState to update our non-existent appearance.
     // refresh items for android
     try {
-      var products = await FlutterInappPurchase.instance.getAvailablePurchases();
+      var products =
+          await FlutterInappPurchase.instance.getAvailablePurchases();
       _items = products;
     } catch (err) {
       print('getProducts error: $err');
@@ -60,7 +59,8 @@ class PurchaseService extends BaseService {
   Future requestPurchase(Purchase item) async {
     final props = Platform.isIOS
         ? RequestPurchaseIosProps(sku: item.productId) as RequestPurchaseProps
-        : RequestPurchaseAndroidProps(skus: List.of([item.productId])) as RequestPurchaseProps;
+        : RequestPurchaseAndroidProps(skus: List.of([item.productId]))
+            as RequestPurchaseProps;
     return await FlutterInappPurchase.instance.requestPurchase(props);
   }
 

@@ -96,7 +96,8 @@ class _PurchasedUserModuleListViewState
                       ],
                     )
                   : buildCircularLoader(context),
-            body: Center(),)));
+              body: Center(),
+            )));
   }
 
   _buildUserModules(BuildContext context, PurchasedUserModuleListModel model,
@@ -124,8 +125,8 @@ class _PurchasedUserModuleListViewState
                 um.moduleTitle ?? '',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              buildWrappedText(
-                  context, (um.courseName ?? '') + " By " + (um.instructorName ?? ''),
+              buildWrappedText(context,
+                  (um.courseName ?? '') + " By " + (um.instructorName ?? ''),
                   lines: 2, style: Theme.of(context).textTheme.bodyMedium),
             ],
             bodyChildren: lessons),

@@ -8,7 +8,8 @@ import 'package:stacked/stacked.dart';
 
 class BusinessSettingView extends StatefulWidget {
   final BusinessSetting businessSetting;
-  const BusinessSettingView({Key? key, required this.businessSetting}) : super(key: key);
+  const BusinessSettingView({Key? key, required this.businessSetting})
+      : super(key: key);
   @override
   _BusinessSettingViewState createState() => _BusinessSettingViewState();
 }
@@ -28,8 +29,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
       viewModelBuilder: () => BusinessSettingViewModel(),
       builder: (context, model, child) => SafeArea(
         child: Scaffold(
-          body: widget.businessSetting != null
-              ? Container(
+          body: Container(
                   child: Column(
                     children: [
                       Row(
@@ -60,12 +60,15 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 10,
-                            value: _businessSetting.maxModulePerCourse?.toDouble() ?? 0,
+                            value: _businessSetting.maxModulePerCourse
+                                    ?.toDouble() ??
+                                0,
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
                               setState(() {
-                                _businessSetting.maxModulePerCourse = value.toInt();
+                                _businessSetting.maxModulePerCourse =
+                                    value.toInt();
                               });
                             },
                             decoration: InputDecoration(
@@ -82,12 +85,14 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 10,
-                            value: _businessSetting.lessonsPerModule!.toDouble(),
+                            value:
+                                _businessSetting.lessonsPerModule!.toDouble(),
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
                               setState(() {
-                                _businessSetting.lessonsPerModule = value.toInt();
+                                _businessSetting.lessonsPerModule =
+                                    value.toInt();
                               });
                             },
                             decoration: InputDecoration(
@@ -104,12 +109,15 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                           SpinBox(
                             min: 0,
                             max: 60,
-                            value: _businessSetting.maxVideoDuration?.toDouble() ?? 0,
+                            value:
+                                _businessSetting.maxVideoDuration?.toDouble() ??
+                                    0,
                             decimals: 0,
                             step: 1,
                             onChanged: (value) {
                               setState(() {
-                                _businessSetting.maxVideoDuration = value.toInt();
+                                _businessSetting.maxVideoDuration =
+                                    value.toInt();
                               });
                             },
                             decoration: InputDecoration(
@@ -131,8 +139,7 @@ class _BusinessSettingViewState extends State<BusinessSettingView> {
                       ),
                     ],
                   ),
-                )
-              : Container(),
+                ),
         ),
       ),
     );

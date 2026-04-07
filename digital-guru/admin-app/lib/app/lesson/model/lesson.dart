@@ -21,8 +21,7 @@ class Lesson {
   VideoInfo? videoInfo;
   String? id;
   Lesson(
-      {
-      this.moduleId,
+      {this.moduleId,
       this.businessId,
       this.moduleTitle,
       this.courseId,
@@ -72,14 +71,14 @@ class Lesson {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['module_id'] = this.moduleId;
-     data['business_id'] = this.businessId;
+    data['business_id'] = this.businessId;
     data['module_title'] = this.moduleTitle;
     data['course_id'] = this.courseId;
     data['course_title'] = this.courseTitle;
     data['instructor_name'] = this.instructorName;
     data['title'] = this.title;
     data['instructor_notes'] = this.instructorNotes;
-    data['locked'] = this.locked == null ? true : this.locked;
+    data['locked'] = this.locked;
     data['deleted'] = this.deleted;
     data['free_trial'] = this.freeTrial;
     data['display_order'] = this.displayOrder;

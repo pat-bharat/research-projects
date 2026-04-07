@@ -21,8 +21,8 @@ class GreenTheme extends BaseTheme {
         labelStyle: TextStyle(fontSize: labelSize, color: primaryColor),
       ),
       textTheme: textTheme(primaryColor, accentColor, backgroundColor),
-      appBarTheme:
-          AppBarTheme(backgroundColor: primaryColor, foregroundColor: backgroundColor),
+      appBarTheme: AppBarTheme(
+          backgroundColor: primaryColor, foregroundColor: backgroundColor),
       bottomAppBarTheme: BottomAppBarThemeData(color: primaryColor),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: primaryColor,
@@ -38,8 +38,10 @@ class GreenTheme extends BaseTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient:
-                LinearGradient(colors: [const Color.fromARGB(255, 122, 237, 132), backgroundColor])),
+            gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 122, 237, 132),
+              backgroundColor
+            ])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -54,7 +56,16 @@ class GreenTheme extends BaseTheme {
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
       ),
-      colorScheme: ColorScheme(surface: backgroundColor, brightness: Brightness.light, primary: primaryColor, onPrimary: backgroundColor, secondary: accentColor, onSecondary: backgroundColor, error: Colors.red, onError: Colors.white, onSurface: primaryColor),
+      colorScheme: ColorScheme(
+          surface: backgroundColor,
+          brightness: Brightness.light,
+          primary: primaryColor,
+          onPrimary: backgroundColor,
+          secondary: accentColor,
+          onSecondary: backgroundColor,
+          error: Colors.red,
+          onError: Colors.white,
+          onSurface: primaryColor),
     );
   }
 }

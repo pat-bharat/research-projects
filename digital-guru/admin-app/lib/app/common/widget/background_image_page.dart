@@ -17,7 +17,7 @@ class BackgroundImageBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        url != null && url.length > 0
+        url.length > 0
             ? Container(
                 child: CachedNetworkImage(
                   imageUrl: url,

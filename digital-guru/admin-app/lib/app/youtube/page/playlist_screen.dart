@@ -1,5 +1,4 @@
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/youtube/model/channel_model.dart';
 import 'package:digiguru/app/youtube/model/playlist_model.dart';
 import 'package:digiguru/app/youtube/model/video_model.dart';
 import 'package:digiguru/app/youtube/page/video_screen.dart';
@@ -30,8 +29,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: _playList != null
-          ? NotificationListener<ScrollNotification>(
+      body: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollDetails) {
                 if (!_isLoading &&
                     (_playList.videos?.length ?? 0) != _playList.videoCount &&
@@ -47,14 +45,7 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
                   Container(),
                   Expanded(child: _buildPlayList()),
                 ],
-              ))
-          : Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).scaffoldBackgroundColor, // Red
-                ),
-              ),
-            ),
+              )),
     ));
   }
 
@@ -70,10 +61,13 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
     );
     return GFAccordion(
       showAccordion: true,
-      title:
-          (_playList.title ?? '') + '(' + _playList.videoCount.toString() + ') videos',
+      title: (_playList.title ?? '') +
+          '(' +
+          _playList.videoCount.toString() +
+          ') videos',
       contentPadding: const EdgeInsets.all(5),
-      textStyle: Theme.of(context).textTheme.headlineMedium ?? const TextStyle(),
+      textStyle:
+          Theme.of(context).textTheme.headlineMedium ?? const TextStyle(),
       collapsedTitleBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       contentBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
       contentChild: videos,
@@ -180,8 +174,9 @@ class _PlaylistScreenState extends State<PlaylistScreen> {
 
   _loadMoreVideos() async {
     _isLoading = true;
-    List<Video> moreVideos =
-        await _apiService.fetchVideosFromPlaylist(playlistId: _playList.id ?? '', nameIndex: _playList.videos?.length ?? 0);
+    List<Video> moreVideos = await _apiService.fetchVideosFromPlaylist(
+        playlistId: _playList.id ?? '',
+        nameIndex: _playList.videos?.length ?? 0);
     List<Video> allVideos = (_playList.videos ?? [])..addAll(moreVideos);
     setState(() {
       _playList.videos = allVideos;

@@ -1,16 +1,9 @@
-import 'package:digiguru/app/auth/service/authentication_service.dart';
-import 'package:digiguru/app/common/constants/shared_styles.dart';
-import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/common/widget/business_drawer.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/drawer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/image/gf_image_overlay.dart';
 
 class TopNavigationBar extends StatelessWidget implements PreferredSizeWidget {
-  final AuthenticationService _authService = locator<AuthenticationService>();
+  //final AuthenticationService _authService = locator<AuthenticationService>();
   final dynamic model;
   final String text;
   final double height;
@@ -55,7 +48,8 @@ class TopNavigationBar extends StatelessWidget implements PreferredSizeWidget {
               Text(
                 text,
                 style: TextStyle(
-                    fontSize: Theme.of(context).textTheme.headlineMedium?.fontSize,
+                    fontSize:
+                        Theme.of(context).textTheme.headlineMedium?.fontSize,
                     color: Theme.of(context).appBarTheme.foregroundColor),
               )
             ])),

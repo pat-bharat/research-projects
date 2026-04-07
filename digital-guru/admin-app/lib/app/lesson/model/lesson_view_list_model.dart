@@ -8,8 +8,6 @@ import 'package:digiguru/app/lesson/service/lesson_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:digiguru/app/video/model/video_info.dart';
-import 'package:flutter/cupertino.dart';
 
 class LessonListModel extends BaseModel {
   final NavigationService _navigationService = locator<NavigationService>();
@@ -23,7 +21,7 @@ class LessonListModel extends BaseModel {
   late Module _module;
   late Course _course;
   Module get module => _module;
-  Course get course => _course; 
+  Course get course => _course;
   List<Lesson> get lessons => _lessons;
 
   LessonListModel({required Course course, required Module module}) {
@@ -35,7 +33,7 @@ class LessonListModel extends BaseModel {
     setBusy(true);
     _lessonService.listenToLessonsRealTime(_module.id).listen((lesson) {
       List<Lesson> lessons = lesson;
-      if (lessons != null && lessons.length > 0) {
+      if (lessons.length > 0) {
         _lessons = lessons;
         //notifyListeners();
       }
@@ -91,5 +89,6 @@ class CourseModuleLessonsArgs {
   Module module;
   Lesson? lesson;
 
-  CourseModuleLessonsArgs({required this.course, required this.module, this.lesson});
+  CourseModuleLessonsArgs(
+      {required this.course, required this.module, this.lesson});
 }

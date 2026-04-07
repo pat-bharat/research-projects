@@ -20,19 +20,16 @@ String formatBytes(int bytes, int decimals) {
 }
 
 String computeDuration(String duration) {
-  if (duration != null) {
-    double? micro = (double.tryParse(duration));
-    if (micro != null) {
-      double sec = micro / 100;
-      if (sec > 60) {
-        return (sec / 60).toStringAsFixed(2);
-      } else {
-        return "00:" + sec.round().toString();
-      }
+  double? micro = (double.tryParse(duration));
+  if (micro != null) {
+    double sec = micro / 100;
+    if (sec > 60) {
+      return (sec / 60).toStringAsFixed(2);
+    } else {
+      return "00:" + sec.round().toString();
     }
-    return duration;
   }
-  return "00.00";
+  return duration;
 }
 
 String toDuration(String isoString) {
@@ -42,8 +39,8 @@ String toDuration(String isoString) {
     throw ArgumentError("String does not follow correct format");
   }
 
-  final weeks = _parseTime(isoString, "W");
-  final days = _parseTime(isoString, "D");
+  //final weeks = _parseTime(isoString, "W");
+  //final days = _parseTime(isoString, "D");
   final hours = _parseTime(isoString, "H");
   final minutes = _parseTime(isoString, "M");
   final seconds = _parseTime(isoString, "S");
@@ -63,6 +60,6 @@ int _parseTime(String duration, String timeUnit) {
   return int.parse(timeString.substring(0, timeString.length - 1));
 }
 
-String getFileName(String path){
+String getFileName(String path) {
   return path.split('/').last;
 }

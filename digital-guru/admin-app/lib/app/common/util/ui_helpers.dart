@@ -131,17 +131,14 @@ Container buildRemoteConfigContainer() {
 }
 
 buildToolTip(BuildContext context, String msg) {
-  if (msg != null) {
-    return Tooltip(
-      message: msg,
-      child: Icon(
-        Icons.info,
-        color: Theme.of(context).iconTheme.color,
-        size: Theme.of(context).iconTheme.size,
-      ),
-    );
-  }
-  return null;
+  return Tooltip(
+    message: msg,
+    child: Icon(
+      Icons.info,
+      color: Theme.of(context).iconTheme.color,
+      size: Theme.of(context).iconTheme.size,
+    ),
+  );
 }
 
 buildWrappedText(BuildContext context, String text,
@@ -156,7 +153,7 @@ buildWrappedText(BuildContext context, String text,
 
 buildCachedNetworkCacheImage(BuildContext context, String url) {
   try {
-    if (url != null && url.length > 0) {
+    if (url.length > 0) {
       return CachedNetworkImage(
         imageUrl: url,
         fit: BoxFit.fill,
@@ -177,8 +174,7 @@ buildCachedNetworkCacheImage(BuildContext context, String url) {
 }
 
 buildScorabbleAccordian(BuildContext context,
-    {required List<Widget> headChildren,
-    required List<Widget> bodyChildren}) {
+    {required List<Widget> headChildren, required List<Widget> bodyChildren}) {
   return ExpandableNotifier(
     child: ScrollOnExpand(
       child: ExpandablePanel(

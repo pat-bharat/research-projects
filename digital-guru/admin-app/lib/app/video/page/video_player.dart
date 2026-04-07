@@ -1,10 +1,8 @@
-import 'package:better_player/better_player.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:better_native_video_player/better_native_video_player.dart';
 
 class VideoPlayer extends StatefulWidget {
   final String? url;
@@ -12,42 +10,27 @@ class VideoPlayer extends StatefulWidget {
     Key? key,
     required this.url,
   }) : super(key: key);
+
   @override
-  _VideoPlayerState createState() => _VideoPlayerState();
+  State<VideoPlayer> createState() => _VideoPlayerState();
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
   final NavigationService _navigationService = locator<NavigationService>();
-  late BetterPlayerController _betterPlayerController;
-
+  late NativeVideoPlayerController _nativeVideoPlayerController = NativeVideoPlayerController(
+     id: 1,
+     autoPlay: false,
+     enableLooping: false,
+     showNativeControls: true,         
+  );
   @override
   void initState() {
     super.initState();
-    //var headers =['appToken',]
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-            aspectRatio: 16 / 9,
-            fit: BoxFit.contain,
-            autoPlay: true,
-            autoDispose: true,
-            fullScreenByDefault: true,
-            startAt: Duration(seconds: 0),
-            //subtitlesConfiguration: ,
-            autoDetectFullscreenDeviceOrientation: true);
-    BetterPlayerCacheConfiguration cacheConfiguration =
-        BetterPlayerCacheConfiguration(
-            useCache: true, maxCacheSize: 2 * 134217728);
-    BetterPlayerDataSource dataSource = BetterPlayerDataSource(
-        BetterPlayerDataSourceType.network, widget.url!,
-        cacheConfiguration: cacheConfiguration);
-    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    _betterPlayerController.setupDataSource(dataSource);
-    super.initState();
+    _nativeVideoPlayerController.loadUrl(url:  widget.url!);
   }
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+     return SafeArea(
       child: Scaffold(
         body: Column(
           children: [
@@ -59,7 +42,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   iconSize: 30,
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
-                    _navigationService.pop();
+                    _navigationService.pop();                    
                   },
                 ),
                 horizontalSpaceMedium,
@@ -71,7 +54,11 @@ class _VideoPlayerState extends State<VideoPlayer> {
             ),
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: BetterPlayer(controller: _betterPlayerController),
+              child: NativeVideoPlayer (               
+                controller: _nativeVideoPlayerController,
+                
+                // Add other configuration as needed
+              ),
             ),
           ],
         ),

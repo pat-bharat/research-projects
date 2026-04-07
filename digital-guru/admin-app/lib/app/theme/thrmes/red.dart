@@ -43,8 +43,10 @@ class RedTheme extends BaseTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient:
-                LinearGradient(colors: [const Color.fromARGB(255, 131, 219, 139), backgroundColor])),
+            gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 131, 219, 139),
+              backgroundColor
+            ])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -59,7 +61,9 @@ class RedTheme extends BaseTheme {
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
       ),
-      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor).copyWith(background: backgroundColor),
+      colorScheme: ColorScheme.fromSwatch()
+          .copyWith(secondary: accentColor)
+          .copyWith(background: backgroundColor),
     );
   }
 }

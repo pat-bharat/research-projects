@@ -16,7 +16,7 @@ class SystemProfileView extends StatefulWidget {
 }
 
 class _SystemProfileViewState extends State<SystemProfileView> {
- late SystemDashBoardViewModel model;
+  late SystemDashBoardViewModel model;
   late SystemProfile _systemProfile;
   List<SystemLegal> businessLegalList = List.empty(growable: true);
   List<SystemLegal> cosumerLegalList = List.empty(growable: true);
@@ -55,47 +55,48 @@ class _SystemProfileViewState extends State<SystemProfileView> {
         viewModelBuilder: () => model,
         //fireOnModelReadyOnce: true,
         builder: (context, model, child) => SafeArea(
-            child: CommonScaffold(
-                appTitle: Strings.systemProfileTitle,
-                model: model,
-                showDrawer: false,
-                bottomNavBarIndex: 0,
-                bodyData: _systemProfile != null
-                    ? SingleChildScrollView(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: screenWidth(context),
-                                decoration: boxDecoration(context),
-                                child: Column(children: [
-                                  Text(
-                                    _systemProfile.name ?? '',
-                                    style:
-                                        Theme.of(context).textTheme.headlineMedium,
-                                  ),
-                                  Text(
-                                    _systemProfile.csPhone.toString() +
-                                        '  ' +
-                                        (_systemProfile.csEmail ?? ''),
-                                    style:
-                                        Theme.of(context).textTheme.headlineMedium,
-                                  ),
-                                ]),
-                              ),
-                              buildUserCounts(context, _systemProfile),
-                              buildSystemPublication(context, _systemProfile),
-                              buildSystemFinanlcial(context, _systemProfile),
-                              buildSystemBranding(context, model),
-                              buildSystemLegals(context, model),
-                            ],
-                          ),
+                child: CommonScaffold(
+              appTitle: Strings.systemProfileTitle,
+              model: model,
+              showDrawer: false,
+              bottomNavBarIndex: 0,
+              bodyData: SingleChildScrollView(
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: screenWidth(context),
+                              decoration: boxDecoration(context),
+                              child: Column(children: [
+                                Text(
+                                  _systemProfile.name ?? '',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
+                                ),
+                                Text(
+                                  _systemProfile.csPhone.toString() +
+                                      '  ' +
+                                      (_systemProfile.csEmail ?? ''),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
+                                ),
+                              ]),
+                            ),
+                            buildUserCounts(context, _systemProfile),
+                            buildSystemPublication(context, _systemProfile),
+                            buildSystemFinanlcial(context, _systemProfile),
+                            buildSystemBranding(context, model),
+                            buildSystemLegals(context, model),
+                          ],
                         ),
-                      )
-                    : Container(),
-                    body: Center(),)));
+                      ),
+                    ),
+              body: Center(),
+            )));
   }
 
   buildSystemLegals(BuildContext context, SystemDashBoardViewModel model) {
@@ -202,7 +203,8 @@ class _SystemProfileViewState extends State<SystemProfileView> {
                 Text("Trial Users:" +
                     (_systemProfile.userCounts?.trialUsers ?? 0).toString()),
                 Text("Purchased Users:" +
-                    (_systemProfile.userCounts?.purchasedUsers ?? 0).toString()),
+                    (_systemProfile.userCounts?.purchasedUsers ?? 0)
+                        .toString()),
               ],
             ))
       ],
@@ -226,12 +228,15 @@ class _SystemProfileViewState extends State<SystemProfileView> {
               children: [
                 Text(
                   "Courses:" +
-                      (_systemProfile.publication?.courseCounts ?? 0).toString(),
+                      (_systemProfile.publication?.courseCounts ?? 0)
+                          .toString(),
                 ),
                 Text(
                   "Modules (trial):" +
                       ((_systemProfile.publication?.totalModuleCounts ?? 0) -
-                              (_systemProfile.publication?.purchasedModuleCounts ?? 0))
+                              (_systemProfile
+                                      .publication?.purchasedModuleCounts ??
+                                  0))
                           .toString(),
                 ),
                 Text(
@@ -241,7 +246,8 @@ class _SystemProfileViewState extends State<SystemProfileView> {
                 ),
                 Text(
                   "Lessons:" +
-                      (_systemProfile.publication?.lessonCounts ?? 0).toString(),
+                      (_systemProfile.publication?.lessonCounts ?? 0)
+                          .toString(),
                 ),
               ],
             ))

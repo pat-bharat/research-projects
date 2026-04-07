@@ -17,7 +17,8 @@ class LoginViewModel extends BaseModel {
   final UserService _userService = locator<UserService>();
 
   Future isLegalAcceptedByUser() async {
-    return await _userService.hasUserAcceptedLegals(currentUser?.documentId ?? '');
+    return await _userService
+        .hasUserAcceptedLegals(currentUser?.documentId ?? '');
   }
 
   Future loginWithEmail({
@@ -26,9 +27,9 @@ class LoginViewModel extends BaseModel {
   }) async {
     setBusy(true);
     String? businessId;
-    
+
     businessId = appConfig.businessId;
-  
+
     var result = await _authenticationService.loginWithEmail(
       email: email,
       password: password,
@@ -37,20 +38,13 @@ class LoginViewModel extends BaseModel {
 
     setBusy(false);
 
-    if (result is bool) {
-      if (result) {
-        await _analyticsService.logLogin();
-        _navigationService.navigateTo(CourseViewListRoute);
-      } else {
-        await _dialogService.showDialog(
-          title: 'Login Failure',
-          description: 'General login failure. Please try again later',
-        );
-      }
+    if (result) {
+      await _analyticsService.logLogin();
+      _navigationService.navigateTo(CourseViewListRoute);
     } else {
       await _dialogService.showDialog(
         title: 'Login Failure',
-        description: "Login Failure",
+        description: 'General login failure. Please try again later',
       );
     }
     _dectateNextRoute();
@@ -64,13 +58,9 @@ class LoginViewModel extends BaseModel {
     bool isLegalAccepted = await isLegalAcceptedByUser();
     if (isLegalAccepted) {
       if (super.isAdmin) {
-        if (currentBusiness != null) {
-          _navigationService.navigateTo(CourseViewListRoute);
-        } else {
-          _navigationService.navigateTo(CreateBusinessViewRoute);
-        }
+        _navigationService.navigateTo(CourseViewListRoute);
       }
-    }else{
+    } else {
       _navigationService.navigateTo(AcceptLegalViewRoute);
     }
   }

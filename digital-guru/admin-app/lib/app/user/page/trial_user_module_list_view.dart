@@ -1,13 +1,10 @@
 import 'package:digiguru/app/common/constants/strings.dart';
-import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/lesson/page/lesson_item.dart';
-import 'package:digiguru/app/lesson/service/lesson_service.dart';
 import 'package:digiguru/app/user/model/trial_user_module_view_list_model..dart';
 import 'package:digiguru/app/user/model/user_module.dart';
-import 'package:digiguru/app/user/model/purchased_user_module_view_list_model.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -22,8 +19,7 @@ class TrialUserModuleListView extends StatefulWidget {
 }
 
 class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
-  LessonService _lessonService = locator<LessonService>();
-  late TrialUserModuleListModel model;
+   late TrialUserModuleListModel model;
   List<UserModule> userModules = List.empty(growable: true);
   bool isFree = false;
   @override
@@ -37,7 +33,7 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
   Future getUserModules(TrialUserModuleListModel model) async {
     List<UserModule> _um = List.empty(growable: true);
 
-    if (isFree != null && isFree) {
+    if (isFree) {
       // await model.loadFreeModule().then((value) => _um.addAll(value));
     }
     setState(() {
@@ -87,7 +83,8 @@ class _TrialUserModuleListViewState extends State<TrialUserModuleListView> {
                   // buildBottomActionBar(model)
                 ],
               ),
-            body: Center(),)));
+              body: Center(),
+            )));
   }
 
   _buildUserModules(BuildContext context, TrialUserModuleListModel model) {

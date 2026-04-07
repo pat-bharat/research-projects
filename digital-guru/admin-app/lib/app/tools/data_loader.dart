@@ -34,31 +34,34 @@ class DataLoaderService extends BaseService {
             itemType: BillingItemType.monthly,
             description: 'Setup Fees',
             quantity: 1,
-            rate: 30.00, createdTimestamp: '', updatedTimestamp: '', modifyBy: '',
+            rate: 30.00,
+            createdTimestamp: '',
+            updatedTimestamp: '',
+            modifyBy: '',
           ),
           BillingItem(
             amount: 70.00,
             itemType: BillingItemType.setup,
             description: 'User fees',
             quantity: 7,
-            rate: 10.00, createdTimestamp: '', updatedTimestamp: '', modifyBy: '',
+            rate: 10.00,
+            createdTimestamp: '',
+            updatedTimestamp: '',
+            modifyBy: '',
           ),
         ]);
     await _businessInvoiceService.addInvoice(binvoice);
   }
 
   void updateLessonsBusinessId(String bid) {
-
-    BaseService.supabaseDataService.fetchAllWithQuery(  'lessons', where: {'business_id': bid}).then((lessonsData) {
+    BaseService.supabaseDataService.fetchAllWithQuery('lessons',
+        where: {'business_id': bid}).then((lessonsData) {
       lessonsData.forEach((element) {
         Lesson l = Lesson.fromJson(element['id'] as String, element);
         l.businessId = bid;
         BaseService.supabaseDataService.update('lessons', l.id!, l.toJson());
       });
     });
-    
-    
-   
   }
 }
 

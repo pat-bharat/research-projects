@@ -16,23 +16,23 @@ class BusinessInvoice {
   String modifiedBy;
   List<BillingItem> billingItems;
   String documentId;
-    BusinessInvoice({
-      required this.businessId,
-      required this.invoiceDate,
-      required this.invoiceAmount,
-      required this.currancyCode,
-      required this.startDate,
-      required this.endDate,
-      required this.dueDate,
-      required this.paidDate,
-      required this.paidBy,
-      required this.paidVia,
-      required this.createdTimestamp,
-      required this.updatedTimestamp,
-      required this.modifiedBy,
-      required this.billingItems,
-      this.documentId = '',
-    });
+  BusinessInvoice({
+    required this.businessId,
+    required this.invoiceDate,
+    required this.invoiceAmount,
+    required this.currancyCode,
+    required this.startDate,
+    required this.endDate,
+    required this.dueDate,
+    required this.paidDate,
+    required this.paidBy,
+    required this.paidVia,
+    required this.createdTimestamp,
+    required this.updatedTimestamp,
+    required this.modifiedBy,
+    required this.billingItems,
+    this.documentId = '',
+  });
 
   BusinessInvoice.fromJson(String docId, Map<String, dynamic> json)
       : documentId = docId,
@@ -50,8 +50,8 @@ class BusinessInvoice {
         updatedTimestamp = json['updated_timestamp'],
         modifiedBy = json['modified_by'] ?? json['modif_by'] ?? '',
         billingItems = json['billing_items'] != null
-            ? List<BillingItem>.from(
-                (json['billing_items'] as List).map((v) => BillingItem.fromJson(v)))
+            ? List<BillingItem>.from((json['billing_items'] as List)
+                .map((v) => BillingItem.fromJson(v)))
             : <BillingItem>[];
 
   Map<String, dynamic> toJson() {
@@ -70,7 +70,7 @@ class BusinessInvoice {
     data['updated_timestamp'] = this.updatedTimestamp;
     data['modified_by'] = this.modifiedBy;
     data['billing_items'] = this.billingItems.map((v) => v.toJson()).toList();
-      return data;
+    return data;
   }
 }
 

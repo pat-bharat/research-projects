@@ -44,7 +44,8 @@ class Course {
       this.language,
       this.youtube = false});
 
-  Course.fromJson(Map<String, dynamic> json, String id) : youtube = json['youtube'] ?? false {
+  Course.fromJson(Map<String, dynamic> json, String id)
+      : youtube = json['youtube'] ?? false {
     this.id = id;
     businessId = json['business_id'];
     title = json['title'];

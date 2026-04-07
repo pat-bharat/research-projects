@@ -18,13 +18,18 @@ class SupabaseProvider {
   }
 */
   static saveDownloadUrl(String videoName, String downloadUrl) async {
-    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {'video_name': videoName}).then((userData) => {
-      if (userData.isNotEmpty)
-        {
-          BaseService.supabaseDataService.update('videos', userData.first['id'], {'video_url': downloadUrl, 'finished_processing': true})
-        }
-    });
-  } 
+    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {
+      'video_name': videoName
+    }).then((userData) => {
+          if (userData.isNotEmpty)
+            {
+              BaseService.supabaseDataService.update(
+                  'videos',
+                  userData.first['id'],
+                  {'video_url': downloadUrl, 'finished_processing': true})
+            }
+        });
+  }
 
   static createNewVideo(String videoName, String rawVideoPath) async {
     await BaseService.supabaseDataService.insert('videos', {
@@ -35,12 +40,15 @@ class SupabaseProvider {
   }
 
   static deleteVideo(String videoName) async {
-    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {'video_name': videoName}).then((userData) => {
-      if (userData.isNotEmpty)
-        {
-          BaseService.supabaseDataService.delete('videos', userData.first['id'])
-        }
-    });
+    await BaseService.supabaseDataService.fetchAllWithQuery('videos', where: {
+      'video_name': videoName
+    }).then((userData) => {
+          if (userData.isNotEmpty)
+            {
+              BaseService.supabaseDataService
+                  .delete('videos', userData.first['id'])
+            }
+        });
   }
 /*
   static listenToVideos(callback) async {

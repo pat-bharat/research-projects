@@ -1,8 +1,6 @@
-import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/system/model/system_dashboard_view_model.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
-import 'package:digiguru/app/system/service/system_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

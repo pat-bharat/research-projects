@@ -1,10 +1,8 @@
 import 'package:digiguru/app/billing/model/business_invoice.dart';
 import 'package:digiguru/app/billing/model/business_invoice_list_view_model.dart';
-import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -43,31 +41,22 @@ class _BusinessInvoiceListViewState extends State<BusinessInvoiceListView> {
                 bodyData: Padding(
                     padding: listPadding,
                     child: !model.busy
-                        ? Column(mainAxisSize: MainAxisSize.max,
+                        ? Column(
+                            mainAxisSize: MainAxisSize.max,
                             // mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                                 //_buildTitleRow(model),
                                 //verticalSpace(5),
                                 // if (model.showMainBanner) _buildRemoteConfigBanner(context),
                                 Expanded(
-                                  child: model.businessInvoices != null
-                                      ? new ListView(
-                                          //padding: const EdgeInsets.all(5),
-                                          children:
-                                              _buildInvoice(context, model),
-                                        )
-                                      : Center(
-                                          child: Text(
-                                            Strings.noInvoiceFound,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium,
-                                          ),
-                                        ),
-                                ),
+                                    child: new ListView(
+                                  //padding: const EdgeInsets.all(5),
+                                  children: _buildInvoice(context, model),
+                                )),
                               ])
                         : buildCircularLoader(context)),
-              body: Center(),),
+                body: Center(),
+              ),
             ));
   }
 

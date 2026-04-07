@@ -1,25 +1,17 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:math';
 
+import 'package:digiguru/app/business/model/business_profille.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
-import 'package:digiguru/app/course/model/course.dart';
-import 'package:digiguru/app/course/service/course_service.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/lesson/service/lesson_service.dart';
-import 'package:digiguru/app/module/model/module.dart';
-import 'package:digiguru/app/module/service/module_service.dart';
-import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/user/model/user_module.dart';
-import 'package:flutter/services.dart';
 
 class UserModuleService extends BaseService {
-    BusinessService _businessService = locator<BusinessService>();
-  CourseService _courseService = locator<CourseService>();
-  ModuleService _moduleService = locator<ModuleService>();
+  BusinessService _businessService = locator<BusinessService>();
   LessonService _lessonService = locator<LessonService>();
   final StreamController<List<UserModule>> _purchasedUserModuleController =
       StreamController<List<UserModule>>.broadcast();
@@ -32,7 +24,6 @@ class UserModuleService extends BaseService {
   static const int PostsLimit = 20;
 
   late Map<String, dynamic> _lastDocument;
-  bool _hasMorePosts = true;
 
   Future addUserModule(UserModule userModule) async {
     try {
@@ -42,14 +33,14 @@ class UserModuleService extends BaseService {
       }
       var purchased = await isModuleAlreadyPurchased(userModule.id!);
       if (purchased is bool && !purchased) {
-        var result =
-            await BaseService.supabaseDataService.insert('user_modules', userModule.toJson());
+        var result = await BaseService.supabaseDataService
+            .insert('user_modules', userModule.toJson());
         BusinessProfile bProfile = await _businessService
             .getBusinessProfile(BaseService.currentBusiness.id!);
         bProfile.userCounts?.purchasedUsers =
             (bProfile.userCounts?.purchasedUsers ?? 0) + 1;
-        bProfile.collectedRevenue =
-            ((bProfile.collectedRevenue ?? 0) + (userModule?.purchaseAmount ?? 0));
+        bProfile.collectedRevenue = ((bProfile.collectedRevenue ?? 0) +
+            (userModule.purchaseAmount ?? 0));
         bProfile.publication?.purchasedModuleCounts =
             (bProfile.publication?.purchasedModuleCounts ?? 0) + 1;
         await _businessService.updateBusinessProfileStats(bProfile);
@@ -63,15 +54,15 @@ class UserModuleService extends BaseService {
   }
 
   Future isModuleAlreadyPurchased(String moduleId) async {
-    
     try {
       //check if it is already purchased?
       bool purchased = false;
-      await BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'module_id': moduleId}).then((value) => {
-        if (value.isNotEmpty) {
-          purchased = true
-        }
-      });
+      await BaseService.supabaseDataService
+          .fetchAllWithQuery('user_modules', where: {
+        'module_id': moduleId
+      }).then((value) => {
+                if (value.isNotEmpty) {purchased = true}
+              });
       /*await _userModulesCollectionReference   
           .where("module_id", isEqualTo: moduleId)
           .get()
@@ -89,7 +80,8 @@ class UserModuleService extends BaseService {
 
   Future getUserModule(String uid) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchById('user_modules', uid);
+      var userData =
+          await BaseService.supabaseDataService.fetchById('user_modules', uid);
       return UserModule.fromJson(uid, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
@@ -206,15 +198,15 @@ Future getFreeUserModules() async {
   // #1: Move the request posts into it's own function
   void _requestPurchasedUserModules(String userId) async {
     // #2: split the query from the actual subscription
-    var userModuleListQuery =
-        BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'user_id': userId});
+    var userModuleListQuery = BaseService.supabaseDataService
+        .fetchAllWithQuery('user_modules', where: {'user_id': userId});
     // List<UserModule> userModules = List.empty(growable: true);
     List<UserModule> finalUserModules = List.empty(growable: true);
     userModuleListQuery.asStream().listen((userModuleSnapshot) {
       if (userModuleSnapshot.isNotEmpty) {
         userModuleSnapshot
-            .map(
-                (snapshot) => UserModule.fromJson(snapshot['id'] as String, snapshot as Map<String, dynamic>))
+            .map((snapshot) => UserModule.fromJson(
+                snapshot['id'] as String, snapshot))
             .where((mappedItem) => mappedItem.userId != null)
             .toList()
             .forEach((um) {
@@ -255,9 +247,11 @@ Future getFreeUserModules() async {
   Future getAllUserModules(String userId) async {
     try {
       List<UserModule> modules = List.empty(growable: true);
-      var result = await BaseService.supabaseDataService.fetchAllWithQuery('user_modules', where: {'user_id': userId});
+      var result = await BaseService.supabaseDataService
+          .fetchAllWithQuery('user_modules', where: {'user_id': userId});
       result.forEach((element) {
-        modules.add(UserModule.fromJson(element['id'] as String, element as Map<String, dynamic>));
+        modules.add(UserModule.fromJson(
+            element['id'] as String, element));
       });
       return modules;
     } catch (e) {

@@ -26,21 +26,19 @@ class _DialogManagerState extends State<DialogManager> {
   }
 
   void _showDialog(DialogRequest request) {
-    var isConfirmationDialog = request.cancelTitle != null;
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(request.title),
               content: Text(request.description),
               actions: <Widget>[
-                if (isConfirmationDialog)
-                  BusyButton(
-                    title: request.cancelTitle,
-                    onPressed: () {
-                      _dialogService
-                          .dialogComplete(DialogResponse(confirmed: false));
-                    },
-                  ),
+                BusyButton(
+                  title: request.cancelTitle,
+                  onPressed: () {
+                    _dialogService
+                        .dialogComplete(DialogResponse(confirmed: false));
+                  },
+                ),
                 BusyButton(
                   title: request.buttonTitle,
                   onPressed: () {

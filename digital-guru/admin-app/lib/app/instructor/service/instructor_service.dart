@@ -6,7 +6,6 @@ import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:flutter/services.dart';
 
 class InstructorService extends BaseService {
-  
   final StreamController<List<Instructor>> _instructorController =
       StreamController<List<Instructor>>.broadcast();
 
@@ -20,8 +19,10 @@ class InstructorService extends BaseService {
 
   Future getInstructor(String documentId) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchById('instructors', documentId);
-      return new Instructor.fromJson(docId: documentId, json: userData as Map<String, dynamic>);
+      var userData = await BaseService.supabaseDataService
+          .fetchById('instructors', documentId);
+      return new Instructor.fromJson(
+          docId: documentId, json: userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as PlatformException);
     }
@@ -29,10 +30,11 @@ class InstructorService extends BaseService {
 
   Future getInstructorByName(String name) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchAllWithQuery('instructors', where: {'full_name': name});
+      var userData = await BaseService.supabaseDataService
+          .fetchAllWithQuery('instructors', where: {'full_name': name});
       if (userData.isNotEmpty) {
         return new Instructor.fromJson(
-            docId: userData.first['id'] as String, json: userData.first as Map<String, dynamic>);
+            docId: userData.first['id'] as String, json: userData.first);
       } else {
         return null;
       }
@@ -44,7 +46,8 @@ class InstructorService extends BaseService {
   Future addInstructor(Instructor instructor) async {
     try {
       super.populateCommonFields(object: instructor, created: true);
-      return await BaseService.supabaseDataService.insert('instructors', instructor.toJson());
+      return await BaseService.supabaseDataService
+          .insert('instructors', instructor.toJson());
     } catch (e) {
       return handleException(e as PlatformException);
     }
@@ -52,12 +55,12 @@ class InstructorService extends BaseService {
 
   Future getInstructoresOnceOff() async {
     try {
-      var instructorDocumentSnapshot =
-          await BaseService.supabaseDataService.fetchAllWithQuery('instructors', maxRows: instructorsLimit);
+      var instructorDocumentSnapshot = await BaseService.supabaseDataService
+          .fetchAllWithQuery('instructors', maxRows: instructorsLimit);
       if (instructorDocumentSnapshot.isNotEmpty) {
         return instructorDocumentSnapshot
-            .map(
-                (snapshot) => Instructor.fromJson(docId: snapshot['id'] as String, json: snapshot ) )
+            .map((snapshot) => Instructor.fromJson(
+                docId: snapshot['id'] as String, json: snapshot))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
       }
@@ -83,21 +86,22 @@ class InstructorService extends BaseService {
     _fetchAndUpdateInstructors(businessId, currentRequestIndex);
   }
 
-  Future<void> _fetchAndUpdateInstructors(String businessId, int currentRequestIndex) async {
+  Future<void> _fetchAndUpdateInstructors(
+      String businessId, int currentRequestIndex) async {
     try {
       // #5: If we have a document start the query after it
-      var offset = currentRequestIndex * instructorsLimit;
-      
-      var instructorData = await BaseService.supabaseDataService.fetchAllWithQuery(
-          'instructors',
-          where: {'business_id': businessId},
-          orderBy: 'full_name',
-          maxRows: instructorsLimit);
+      //var offset = currentRequestIndex * instructorsLimit;
+
+      var instructorData = await BaseService.supabaseDataService
+          .fetchAllWithQuery('instructors',
+              where: {'business_id': businessId},
+              orderBy: 'full_name',
+              maxRows: instructorsLimit);
 
       if (instructorData.isNotEmpty) {
         var cources = instructorData
-            .map(
-                (snapshot) => Instructor.fromJson(docId: snapshot['id'] as String, json: snapshot as Map<String, dynamic>))
+            .map((snapshot) => Instructor.fromJson(
+                docId: snapshot['id'] as String, json: snapshot))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
 
@@ -131,13 +135,15 @@ class InstructorService extends BaseService {
 
   Future deleteInstructor(Instructor instructor) async {
     super.populateCommonFields(object: instructor, deleted: true);
-    await BaseService.supabaseDataService.delete('instructors', instructor.documentId);
+    await BaseService.supabaseDataService
+        .delete('instructors', instructor.documentId);
   }
 
   Future updateInstructor(String instructorId, Instructor instructor) async {
     try {
       super.populateCommonFields(object: instructor, created: false);
-      await BaseService.supabaseDataService.update('instructors', instructorId, instructor.toJson());
+      await BaseService.supabaseDataService
+          .update('instructors', instructorId, instructor.toJson());
     } catch (e) {
       return handleException(e as PlatformException);
     }

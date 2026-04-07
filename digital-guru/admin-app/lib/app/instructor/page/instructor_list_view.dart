@@ -1,12 +1,10 @@
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
-import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/creation_aware_list_item.dart';
+import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/instructor/model/instructor_list_model.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +56,7 @@ class _InstructorListViewState extends State<InstructorListView> {
               verticalSpace(5),
               if (model.showMainBanner) _buildRemoteConfigBanner(context),
               Expanded(
-                  child: InstructorListModel.instructors != null
+                  child: InstructorListModel.instructors.isNotEmpty
                       ? ListView(
                           children: <Widget>[
                             for (final item in InstructorListModel.instructors)
@@ -68,16 +66,17 @@ class _InstructorListViewState extends State<InstructorListView> {
                       : Center(
                           child: !model.busy
                               ? Text(Strings.addInstructor,
-                                  style: Theme.of(context).textTheme.headlineMedium)
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium)
                               : Container(),
                         )),
               model.isAdmin ? _buildBottomButtonRaw(model) : Container(),
               verticalSpaceSmall,
             ],
           ),
-          
         ),
-      body: Center(),
+        body: Center(),
       )),
     );
   }

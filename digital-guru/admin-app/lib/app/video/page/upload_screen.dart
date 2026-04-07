@@ -2,46 +2,51 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 //import 'package:flutter_uploader_example/server_behavior.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UploadScreen extends StatefulWidget {
-  UploadScreen({
-    Key? key,
-    required this.uploader,
-    required this.uploadURL,
-    required this.onUploadStarted,
-  }) : super(key: key);
 
-  final FlutterUploader uploader;
-  final Uri uploadURL;
-  final VoidCallback onUploadStarted;
+class UploadScreen extends StatefulWidget {
+  const UploadScreen({Key? key}) : super(key: key);
 
   @override
   _UploadScreenState createState() => _UploadScreenState();
 }
 
-class _UploadScreenState extends State<UploadScreen> {
-  ImagePicker imagePicker = ImagePicker();
 
-  //ServerBehavior _serverBehavior = ServerBehavior.defaultOk200;
+class _UploadTask {
+  final String name;
+  final StreamController<double> progressController;
+  final File file;
+  bool isCancelled = false;
+  _UploadTask(this.name, this.file) : progressController = StreamController.broadcast();
+  void cancel() {
+    isCancelled = true;
+    progressController.close();
+  }
+}
+
+class _UploadScreenState extends State<UploadScreen> {
+  final ImagePicker imagePicker = ImagePicker();
+  final List<_UploadTask> _uploads = [];
+  final String bucket = 'your-bucket'; // TODO: set your bucket name
 
   @override
   void initState() {
     super.initState();
-
     if (Platform.isAndroid) {
       imagePicker.retrieveLostData().then((lostData) {
         if (lostData.type == RetrieveType.image) {
-          _handleFileUpload([lostData.file!.path]);
+          _handleFileUpload([File(lostData.file!.path)]);
         }
         if (lostData.type == RetrieveType.video) {
-          _handleFileUpload([lostData.file!.path]);
+          _handleFileUpload([File(lostData.file!.path)]);
         }
       });
     }
@@ -51,7 +56,7 @@ class _UploadScreenState extends State<UploadScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Uploader'),
+        title: const Text('Supabase Uploader'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -60,81 +65,41 @@ class _UploadScreenState extends State<UploadScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text(
-                  'Configure test Server Behavior',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                /*DropdownButton<ServerBehavior>(
-                  items: ServerBehavior.all.map((e) {
-                    return DropdownMenuItem(
-                        child: Text('${e.title}'), value: e);
-                  }).toList(),
-                  onChanged: (newBehavior) {
-                    setState(() => _serverBehavior = newBehavior);
-                  },
-                  value: _serverBehavior,
-                ),*/
+                Text('Supabase Storage Uploads', style: Theme.of(context).textTheme.bodyMedium),
                 Divider(),
-                Text(
-                  'multipart/form-data uploads',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
                 Wrap(
                   alignment: WrapAlignment.center,
                   spacing: 10,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () => getImage(binary: false),
+                      onPressed: () => getImage(),
                       child: Text('upload image'),
                     ),
                     TextButton(
-                      onPressed: () => getVideo(binary: false),
+                      onPressed: () => getVideo(),
                       child: Text('upload video'),
                     ),
                     TextButton(
-                      onPressed: () => getMultiple(binary: false),
+                      onPressed: () => getMultiple(),
                       child: Text('upload multi'),
                     ),
                   ],
                 ),
                 Divider(height: 40),
-                Text(
-                  'binary uploads',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                Text('this will upload selected files as binary'),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  spacing: 10,
-                  children: <Widget>[
-                    TextButton(
-                      onPressed: () => getImage(binary: true),
-                      child: Text('upload image'),
-                    ),
-                    TextButton(
-                      onPressed: () => getVideo(binary: true),
-                      child: Text('upload video'),
-                    ),
-                    TextButton(
-                      onPressed: () => getMultiple(binary: true),
-                      child: Text('upload multi'),
-                    ),
-                  ],
-                ),
+                Text('Uploads Progress'),
+                ..._uploads.map((task) => _buildProgressTile(task)).toList(),
                 Divider(height: 40),
                 Text('Cancellation'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextButton(
-                      onPressed: () => widget.uploader.cancelAll(),
+                      onPressed: _cancelAllUploads,
                       child: Text('Cancel All'),
                     ),
                     Container(width: 20.0),
                     TextButton(
-                      onPressed: () {
-                        widget.uploader.clearUploads();
-                      },
+                      onPressed: _clearUploads,
                       child: Text('Clear Uploads'),
                     )
                   ],
@@ -147,88 +112,101 @@ class _UploadScreenState extends State<UploadScreen> {
     );
   }
 
-  Future getImage({required bool binary}) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('binary', binary);
 
+  Future getImage() async {
     var image = await imagePicker.pickImage(source: ImageSource.gallery);
-
     if (image != null) {
-      _handleFileUpload([image.path]);
+      _handleFileUpload([File(image.path)]);
     }
   }
 
-  Future getVideo({required bool binary}) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('binary', binary);
 
+  Future getVideo() async {
     var video = await imagePicker.pickVideo(source: ImageSource.gallery);
-
     if (video != null) {
-      _handleFileUpload([video.path]);
+      _handleFileUpload([File(video.path)]);
     }
   }
 
-  Future getMultiple({required bool binary}) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('binary', binary);
 
-    final files = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-    );
+  Future getMultiple() async {
+    final files = await FilePicker.platform.pickFiles(allowMultiple: true);
     if (files != null && files.count > 0) {
-      if (binary) {
-        for (var file in files.files) {
-          _handleFileUpload([file.path!]);
-        }
-      } else {
-        _handleFileUpload(files.paths!.whereType<String>().toList());
-      }
+      _handleFileUpload(files.paths.whereType<String>().map((p) => File(p)).toList());
     }
   }
 
-  void _handleFileUpload(List<String> paths) async {
-    //final prefs = await SharedPreferences.getInstance();
-    // final binary = prefs.getBool('binary') ?? false;
 
-    await widget.uploader.enqueue(_buildUpload(true, paths));
-
-    widget.onUploadStarted();
+  void _handleFileUpload(List<File> files) async {
+    for (final file in files) {
+      final name = file.path.split(Platform.pathSeparator).last;
+      final task = _UploadTask(name, file);
+      setState(() => _uploads.add(task));
+      _uploadWithProgress(task);
+    }
   }
 
-  Upload _buildUpload(bool binary, List<String> paths) {
-    final tag = 'upload';
 
-    var url = binary
-        ? widget.uploadURL.replace(path: widget.uploadURL.path + 'Binary')
-        : widget.uploadURL;
-
-    url = url.replace(queryParameters: {
-      //'simulate': _serverBehavior.name,
-    });
-
-    if (binary) {
-      return RawUpload(
-        url: url.toString(),
-        path: paths.first,
-        method: UploadMethod.POST,
-        tag: tag,
-      );
-    }
-    return RawUpload(
-      url: url.toString(),
-      path: paths.first,
-      method: UploadMethod.POST,
-      tag: tag,
+  Future<void> _uploadWithProgress(_UploadTask task) async {
+    final supabase = Supabase.instance.client;
+    final total = await task.file.length();
+    int sent = 0;
+    final stream = task.file.openRead().transform<List<int>>(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) {
+          if (task.isCancelled) return;
+          sent += data.length;
+          task.progressController.add(sent / total);
+          sink.add(data);
+        },
+      ),
     );
-    /*else {
-      return MultipartFormDataUpload(
-        url: url.toString(),
-        data: {'name': 'john'},
-        files: paths.map((e) => FileItem(path: e, field: 'file')).toList(),
-        method: UploadMethod.POST,
-        tag: tag,
-      );
-    }*/
+    await supabase.storage
+        .from(bucket)
+        .uploadBinary(
+          task.name, 
+          stream as Uint8List, 
+          retryAttempts: 2,
+          retryController: StorageRetryController(),
+          fileOptions: FileOptions(contentType: 'application/octet-stream'));
+    if (!task.isCancelled) {
+      task.progressController.add(1.0);
+    }
+    await task.progressController.close();
+    setState(() {});
+  }
+
+  Widget _buildProgressTile(_UploadTask task) {
+    return StreamBuilder<double>(
+      stream: task.progressController.stream,
+      initialData: 0.0,
+      builder: (context, snapshot) {
+        final progress = snapshot.data ?? 0.0;
+        return ListTile(
+          title: Text(task.name),
+          subtitle: LinearProgressIndicator(value: progress),
+          trailing: IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              setState(() {
+                task.cancel();
+                _uploads.remove(task);
+              });
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void _cancelAllUploads() {
+    for (final task in _uploads) {
+      task.cancel();
+    }
+    setState(() => _uploads.clear());
+  }
+
+  void _clearUploads() {
+    setState(() => _uploads.clear());
   }
 }

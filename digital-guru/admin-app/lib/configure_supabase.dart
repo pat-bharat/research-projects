@@ -25,35 +25,35 @@ Future configureApp() async {
 
 // user flutter_secure_storage to persist user session
 class SecureLocalStorage extends LocalStorage {
-  SecureLocalStorage();       
-          @override
-          Future<String?> accessToken() {
-             const storage = FlutterSecureStorage();
-            return storage.read(key: supabasePersistSessionKey);
-          }
-        
-          @override
-          Future<bool> hasAccessToken() {
-            const storage = FlutterSecureStorage();
-            return storage.containsKey(key: supabasePersistSessionKey);
-          }
-        
-          @override
-          Future<void> initialize() {
-            // TODO: implement initialize
-            throw UnimplementedError();
-          }
-        
-          @override
-          Future<void> persistSession(String persistSessionString) {
-                        const storage = FlutterSecureStorage();
-            return storage.write(key: supabasePersistSessionKey, value: persistSessionString);
+  SecureLocalStorage();
+  @override
+  Future<String?> accessToken() {
+    const storage = FlutterSecureStorage();
+    return storage.read(key: supabasePersistSessionKey);
+  }
 
-          }
-        
-          @override
-          Future<void> removePersistedSession() {
-            const storage = FlutterSecureStorage();
-            return storage.delete(key: supabasePersistSessionKey);
-         }
+  @override
+  Future<bool> hasAccessToken() {
+    const storage = FlutterSecureStorage();
+    return storage.containsKey(key: supabasePersistSessionKey);
+  }
+
+  @override
+  Future<void> initialize() {
+    // TODO: implement initialize
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> persistSession(String persistSessionString) {
+    const storage = FlutterSecureStorage();
+    return storage.write(
+        key: supabasePersistSessionKey, value: persistSessionString);
+  }
+
+  @override
+  Future<void> removePersistedSession() {
+    const storage = FlutterSecureStorage();
+    return storage.delete(key: supabasePersistSessionKey);
+  }
 }

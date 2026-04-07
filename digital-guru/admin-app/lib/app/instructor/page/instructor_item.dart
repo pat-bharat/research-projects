@@ -1,4 +1,3 @@
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:flutter/material.dart';

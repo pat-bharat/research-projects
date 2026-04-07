@@ -74,19 +74,20 @@ class _ExpansionListState extends State<ExpansionList> {
 
   List<Widget> _getDropdownListItems() {
     return widget.items
-        ?.map((item) => ExpansionListItem(
-            key: UniqueKey(),
-            smallVersion: widget.smallVersion,
-            title: item.toString(),
-            onTap: () {
-              setState(() {
-                expanded = !expanded;
-                selectedValue = item.toString();
-              });
+            ?.map((item) => ExpansionListItem(
+                key: UniqueKey(),
+                smallVersion: widget.smallVersion,
+                title: item.toString(),
+                onTap: () {
+                  setState(() {
+                    expanded = !expanded;
+                    selectedValue = item.toString();
+                  });
 
-              widget.onItemSelected(item);
-            }))
-        .toList() ?? [];
+                  widget.onItemSelected(item);
+                }))
+            .toList() ??
+        [];
   }
 
   void _calculateExpandedHeight() {
@@ -130,7 +131,7 @@ class ExpansionListItem extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Text(
-                title ?? '',
+                title,
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ),

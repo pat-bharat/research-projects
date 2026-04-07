@@ -1,14 +1,12 @@
-import 'package:digiguru/app/common/constants/route_names.dart';
-import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/service/navigation_service.dart';
+
 //import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 
 class DynamicLinkService {
-  final NavigationService _navigationService = locator<NavigationService>();
+  //final NavigationService _navigationService = locator<NavigationService>();
 
   Future handleDynamicLinks() async {
     // Get the initial dynamic link if the app is opened with a dynamic link
-   // final PendingDynamicLinkData? data =
+    // final PendingDynamicLinkData? data =
     //    await FirebaseDynamicLinks.instance.getInitialLink();
 
     // handle link that has been retrieved
@@ -42,7 +40,7 @@ class DynamicLinkService {
   }
 */
   Future<String> createFirstPostLink(String title) async {
-   /** final DynamicLinkParameters parameters = DynamicLinkParameters(
+    /** final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://filledstacks.page.link',
       link: Uri.parse('https://www.digiguru.com/post?title=$title'),
       androidParameters: AndroidParameters(

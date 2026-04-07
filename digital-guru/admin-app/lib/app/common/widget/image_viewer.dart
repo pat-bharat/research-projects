@@ -1,10 +1,7 @@
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
-import 'package:http/http.dart';
 
 class ImageViewer extends StatefulWidget {
   final String url;

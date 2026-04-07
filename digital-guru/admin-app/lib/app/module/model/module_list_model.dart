@@ -11,7 +11,6 @@ import 'package:digiguru/app/common/model/base_model.dart';
 import 'package:digiguru/app/purchase/service/purchase_service.dart';
 import 'package:digiguru/app/user/model/user_module.dart';
 import 'package:digiguru/app/user/service/user_module_service.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:intl/intl.dart';
 
@@ -59,13 +58,16 @@ class ModuleListModel extends BaseModel {
       await _moduleService.deleteModule(module.id);
       // Delete the image after the module is deleted
       if (module.moduleBackground!.imageUrl != null) {
-        await _cloudStorageService.deleteFile(module.moduleBackground!.imageUrl!);
+        await _cloudStorageService
+            .deleteFile(module.moduleBackground!.imageUrl!);
       }
-      if (module.moduleDetailDoc!.docUrl != null && module.moduleDetailDoc!.docUrl!.isNotEmpty) {
+      if (module.moduleDetailDoc!.docUrl != null &&
+          module.moduleDetailDoc!.docUrl!.isNotEmpty) {
         await _cloudStorageService.deleteFile(module.moduleDetailDoc!.docUrl!);
       }
 
-      if (module.moduleVideo!.videoUrl != null && module.moduleVideo!.videoUrl!.isNotEmpty) {
+      if (module.moduleVideo!.videoUrl != null &&
+          module.moduleVideo!.videoUrl!.isNotEmpty) {
         await _cloudStorageService.deleteFile(module.moduleVideo!.videoUrl!);
       }
 
@@ -96,7 +98,7 @@ class ModuleListModel extends BaseModel {
       int index = items.indexOf(item);
       if (index != item.displayOrder) {
         item.displayOrder = index;
-        this._moduleService.updateModule(item.id!, item);
+        this._moduleService.updateModule(item.id, item);
       }
     }
   }
@@ -127,17 +129,17 @@ class ModuleListModel extends BaseModel {
           title: "Success!",
           buttonTitle: "Conratulations!",
           description: "Module \n" +
-              module.name! +
+              module.name +
               '\n' +
-              module.title! +
+              module.title +
               "\nSuccessfully purchased");
     } else {
       _dialogService.showDialog(
           title: "Failed!",
           buttonTitle: "Try Again!",
-          description: module.name! +
+          description: module.name +
               '\n' +
-              module.title! +
+              module.title +
               "\nFailed!! \n\n" +
               result.toString());
     }

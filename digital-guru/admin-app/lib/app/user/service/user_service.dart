@@ -3,9 +3,7 @@ import 'dart:async';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
-import 'package:digiguru/app/startup/model/user_accepted_legal.dart';
 import 'package:digiguru/app/user/model/user.dart';
-import 'package:flutter/services.dart';
 
 class UserService extends BaseService {
   /*final CollectionReference _usersCollectionReference =
@@ -20,7 +18,7 @@ class UserService extends BaseService {
 
   static const int PostsLimit = 20;
 
- late Map<String, dynamic>  _lastDocument;
+  late Map<String, dynamic> _lastDocument;
   bool _hasMorePosts = true;
 
   Future createUser(User user) async {
@@ -38,7 +36,8 @@ class UserService extends BaseService {
 
   Future getUser(String uid) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchById('users', uid);
+      var userData =
+          await BaseService.supabaseDataService.fetchById('users', uid);
       return User.fromJson(uid, userData as Map<String, dynamic>);
     } catch (e) {
       return handleException(e as Exception);
@@ -48,9 +47,10 @@ class UserService extends BaseService {
   Future hasUserAcceptedLegals(String uid) async {
     try {
       bool accepted = false;
-      var result = await BaseService.supabaseDataService.fetchAllWithQuery('user_accepted_legals', where: {'user_id': uid});
-      // await _userAccepedLegalsCollectionReference  
-        
+      var result = await BaseService.supabaseDataService
+          .fetchAllWithQuery('user_accepted_legals', where: {'user_id': uid});
+      // await _userAccepedLegalsCollectionReference
+
       return result.length == 2;
     } catch (e) {
       return handleException(e as Exception);
@@ -66,9 +66,13 @@ class UserService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestPosts(String bid) {
     // #2: split the query from the actual subscription
-    var pagePostsQuery = BaseService.supabaseDataService.fetchAllWithQuery('users', where: {'business_id': bid}, orderBy: 'fullName', maxRows: PostsLimit);
+    var pagePostsQuery = BaseService.supabaseDataService.fetchAllWithQuery(
+        'users',
+        where: {'business_id': bid},
+        orderBy: 'fullName',
+        maxRows: PostsLimit);
 
-            // #5: If we have a document start the query after it
+    // #5: If we have a document start the query after it
     /*if (_lastDocument != null) {
       pagePostsQuery = pagePostsQuery.startAfterDocument(_lastDocument);
     }*/
@@ -81,7 +85,8 @@ class UserService extends BaseService {
     pagePostsQuery.asStream().listen((postsSnapshot) {
       if (postsSnapshot.isNotEmpty) {
         var posts = postsSnapshot
-            .map((snapshot) => User.fromJson(snapshot['id'], snapshot as Map<String, dynamic>))
+            .map((snapshot) =>
+                User.fromJson(snapshot['id'], snapshot))
             .where((mappedItem) => mappedItem.fullName != null)
             .toList();
 

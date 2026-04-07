@@ -11,11 +11,13 @@ class TextLink extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Text(text,
-          style: style != null ? style : TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-                color: Theme.of(context).primaryColor,
-              )),
+          style: style != null
+              ? style
+              : TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                  color: Theme.of(context).primaryColor,
+                )),
     );
   }
 }

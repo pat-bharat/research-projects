@@ -11,8 +11,6 @@ import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/media_selector.dart';
 import 'package:digiguru/app/system/service/system_service.dart';
-import 'package:digiguru/app/user/model/user.dart';
-import 'package:flutter/foundation.dart';
 import '../../common/model/base_model.dart';
 import 'package:path/path.dart' as p;
 
@@ -99,8 +97,7 @@ class BusinessViewModel extends BaseModel {
       BaseService.currentBusiness = business;
     } else {
       business.id = _edittingBusiness.id;
-      await _businessService.updateBusiness(
-          _edittingBusiness.id!, business);
+      await _businessService.updateBusiness(_edittingBusiness.id!, business);
       BaseService.currentBusiness = business;
     }
 

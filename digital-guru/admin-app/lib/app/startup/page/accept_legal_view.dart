@@ -1,15 +1,11 @@
-import 'package:digiguru/app/AppConfig.dart';
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/text_link.dart';
 import 'package:digiguru/app/startup/model/accept_legal_model.dart';
-import 'package:digiguru/app/startup/model/startup_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/toggle/gf_toggle.dart';
 import 'package:getwidget/types/gf_toggle_type.dart';

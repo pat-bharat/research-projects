@@ -15,14 +15,15 @@ class ModuleService extends BaseService {
   final CollectionReference _businessProfileCollectionReference =
       FirebaseFirestore.instance.collection('business_profile');
  */
- final BusinessService _businessService = locator<BusinessService>();
+  final BusinessService _businessService = locator<BusinessService>();
 
   final StreamController<List<Module>> _moduleController =
       StreamController<List<Module>>.broadcast();
 
   Future getModule(String moduleId) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchById('modules', moduleId);
+      var userData =
+          await BaseService.supabaseDataService.fetchById('modules', moduleId);
       return new Module.fromJson(userData as Map<String, dynamic>, moduleId);
     } catch (e) {
       return handleException(e as PlatformException);
@@ -32,8 +33,13 @@ class ModuleService extends BaseService {
   Future allCourseModules(String courseId) async {
     try {
       List<Module> modules = new List.empty(growable: true);
-      var result = await BaseService.supabaseDataService.fetchAllWithQuery('modules', where: {'course_id': courseId}, orderBy: 'created_timestamp', ascending: false);
-      result.forEach((value) =>  modules.add(Module.fromJson(value, value['id'] as String)));
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery(
+          'modules',
+          where: {'course_id': courseId},
+          orderBy: 'created_timestamp',
+          ascending: false);
+      result.forEach((value) =>
+          modules.add(Module.fromJson(value, value['id'] as String)));
       return modules;
     } catch (e) {
       return handleException(e as PlatformException);
@@ -49,10 +55,11 @@ class ModuleService extends BaseService {
 
       profile.publication!.totalModuleCounts =
           profile.publication!.totalModuleCounts + 1;
-       
+
       await _businessService.updateBusinessProfileStats(profile);
 
-      return await BaseService.supabaseDataService.insert('modules',  module.toJson());
+      return await BaseService.supabaseDataService
+          .insert('modules', module.toJson());
     } catch (e) {
       return handleException(e as PlatformException);
     }
@@ -60,10 +67,13 @@ class ModuleService extends BaseService {
 
   Future getModulesOnceOff() async {
     try {
-      var result = await BaseService.supabaseDataService.fetchAllWithQuery('modules', orderBy: 'created_timestamp', ascending: false);
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery(
+          'modules',
+          orderBy: 'created_timestamp',
+          ascending: false);
       if (result.isNotEmpty) {
         return result
-            .map((value) => Module.fromJson(value , value['id'] as String))
+            .map((value) => Module.fromJson(value, value['id'] as String))
             .toList();
       }
     } catch (e) {
@@ -81,7 +91,11 @@ class ModuleService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestModules(String courseId) {
     // #2: split the query from the actual subscription
-    var pageModulesQuery = BaseService.supabaseDataService.fetchAllWithQuery('modules', where: {'course_id': courseId}, orderBy: 'display_order', ascending: false);
+    var pageModulesQuery = BaseService.supabaseDataService.fetchAllWithQuery(
+        'modules',
+        where: {'course_id': courseId},
+        orderBy: 'display_order',
+        ascending: false);
     // #3: Limit the amount of results
     // .limit(ModulesLimit);
 
@@ -98,7 +112,7 @@ class ModuleService extends BaseService {
     pageModulesQuery.asStream().listen((snapshot) {
       if (snapshot.isNotEmpty) {
         var modules = snapshot
-            .map((value) => Module.fromJson( value, value['id'] as String))
+            .map((value) => Module.fromJson(value, value['id'] as String))
             .toList();
 /*
         // #8: Check if the page exists or not
@@ -134,7 +148,8 @@ class ModuleService extends BaseService {
 
   Future deleteModule(String documentId) async {
     try {
-      return await BaseService.supabaseDataService.delete('modules', documentId);
+      return await BaseService.supabaseDataService
+          .delete('modules', documentId);
     } catch (e) {
       return handleException(e as PlatformException);
     }
@@ -142,7 +157,8 @@ class ModuleService extends BaseService {
 
   Future updateModule(String id, Module module) async {
     try {
-      await BaseService.supabaseDataService.update('modules', id, module.toJson());
+      await BaseService.supabaseDataService
+          .update('modules', id, module.toJson());
     } catch (e) {
       return handleException(e as PlatformException);
     }
@@ -152,10 +168,14 @@ class ModuleService extends BaseService {
 
   Future getAllBusinessPublishedModules(String businessId) async {
     try {
-      var result = await BaseService.supabaseDataService.fetchAllWithQuery('modules', where: {'business_id': businessId, 'published': true}, orderBy: 'display_order', ascending: false);
+      var result = await BaseService.supabaseDataService.fetchAllWithQuery(
+          'modules',
+          where: {'business_id': businessId, 'published': true},
+          orderBy: 'display_order',
+          ascending: false);
       if (result.isNotEmpty) {
         return result
-            .map((value) => Module.fromJson(  value, value['id'] as String))
+            .map((value) => Module.fromJson(value, value['id'] as String))
             .toList();
       }
       return List.empty();
@@ -165,8 +185,11 @@ class ModuleService extends BaseService {
   }
 
   void deleteCourseModules(String courseId) {
-      BaseService.supabaseDataService.fetchAllWithQuery('modules', where: {'course_id': courseId}).asStream().listen((snapshot) {
-        snapshot.forEach((value) => deleteModule(value['id'] as String));
-      });
+    BaseService.supabaseDataService
+        .fetchAllWithQuery('modules', where: {'course_id': courseId})
+        .asStream()
+        .listen((snapshot) {
+          snapshot.forEach((value) => deleteModule(value['id'] as String));
+        });
   }
 }

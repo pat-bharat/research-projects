@@ -1,12 +1,10 @@
-import 'package:digiguru/app/common/constants/youtube_channels.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/youtube/service/youtube_course_builder_service.dart';
 import 'package:digiguru/app/youtube/model/channel_model.dart';
-import 'package:digiguru/app/youtube/model/playlist_model.dart';
 import 'package:digiguru/app/youtube/model/video_model.dart';
 import 'package:digiguru/app/youtube/page/playlist_screen.dart';
 import 'package:digiguru/app/youtube/page/video_screen.dart';
 import 'package:digiguru/app/youtube/service/api_service.dart';
+import 'package:digiguru/app/youtube/service/youtube_course_builder_service.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -27,8 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
 //Flute GURU --> UC6T85gyXT_WqvsEYNUWTSJA // UC6Dy0rQ6zDnQuHQ1EeErGUA
   _initChannel() async {
-    Channel channel =
-        await _apiService.fetchChannel(channelId: 'UC6T85gyXT_WqvsEYNUWTSJA', playlist: 'true');
+    Channel channel = await _apiService.fetchChannel(
+        channelId: 'UC6T85gyXT_WqvsEYNUWTSJA', playlist: 'true');
     setState(() {
       _channel = channel;
     });

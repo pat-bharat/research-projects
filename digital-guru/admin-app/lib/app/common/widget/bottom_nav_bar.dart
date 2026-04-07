@@ -1,10 +1,8 @@
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
-import 'package:digiguru/app/system/page/system_profile_view.dart';
 import 'package:flutter/material.dart';
 
 final NavigationService _navigationService = locator<NavigationService>();
@@ -48,7 +46,7 @@ systemBottomNavBar(BuildContext context, int index) {
     items: [
       TabItem(icon: Icons.business, title: Strings.settings),
       // TabItem(icon: Icons.money, title: Strings.invoices),
-      TabItem(icon: Icons.pages, title: Strings.busineses),      
+      TabItem(icon: Icons.pages, title: Strings.busineses),
     ],
     top: 0,
     height: 55,
@@ -60,7 +58,7 @@ systemBottomNavBar(BuildContext context, int index) {
           if (index == 0)
             _navigationService.navigateTo(SystemProfileViewRoute)
           else if (index == 1)
-            _navigationService.navigateTo(SystemBusinessManagementViewRoute)         
+            _navigationService.navigateTo(SystemBusinessManagementViewRoute)
           else
             {
               _navigationService.navigateTo(SystemProfileViewRoute,
@@ -91,9 +89,11 @@ consumerBottomNavBar(BuildContext context, int index) {
           if (index == 0)
             _navigationService.navigateTo(CourseViewListRoute)
           else if (index == 1)
-            _navigationService.navigateTo(FreeUserModuleListRoute, arguments: true)
+            _navigationService.navigateTo(FreeUserModuleListRoute,
+                arguments: true)
           else if (index == 2)
-            _navigationService.navigateTo(FreeUserModuleListRoute, arguments: false)
+            _navigationService.navigateTo(FreeUserModuleListRoute,
+                arguments: false)
           else
             {
               _navigationService.navigateTo(CourseViewListRoute,

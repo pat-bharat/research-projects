@@ -5,10 +5,8 @@ import 'package:digiguru/app/business/service/business_legal_service.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/creation_aware_list_item.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:flutter/material.dart';
@@ -61,24 +59,18 @@ class _BusinessListViewState extends State<BusinessLegalListView> {
               verticalSpace(5),
               if (model.showMainBanner) _buildRemoteConfigBanner(context),
               Expanded(
-                  child: BusinessLegalListModel.getBusinessLegals != null
-                      ? ListView(
-                          children: <Widget>[
-                            for (final item
-                                in BusinessLegalListModel.getBusinessLegals)
-                              _buildBusinessLegalCard(
-                                  systemLegalList, model, item),
-                          ],
-                        )
-                      : Center(
-                          child: Text(Strings.noBusinessLegasFound,
-                              style: Theme.of(context).textTheme.bodyMedium),
-                        )),
+                  child: ListView(
+                children: <Widget>[
+                  for (final item in BusinessLegalListModel.getBusinessLegals)
+                    _buildBusinessLegalCard(systemLegalList, model, item),
+                ],
+              )),
               // _buildBottomButtonRaw(model),
               verticalSpaceSmall,
             ],
           ),
-        ), body: Center(),
+        ),
+        body: Center(),
       )),
     );
   }

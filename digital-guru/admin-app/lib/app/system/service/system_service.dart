@@ -2,17 +2,12 @@ import 'dart:async';
 
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digiguru/app/business/model/business.dart';
-import 'package:digiguru/app/business/model/business_legal.dart';
-import 'package:digiguru/app/common/model/enums.dart';
-import 'package:digiguru/app/common/model/publication.dart';
-import 'package:digiguru/app/common/model/user_count.dart';
+import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/startup/model/user_accepted_legal.dart';
-import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:digiguru/app/system/model/system_profile.dart';
-import 'package:digiguru/app/user/model/user_module.dart';
 
 class SystemService extends BaseService {
   /*final CollectionReference _legalCollectionReference =
@@ -43,11 +38,11 @@ class SystemService extends BaseService {
   Future loadBusinesOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      var userData = await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'business'});
-        
+      var userData = await BaseService.supabaseDataService
+          .fetchAllWithQuery('legals', where: {'legal_type': 'business'});
 
-      userData.forEach((legal) =>
-          legals.add(SystemLegal.fromJson(legal['id'], legal as Map<String, dynamic>)));
+      userData.forEach((legal) => legals.add(
+          SystemLegal.fromJson(legal['id'], legal as Map<String, dynamic>)));
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -57,11 +52,11 @@ class SystemService extends BaseService {
   Future getConsumerOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      var userData = await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'consumer'});
-         
+      var userData = await BaseService.supabaseDataService
+          .fetchAllWithQuery('legals', where: {'legal_type': 'consumer'});
 
-      userData.forEach((legal) =>
-          legals.add(SystemLegal.fromJson(legal['id'], legal)));
+      userData.forEach(
+          (legal) => legals.add(SystemLegal.fromJson(legal['id'], legal)));
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -71,9 +66,13 @@ class SystemService extends BaseService {
   Future getBusinessOnlyLegals() async {
     try {
       List<SystemLegal> legals = new List.empty(growable: true);
-      await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {'legal_type': 'business'}).then((userData) => {
-         userData.forEach((legal) {legals.add(SystemLegal.fromJson(legal['id'], legal));})
-      });
+      await BaseService.supabaseDataService.fetchAllWithQuery('legals', where: {
+        'legal_type': 'business'
+      }).then((userData) => {
+            userData.forEach((legal) {
+              legals.add(SystemLegal.fromJson(legal['id'], legal));
+            })
+          });
       return legals;
     } catch (e) {
       return handleException(e as Exception);
@@ -86,7 +85,8 @@ class SystemService extends BaseService {
 
   Future updateBusinessSettings(BusinessSetting businessSetting) async {
     try {
-      await BaseService.supabaseDataService.update('business_settings', businessSetting.documentId!, businessSetting.toJson());
+      await BaseService.supabaseDataService.update('business_settings',
+          businessSetting.documentId!, businessSetting.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -95,12 +95,16 @@ class SystemService extends BaseService {
   Future getBusinessSettings(String businessId) async {
     BusinessSetting bSetting = BusinessSetting();
     try {
-      await BaseService.supabaseDataService.fetchAllWithQuery('business_settings', where: {'business_id': businessId}).then((userData) => {
-        if (userData.isNotEmpty)
-          {
-            bSetting = BusinessSetting.fromJson(userData.first['id'], userData.first)
-          }
-      });
+      await BaseService.supabaseDataService
+          .fetchAllWithQuery('business_settings', where: {
+        'business_id': businessId
+      }).then((userData) => {
+                if (userData.isNotEmpty)
+                  {
+                    bSetting = BusinessSetting.fromJson(
+                        userData.first['id'], userData.first)
+                  }
+              });
       return bSetting;
     } catch (e) {
       return handleException(e as Exception);
@@ -108,13 +112,17 @@ class SystemService extends BaseService {
   }
 
   Future getSystemProfile() async {
-    SystemProfile? profile;;
-    await BaseService.supabaseDataService.fetchAllWithQuery('system_profile').then((userData) => {
-          if (userData.isNotEmpty)
-            {
-              profile = SystemProfile.fromJson(userData.first['id'], userData.first)
-            }
-        });
+    SystemProfile? profile;
+    ;
+    await BaseService.supabaseDataService
+        .fetchAllWithQuery('system_profile')
+        .then((userData) => {
+              if (userData.isNotEmpty)
+                {
+                  profile = SystemProfile.fromJson(
+                      userData.first['id'], userData.first)
+                }
+            });
     return profile;
   }
   /*
@@ -154,21 +162,30 @@ class SystemService extends BaseService {
   Future getAllBusinessesList() async {
     List<Business> businessList = List.empty(growable: true);
 
-    await BaseService.supabaseDataService.fetchAllWithQuery('businesses').then((userData) => {
-      userData.forEach((business) {businessList.add(Business.fromJson( business, business['id']));})
-    });
+    await BaseService.supabaseDataService
+        .fetchAllWithQuery('businesses')
+        .then((userData) => {
+              userData.forEach((business) {
+                businessList.add(Business.fromJson(business, business['id']));
+              })
+            });
     return businessList;
   }
 
   Future getBusinessProfile(String bid) async {
     BusinessProfile? profile;
-    await BaseService.supabaseDataService.fetchAllWithQuery('business_profile', where: {'business_id': bid}).then((userData) => {
-          if (userData.isNotEmpty)
-            {
-              profile = BusinessProfile.fromJson(userData.first['id'], userData.first),
-              getBusinessSettings(bid).then((value) => profile!.businessSetting = value)
-            }
-        });   
+    await BaseService.supabaseDataService
+        .fetchAllWithQuery('business_profile', where: {
+      'business_id': bid
+    }).then((userData) => {
+              if (userData.isNotEmpty)
+                {
+                  profile = BusinessProfile.fromJson(
+                      userData.first['id'], userData.first),
+                  getBusinessSettings(bid)
+                      .then((value) => profile!.businessSetting = value)
+                }
+            });
     return profile;
   }
 
@@ -182,7 +199,8 @@ class SystemService extends BaseService {
             legalType: l.legalType,
             pdfDoc: l.pdfDoc,
             acceptedTimestamp: DateTime.now().toIso8601String());
-        await BaseService.supabaseDataService.insert('user_accepted_legals', ual.toJson());
+        await BaseService.supabaseDataService
+            .insert('user_accepted_legals', ual.toJson());
       });
     } catch (e) {
       handleException(e as Exception);

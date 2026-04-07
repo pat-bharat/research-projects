@@ -4,16 +4,14 @@ import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
-import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';
 
 class BusinessDashBoardViewModel extends BaseModel {
-  final DialogService _dialogService = locator<DialogService>();
+  //final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  //final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final BusinessService _businessService = locator<BusinessService>();
   final BusinessBillingService _businessBillingService =
       locator<BusinessBillingService>();
@@ -21,8 +19,7 @@ class BusinessDashBoardViewModel extends BaseModel {
   late List<BusinessInvoice> _businessInvoices;
 
   Future<List<BusinessLegal>> getConsumerLegals() async {
-    return await _businessService
-        .getAllBusinessLegals(currentBusiness.id!);
+    return await _businessService.getAllBusinessLegals(currentBusiness.id!);
   }
 
   void listenToBusinessInvoices() async {
@@ -31,7 +28,7 @@ class BusinessDashBoardViewModel extends BaseModel {
         .listenToInvoiceesRealTime(currentBusiness.id!)
         .listen((invoices) {
       List<BusinessInvoice> bInvoices = invoices;
-      if (bInvoices != null && bInvoices.length > 0) {
+      if (bInvoices.length > 0) {
         _businessInvoices = bInvoices;
         notifyListeners();
       }
@@ -42,8 +39,7 @@ class BusinessDashBoardViewModel extends BaseModel {
   Future getBusinessProfile() async {
     BusinessProfile? profile;
     setBusy(true);
-    profile = await _businessService
-        .getBusinessProfile(currentBusiness.id!);
+    profile = await _businessService.getBusinessProfile(currentBusiness.id!);
     // notifyListeners();
     setBusy(false);
     return profile;

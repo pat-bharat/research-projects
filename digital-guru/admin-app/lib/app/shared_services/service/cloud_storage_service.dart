@@ -1,7 +1,5 @@
 import 'dart:io';
 
-//import 'package:digiguru/app/firebase_services/service/supabase_file_storage.dart';
-//import 'package:firebase_storage/firebase_storage.dart';
 import 'package:filesize/filesize.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -48,6 +46,7 @@ class CloudStorageService {
 }
 */
 
+
   final SupabaseClient _client = Supabase.instance.client;
 
   Future<CloudStorageResult> uploadFile({
@@ -59,16 +58,17 @@ class CloudStorageService {
     final fileBytes = await fileToUpload.readAsBytes();
     final filePath = title;
 
-    try {
-      await storage.from(bucket).uploadBinary(
-            filePath,
-            fileBytes,
-            fileOptions: const FileOptions(upsert: true),
-          );
-    } catch (e) {
+try{
+  await storage.from(bucket).uploadBinary(
+      filePath,
+      fileBytes,
+      fileOptions: const FileOptions(upsert: true),
+    );
+} catch (e) {
       throw Exception('Failed to upload file: ${e.toString()}');
-    }
-
+}
+    
+    
     final publicUrl = storage.from(bucket).getPublicUrl(filePath);
     final size = fileBytes.length > 0 ? filesize(fileBytes.length) : "0Kb";
 
@@ -83,12 +83,13 @@ class CloudStorageService {
     final storage = _client.storage;
     try {
       await storage.from(bucket).remove([fileName]);
-
+      
       return true;
     } catch (e) {
       throw Exception('Failed to delete file: ${e.toString()}');
     }
   }
+
 }
 
 class CloudStorageResult {
@@ -96,6 +97,6 @@ class CloudStorageResult {
   final String name;
   final String size;
 
-  CloudStorageResult(
-      {required this.mediaUrl, required this.name, required this.size});
+  CloudStorageResult({required this.mediaUrl, required this.name, required this.size});
 }
+

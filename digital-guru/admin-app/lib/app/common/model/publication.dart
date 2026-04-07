@@ -21,11 +21,11 @@ class Publication {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['course_counts'] = this.courseCounts ??= 0;
-    data['total_module_counts'] = this.totalModuleCounts ??= 0;
-    data['purchased_module_counts'] = this.purchasedModuleCounts ??= 0;
-    data['lesson_counts'] = this.lessonCounts ??= 0;
-    data['business_counts'] = this.businessCounts ??= 0;
+    data['course_counts'] = this.courseCounts;
+    data['total_module_counts'] = this.totalModuleCounts;
+    data['purchased_module_counts'] = this.purchasedModuleCounts;
+    data['lesson_counts'] = this.lessonCounts;
+    data['business_counts'] = this.businessCounts;
     return data;
   }
 }

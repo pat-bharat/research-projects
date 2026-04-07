@@ -1,14 +1,12 @@
 import 'dart:async' show unawaited;
 
+import 'package:digital_guru_app/app/common/constants/strings.dart';
+import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'alert_helpers.dart';
-import 'package:digital_guru_app/app/common/constants/strings.dart';
-import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // ignore: must_be_immutable
 class DGScaffold extends ConsumerWidget {

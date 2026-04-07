@@ -6,7 +6,6 @@ import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/constants/tooltips.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/module/model/module.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
@@ -25,7 +24,8 @@ class ModuleView extends StatefulWidget {
   final Module editingModule;
   final Course course;
 
-  ModuleView({Key? key, required this.editingModule, required this.course}) : super(key: key);
+  ModuleView({Key? key, required this.editingModule, required this.course})
+      : super(key: key);
 
   @override
   _ModuleViewState createState() => _ModuleViewState();
@@ -64,30 +64,24 @@ class _ModuleViewState extends State<ModuleView> {
     portraitModeOnly();
     return ViewModelBuilder<ModuleViewModel>.reactive(
       viewModelBuilder: () => ModuleViewModel(widget.course),
-      onModelReady: (model) {
-        if (widget.editingModule != null) {
-          // update the text in the controller
-          titleController.text = editingModule?.title ?? '';
-          nameController.text = editingModule?.name ?? '';
-          //discountController.text = editingModule?.discountPercentage ?? '';
-          _discount = editingModule?.discountPercentage ?? 0;
-          tagController.text = editingModule.tags != null
-              ? editingModule.tags.join(',')
-              : '';
-          priceController.text = editingModule?.purchaseAmount.toString() ?? '';
-          background =
-              editingModule.moduleBackground ?? new ModuleBackground();
-          moduleDetailDoc =
-              editingModule.moduleDetailDoc ?? new ModuleDetailDoc();
-          moduleVideo =
-              editingModule.moduleVideo ?? new VideoInfo();
-          pricePlans =
-              editingModule?.pricePlan ??
-              new List<PricePlan>.empty(growable: true);
-          _published = editingModule.published ?? false;
-          model.setEditingModule(editingModule);
-        }
-      },
+      onViewModelReady: (model) {
+        // update the text in the controller
+        titleController.text = editingModule?.title ?? '';
+        nameController.text = editingModule?.name ?? '';
+        //discountController.text = editingModule?.discountPercentage ?? '';
+        _discount = editingModule?.discountPercentage ?? 0;
+        tagController.text =
+            editingModule.tags != null ? editingModule.tags.join(',') : '';
+        priceController.text = editingModule?.purchaseAmount.toString() ?? '';
+        background = editingModule.moduleBackground ?? new ModuleBackground();
+        moduleDetailDoc =
+            editingModule.moduleDetailDoc ?? new ModuleDetailDoc();
+        moduleVideo = editingModule.moduleVideo ?? new VideoInfo();
+        pricePlans = editingModule?.pricePlan ??
+            new List<PricePlan>.empty(growable: true);
+        _published = editingModule.published ?? false;
+        model.setEditingModule(editingModule);
+            },
       builder: (context, model, child) => SafeArea(
         child: CommonScaffold(
           appTitle: Strings.moduleViewTitle,
@@ -102,7 +96,8 @@ class _ModuleViewState extends State<ModuleView> {
               child: _buildFields(context, model),
             ),
           ),
-        body: Center(),),
+          body: Center(),
+        ),
       ),
     );
   }
@@ -216,8 +211,8 @@ class _ModuleViewState extends State<ModuleView> {
                 mediaLink: background.imageUrl,
                 onTap: () => {
                   model.selectBannerImage().then(
-                    (v) => {model.setBackgroundImage(v)},
-                  ),
+                        (v) => {model.setBackgroundImage(v)},
+                      ),
                 },
                 onDelete: () => {
                   setState(() {
@@ -236,13 +231,12 @@ class _ModuleViewState extends State<ModuleView> {
                 mediaLink: moduleDetailDoc.docUrl,
                 onTap: () => {
                   model.selectModuleDocument().then(
-                    (v) => {model.setModuleDetailDocument(v)},
-                  ),
+                        (v) => {model.setModuleDetailDocument(v)},
+                      ),
                 },
                 onDelete: () => {
                   setState(() {
-                    if (editingModule != null)
-                      editingModule.moduleDetailDoc = null;
+                    editingModule.moduleDetailDoc = null;
                   }),
                 },
               ),
@@ -257,8 +251,8 @@ class _ModuleViewState extends State<ModuleView> {
                 mediaLink: moduleVideo.videoUrl,
                 onTap: () => {
                   model.selectModuleVideo().then(
-                    (v) => {model.setModuleVideo(v)},
-                  ),
+                        (v) => {model.setModuleVideo(v)},
+                      ),
                 },
                 onDelete: () => {
                   setState(() {

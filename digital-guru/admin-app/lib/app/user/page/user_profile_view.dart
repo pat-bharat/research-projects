@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
-import 'package:digiguru/app/common/constants/tooltips.dart';
 import 'package:digiguru/app/common/constants/validation_pattern.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
@@ -58,28 +57,30 @@ class _UserProfileViewState extends State<UserProfileView> {
         },
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
-                  appTitle: Strings.userProfileTitle,
-                  showDrawer: false,
-                  model: model,
-                  showBottomNav: true,
-                  bottomNavBarIndex: 0,
-                  bodyData: SingleChildScrollView(
-                      padding: viewPadding,
-                      child: Form(
-                        key: _userViewKey,
-                        autovalidateMode: AutovalidateMode.always,
-                        child: Column(children: [
-                          verticalSpaceMedium,
-                          _buildProfile(context, model),
-                          verticalSpaceMedium,
-                          model.isConsumerUser
-                              ? _buildPreferances(context, model)
-                              : _buildAdminPreferances(context, model),
-                          verticalSpaceMedium,
-                          _buildActionButtons(context, model),
-                          verticalSpaceMedium,
-                        ]),
-                      )), body: Center(),),
+                appTitle: Strings.userProfileTitle,
+                showDrawer: false,
+                model: model,
+                showBottomNav: true,
+                bottomNavBarIndex: 0,
+                bodyData: SingleChildScrollView(
+                    padding: viewPadding,
+                    child: Form(
+                      key: _userViewKey,
+                      autovalidateMode: AutovalidateMode.always,
+                      child: Column(children: [
+                        verticalSpaceMedium,
+                        _buildProfile(context, model),
+                        verticalSpaceMedium,
+                        model.isConsumerUser
+                            ? _buildPreferances(context, model)
+                            : _buildAdminPreferances(context, model),
+                        verticalSpaceMedium,
+                        _buildActionButtons(context, model),
+                        verticalSpaceMedium,
+                      ]),
+                    )),
+                body: Center(),
+              ),
             ));
   } //Column1
 
@@ -120,7 +121,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                     if (phone == null || phone.number.isEmpty) {
                       return Strings.invalidMobileNumber;
                     }
-                    if (!RegExp(phonePattern.toString()).hasMatch(phone.number)) {
+                    if (!RegExp(phonePattern.toString())
+                        .hasMatch(phone.number)) {
                       return Strings.invalidMobileNumber;
                     }
                     return null;
@@ -203,7 +205,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                         profile!.userPreferances?.inAppNotifications = val;
                       });
                     },
-                    value: profile!.userPreferances?.inAppNotifications ?? false,
+                    value:
+                        profile!.userPreferances?.inAppNotifications ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -263,7 +266,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                         profile!.userPreferances?.inAppNotifications = val;
                       });
                     },
-                    value: profile!.userPreferances?.inAppNotifications ?? false,
+                    value:
+                        profile!.userPreferances?.inAppNotifications ?? false,
                     type: Platform.isIOS
                         ? GFToggleType.ios
                         : GFToggleType.android,
@@ -294,7 +298,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                     profile!.fullName = nameController.text;
                     profile!.country = _country;
                     profile!.mobileNo = mobileController.text;
-                    model.save(profile! );
+                    model.save(profile!);
                   }
                 }),
             horizontalSpaceMedium,

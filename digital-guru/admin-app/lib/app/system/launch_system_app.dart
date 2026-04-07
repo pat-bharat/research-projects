@@ -1,18 +1,16 @@
 import 'package:digiguru/app/common/constants/dialog_manager.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
+import 'package:digiguru/app/routing/router.dart';
 import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/system/page/system_profile_view.dart';
 import 'package:digiguru/app/theme/service/theme_service.dart';
 import 'package:digiguru/app/theme/theme_colors.dart';
-import 'package:digiguru/app/user/model/user.dart';
 import 'package:digiguru/configure_supabase.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:digiguru/app/routing/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

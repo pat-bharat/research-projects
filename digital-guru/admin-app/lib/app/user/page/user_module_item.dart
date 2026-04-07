@@ -1,8 +1,6 @@
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/util/general.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
-import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:flutter/material.dart';
 
 class LessonItem extends StatelessWidget {
@@ -62,7 +60,7 @@ class LessonItem extends StatelessWidget {
                     ),*/
                       ),
                       Text(
-                        computeDuration(lesson!.videoInfo!.duration!),
+                        computeDuration(lesson.videoInfo!.duration!),
                         style: Theme.of(context).textTheme.bodySmall,
                       )
                     ],

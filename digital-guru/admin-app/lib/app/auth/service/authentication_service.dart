@@ -7,12 +7,9 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/model/enums.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/shared_services/analytics_service.dart';
-import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/user/service/user_service.dart';
-import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:digiguru/app/user/model/user.dart' as u;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthenticationService extends BaseService {
   final SupabaseClient _supabase = Supabase.instance.client;
@@ -46,6 +43,7 @@ class AuthenticationService extends BaseService {
     try {
       final response =
           await _supabase.auth.signUp(email: email, password: password);
+
       return response.user != null;
     } catch (e) {
       return false;
@@ -79,7 +77,7 @@ class AuthenticationService extends BaseService {
     final googleAccount = await signIn.authenticate();
     final googleAuthorization =
         await googleAccount.authorizationClient.authorizationForScopes([]);
-    final googleAuthentication = googleAccount!.authentication;
+    final googleAuthentication = googleAccount.authentication;
     final idToken = googleAuthentication.idToken;
     final accessToken = googleAuthorization!.accessToken;
 
@@ -133,7 +131,6 @@ class AuthenticationService extends BaseService {
     );
   }
 
- 
   Future getBusinessByEmail() async {
     if (BaseService.currentUser != null) {
       if (BaseService.currentUser!.userRole == "Admin") {
@@ -169,9 +166,11 @@ class AuthenticationService extends BaseService {
       profile.userCounts!.consumerUsers =
           (profile.userCounts?.consumerUsers ?? 0) + 1;
     }
-     await BaseService.supabaseDataService.update("business_profile", profile.id, profile.toJson());
-    
+    await BaseService.supabaseDataService
+        .update("business_profile", profile.id, profile.toJson());
   }
 
-  Future<Object?> signUpWithFacebook({required String role}) async {}
+  Future<Object?> signUpWithFacebook({required String role}) async {
+    return "";
+  }
 }

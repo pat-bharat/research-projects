@@ -11,7 +11,6 @@ import 'package:digiguru/app/module/model/module.dart';
 import 'package:digiguru/app/module/service/module_service.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/youtube/model/channel_model.dart';
-import 'package:digiguru/app/youtube/model/playlist_model.dart';
 import 'package:digiguru/app/youtube/model/video_model.dart';
 import 'package:digiguru/app/youtube/service/api_service.dart';
 
@@ -26,7 +25,7 @@ class YoutubeCourseBuilderService extends BaseService {
   //     FirebaseFirestore.instance.collection('lessons');
   // final CollectionReference _moduleCollectionReference =
   //     FirebaseFirestore.instance.collection('modules');
- // final CollectionReference _instructorsCollectionReference =
+  // final CollectionReference _instructorsCollectionReference =
   //    FirebaseFirestore.instance.collection('instructors');
 
   APIService api = locator<APIService>();
@@ -39,12 +38,13 @@ class YoutubeCourseBuilderService extends BaseService {
     Instructor instructor =
         await _instructorService.getInstructorByName(info.instructorName);
     if (instructor == null) {
-      var snapshot = await _instructorService.addInstructor(
-          Instructor(
-              businessId: info.businessId,
-              fullName: info.instructorName,
-              profilePic: channel.profilePictureUrl!, documentId: channel.id!));
-      instructor = Instructor.fromJson(docId: snapshot.id, json: snapshot.data() as Map<String, dynamic>);
+      var snapshot = await _instructorService.addInstructor(Instructor(
+          businessId: info.businessId,
+          fullName: info.instructorName,
+          profilePic: channel.profilePictureUrl!,
+          documentId: channel.id!));
+      instructor = Instructor.fromJson(
+          docId: snapshot.id, json: snapshot.data() as Map<String, dynamic>);
     }
 
     Course course = Course(
@@ -81,7 +81,7 @@ class YoutubeCourseBuilderService extends BaseService {
       int lIndex = 0;
       videos.forEach((video) async {
         await _lessonService.addLesson(Lesson(
-          businessId: info.businessId,
+            businessId: info.businessId,
             courseId: _courseDocRef.id,
             moduleId: _moduleDocRef.id,
             title: video.title,
@@ -101,10 +101,9 @@ class YoutubeCourseBuilderService extends BaseService {
   }
 
   Future deleteCourse(String courseId) async {
-   _lessonService.deleteCourseLessions(courseId);
-   _moduleService.deleteCourseModules(courseId);
-   _courseService.deleteCourseById(courseId);
-     
+    _lessonService.deleteCourseLessions(courseId);
+    _moduleService.deleteCourseModules(courseId);
+    _courseService.deleteCourseById(courseId);
   }
 }
 

@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+//import 'package:equatable/equatable.dart';
 
-class SupabaseUploadItem extends Equatable {
+class SupabaseUploadItem  {
   final String? title;
   final int? uploadProgress; // 0-100
   final String? status; // e.g., 'pending', 'uploading', 'success', 'error'

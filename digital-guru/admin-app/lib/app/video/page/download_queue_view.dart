@@ -1,13 +1,10 @@
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
-import 'dart:async';
-import 'dart:io';
 
 import 'package:digiguru/app/video/model/download_queue_view_model.dart';
 import 'package:digiguru/app/video/service/download_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stacked/stacked.dart';
@@ -35,7 +32,8 @@ class DownloadList extends StatelessWidget {
 class DownloadQueueView extends StatefulWidget with WidgetsBindingObserver {
   final TargetPlatform? platform;
 
-  DownloadQueueView({Key? key, required this.title, this.platform}) : super(key: key);
+  DownloadQueueView({Key? key, required this.title, this.platform})
+      : super(key: key);
 
   final String title;
 
@@ -49,7 +47,6 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
   bool? _isLoading;
   bool? _permissionReady;
   String? _localPath;
-  ReceivePort _port = ReceivePort();
   DownloadService? downloadService;
   @override
   void initState() {
@@ -68,15 +65,13 @@ class _DownloadQueueViewState extends State<DownloadQueueView> {
       DownloadTaskStatus status = data[1];
       int progress = data[2];
 
-      if (_tasks != null && _tasks.isNotEmpty) {
+      if (_tasks.isNotEmpty) {
         final task = _tasks.firstWhere((task) => task.taskId == id);
-        if (task != null) {
-          setState(() {
-            task.status = status;
-            task.progress = progress;
-          });
-        }
-      }
+        setState(() {
+          task.status = status;
+          task.progress = progress;
+        });
+            }
     });
     _isLoading = true;
     _permissionReady = false;
@@ -352,7 +347,7 @@ class DownloadItem extends StatelessWidget {
   final Function(_TaskInfo)? onItemClick;
   final Function(_TaskInfo)? onAtionClick;
 
-  DownloadItem({required this.data, this.onItemClick,  this.onAtionClick});
+  DownloadItem({required this.data, this.onItemClick, this.onAtionClick});
 
   @override
   Widget build(BuildContext context) {
@@ -398,6 +393,7 @@ class DownloadItem extends StatelessWidget {
                     ),
                   )
                 : Container()
+          // ignore: unnecessary_null_comparison
           ].where((child) => child != null).toList(),
         ),
       ),

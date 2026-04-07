@@ -4,8 +4,6 @@ import 'package:digiguru/app/shared_services/analytics_service.dart';
 import 'package:digiguru/app/auth/service/authentication_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:flutter/foundation.dart';
-
 import '../../common/model/base_model.dart';
 
 class SignUpViewModel extends BaseModel {
@@ -38,9 +36,7 @@ class SignUpViewModel extends BaseModel {
         businessId: super.appConfig.businessId);
 
     setBusy(false);
-
-    if (result is bool) {
-      if (result) {
+ if (result) {
         await _analyticsService.logSignUp();
         _navigationService.navigateTo(StartUpViewRoute, arguments: appConfig);
       } else {
@@ -49,6 +45,8 @@ class SignUpViewModel extends BaseModel {
           description: 'General sign up failure. Please try again later',
         );
       }
+    if (result) {
+     
     } else {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
@@ -89,21 +87,14 @@ class SignUpViewModel extends BaseModel {
 
     setBusy(false);
 
-    if (result is bool) {
-      if (result) {
-        await _analyticsService.logSignUp();
-        _navigationService.navigateTo(StartUpViewRoute, arguments: appConfig);
-      } else {
-        await _dialogService.showDialog(
-          title: 'Sign Up Failure',
-          description: 'General sign up failure. Please try again later',
-        );
-      }
+    if (result) {
+      await _analyticsService.logSignUp();
+      _navigationService.navigateTo(StartUpViewRoute, arguments: appConfig);
     } else {
       await _dialogService.showDialog(
         title: 'Sign Up Failure',
-        description: "Sign Up Failure",
+        description: 'General sign up failure. Please try again later',
       );
     }
-  }
+    }
 }

@@ -1,5 +1,4 @@
 import 'package:digiguru/app/business/model/business.dart';
-import 'package:digiguru/app/business/model/business_legal.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
@@ -8,7 +7,6 @@ import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 import 'package:digiguru/app/system/model/system_dashboard_view_model.dart';
-import 'package:digiguru/app/system/model/system_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinbox/flutter_spinbox.dart';
 import 'package:stacked/stacked.dart';
@@ -62,7 +60,8 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
               ],
             ),
           ),
-        body: Center(),),
+          body: Center(),
+        ),
       ),
     );
   }
@@ -151,7 +150,7 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
               decoration: boxDecoration(context),
               padding: EdgeInsets.only(right: 10, left: 10, top: 5, bottom: 5),
               child: //businessSettings
-              buildBusinessSettings(
+                  buildBusinessSettings(
                 context,
                 currentBusinessProfile.businessSetting,
               ),
@@ -162,7 +161,8 @@ class _SystemDashBoardViewState extends State<SystemDashBoardView> {
     );
   }
 
-  buildBusinessSettings(BuildContext context, BusinessSetting? businessSetting) {
+  buildBusinessSettings(
+      BuildContext context, BusinessSetting? businessSetting) {
     if (businessSetting == null) return SizedBox.shrink();
     return Column(
       children: [

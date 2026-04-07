@@ -1,8 +1,6 @@
 import 'package:squint_json/squint_json.dart';
 import 'package:json_to_dart/helpers.dart';
 
-import 'helpers.dart';
-
 const String emptyListWarn = "list is empty";
 const String ambiguousListWarn = "list is ambiguous";
 const String ambiguousTypeWarn = "type is ambiguous";

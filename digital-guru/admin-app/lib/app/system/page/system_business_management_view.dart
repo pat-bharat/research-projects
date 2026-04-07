@@ -63,15 +63,15 @@ class _SystemBusinessManagementViewState
       onModelReady: (model) {},
       builder: (context, model, child) => SafeArea(
         child: CommonScaffold(
-          appTitle: Strings.systemBusinessManagement,
-          model: model,
-          bottomNavBarIndex: 1,
-          bodyData: SingleChildScrollView(
-            padding: viewPadding,
-            child: Column(children: [buildBusinessProfileView(context, model)]),
-          ),
-        body: Center()
-        ),
+            appTitle: Strings.systemBusinessManagement,
+            model: model,
+            bottomNavBarIndex: 1,
+            bodyData: SingleChildScrollView(
+              padding: viewPadding,
+              child:
+                  Column(children: [buildBusinessProfileView(context, model)]),
+            ),
+            body: Center()),
       ),
     );
   }
@@ -137,7 +137,8 @@ class _SystemBusinessManagementViewState
       children: [
         Row(
           children: [
-            Text("General Stats", style: Theme.of(context).textTheme.headlineMedium),
+            Text("General Stats",
+                style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
         Container(
@@ -172,7 +173,8 @@ class _SystemBusinessManagementViewState
       children: [
         Row(
           children: [
-            Text("Publications", style: Theme.of(context).textTheme.headlineSmall),
+            Text("Publications",
+                style: Theme.of(context).textTheme.headlineSmall),
           ],
         ),
         Container(

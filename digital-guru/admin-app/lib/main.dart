@@ -19,7 +19,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await configureApp();
   await FlutterDownloader.initialize(debug: true);
-   WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
     url: "SUPABASE_URL",

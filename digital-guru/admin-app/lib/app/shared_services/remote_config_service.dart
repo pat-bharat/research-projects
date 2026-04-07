@@ -1,6 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-
 const String _ShowMainBanner = "show_main_banner";
 const String _ConfigTable = "app_config";
 
@@ -22,7 +21,8 @@ class RemoteConfigService {
       final response = await _client.from(_ConfigTable).select().single();
       _config = response;
     } catch (e) {
-      print('Unable to fetch remote config from Supabase. Default values will be used.');
+      print(
+          'Unable to fetch remote config from Supabase. Default values will be used.');
       _config = {_ShowMainBanner: false};
     }
   }

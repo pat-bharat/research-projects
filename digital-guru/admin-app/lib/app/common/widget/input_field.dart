@@ -70,7 +70,8 @@ class _InputFieldState extends State<InputField> {
         // widget.label != null ? Text(widget.label) : verticalSpaceTiny,
         // verticalSpaceTiny,
         Container(
-          height: widget.smallVersion ? 40 : fieldHeight * (widget.maxLines ?? 1),
+          height:
+              widget.smallVersion ? 40 : fieldHeight * (widget.maxLines ?? 1),
           alignment: Alignment.centerLeft,
           //decoration: boxDecoration(context),
           // padding: fieldPadding,
@@ -94,7 +95,9 @@ class _InputFieldState extends State<InputField> {
                               child: Icon(isPassword
                                   ? Icons.visibility
                                   : Icons.visibility_off))
-                          : widget.tooltip != null ? buildToolTip(context, widget.tooltip!) : null),
+                          : widget.tooltip != null
+                              ? buildToolTip(context, widget.tooltip!)
+                              : null),
                   maxLines: isPassword ? 1 : widget.maxLines,
                   keyboardType: widget.textInputType,
                   maxLength: widget.maxLength,
@@ -102,8 +105,9 @@ class _InputFieldState extends State<InputField> {
                   focusNode: widget.fieldFocusNode,
                   textInputAction: widget.textInputAction,
                   onChanged: widget.onChanged,
-                  inputFormatters:
-                      widget.formatter != null ? <TextInputFormatter>[widget.formatter!] : null,
+                  inputFormatters: widget.formatter != null
+                      ? <TextInputFormatter>[widget.formatter!]
+                      : null,
                   onEditingComplete: () {
                     if (widget.enterPressed != null) {
                       FocusScope.of(context).requestFocus(FocusNode());

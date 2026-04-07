@@ -23,7 +23,8 @@ class CommonScaffold extends StatefulWidget {
     this.scaffoldKey,
     this.showBottomNav = true,
     this.elevation = 4.0,
-    this.bottomNavBarIndex = 2, required Center body,
+    this.bottomNavBarIndex = 2,
+    required Center body,
   });
 
   @override

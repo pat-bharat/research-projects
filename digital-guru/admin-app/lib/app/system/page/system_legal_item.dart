@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:digiguru/app/business/model/business_legal.dart';
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +23,6 @@ class SystemLegalItem extends StatefulWidget {
 }
 
 class _SystemLegalItemState extends State<SystemLegalItem> {
-  late SystemLegal _selectedLegal;
   late File pdfFile;
   @override
   void initState() {

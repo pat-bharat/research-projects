@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_guru_app/app/common/provider/top_level_providers.dart';
 import 'package:digital_guru_app/app/course/model/course.dart';
 import 'package:digital_guru_app/app/course/page/coure_page_vm.dart';

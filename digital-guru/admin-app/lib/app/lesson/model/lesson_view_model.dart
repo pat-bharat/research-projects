@@ -13,8 +13,6 @@ import 'package:digiguru/app/common/util/media_selector.dart';
 import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
-//import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_compress/video_compress.dart';
 import '../../common/model/base_model.dart';
 import 'package:path/path.dart' as p;
@@ -39,6 +37,7 @@ class LessonViewModel extends BaseModel {
   Module _module;
   Module get module => _module;
   Course _course;
+  Course get course => _course;
   final MediaSelector _mediaSelector = locator<MediaSelector>();
 
   LessonViewModel(this._course, this._module);
@@ -92,7 +91,9 @@ class LessonViewModel extends BaseModel {
       instructorName: instructorName!,
       title: title,
       freeTrial: freeTrial!,
-      locked: freeTrial == true ? true : (isEditting ? _edittingLesson.locked : true),
+      locked: freeTrial == true
+          ? true
+          : (isEditting ? _edittingLesson.locked : true),
       instructorNotes: instructorNotes,
       instructionDoc: instructionDoc!,
       videoInfo: videoInfo!,
@@ -119,13 +120,13 @@ class LessonViewModel extends BaseModel {
           "/" +
           p.basename(_lessonDetailDocument.path),
     );
-      //update course
+    //update course
 
     lesson.instructionDoc = new InstructionDoc(
         title: p.basename(_lessonDetailDocument.path),
         docUrl: lessonDocResult.mediaUrl,
         docSize: lessonDocResult.size);
-    
+
     await handleVideoUpload(_lessonVideoFile, result, lesson);
     /*
     if (videoResult != null) {
@@ -187,7 +188,7 @@ class LessonViewModel extends BaseModel {
           p.basename(thumbnailFile.path),
     );
     lesson.videoInfo!.thumbUrl = videoThumbnailResult.mediaUrl;
-  
+
     //update Media Info
     MediaInfo mediaInfo = await mediaService.getMediaInfo(videoFile.path);
     lesson.videoInfo!.videoSize = filesize(mediaInfo.filesize);
@@ -205,12 +206,12 @@ class LessonViewModel extends BaseModel {
         "/" +
         (isEditting ? _edittingLesson.id! : result.userId);
     //compress video
-    mediaService.uploadVideo(lesson.videoInfo!, uploadPath,
+    mediaService.uploadVideoWithProgress(
         onComplete: () async {
       String downloadURL = uploadPath + '/' + lesson.videoInfo!.title!;
       lesson.videoInfo!.videoUrl = downloadURL;
       _lessonService.updateLesson(lesson.id!, lesson);
-    });
+    }, videoInfo: lesson.videoInfo!, uploadDir: uploadPath);
     //update videoInfo
     /* await mediaService.compressVideo(path: videoFile.path);
     //upload video

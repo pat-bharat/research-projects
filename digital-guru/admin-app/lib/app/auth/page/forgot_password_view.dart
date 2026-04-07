@@ -26,7 +26,7 @@ class ForgotPasswordView extends StatelessWidget {
                   height: 150,
                   child: Image.asset('assets/images/title.png'),
                 ),
-               // Text(Strings.enterEmail),
+                // Text(Strings.enterEmail),
                 verticalSpaceSmall,
                 InputField(
                   label: Strings.enterEmail,

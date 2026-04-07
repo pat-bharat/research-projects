@@ -14,7 +14,6 @@ import 'package:digiguru/app/video/model/video_info.dart';
 import 'package:digiguru/app/video/service/media_upload_service.dart';
 import 'package:filesize/filesize.dart';
 //import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 import 'package:video_compress/video_compress.dart';
 
@@ -83,7 +82,7 @@ class ModuleViewModel extends BaseModel {
   }
 
   List<String> populateTags(String data) {
-    if (data != null && data.length > 0) {
+    if (data.length > 0) {
       List<String> t = data.split(',');
       List<String> tags = t;
       if (t.length > 6) {
@@ -135,7 +134,7 @@ class ModuleViewModel extends BaseModel {
       int? discountPercentage,
       bool? published,
       String? tagData,
-      List<PricePlan>?  pricePlan,
+      List<PricePlan>? pricePlan,
       ModuleBackground? background,
       ModuleDetailDoc? moduleDetailDoc,
       VideoInfo? moduleVideo}) async {
@@ -146,14 +145,14 @@ class ModuleViewModel extends BaseModel {
         courseId: course.id ?? '',
         businessId: currentBusiness.id ?? '',
         name: moduleName ?? '',
-        title: title ?? '',
+        title: title,
         purchaseAmount: purchaseAmount ?? 0.0,
         lessonCount: 0,
         discountPercentage: discountPercentage ?? 0,
         published: published ?? false,
         tags: populateTags(tagData!),
         pricePlan: pricePlan ?? [],
-        moduleBackground: background?? ModuleBackground(),
+        moduleBackground: background ?? ModuleBackground(),
         moduleDetailDoc: moduleDetailDoc ?? ModuleDetailDoc(),
         moduleVideo: moduleVideo ?? VideoInfo());
     if (!_editting) {
@@ -164,7 +163,7 @@ class ModuleViewModel extends BaseModel {
       module.id = _edittingModule.id;
       await _moduleService.updateModule(_edittingModule.id, module);
     }
-    CloudStorageResult? backgroundResult, documentDetailResult, vodeoResult;
+    CloudStorageResult? backgroundResult, documentDetailResult;
 
     if (_backgroundImage != null) {
       backgroundResult = await _cloudStorageService.uploadFile(
@@ -193,7 +192,7 @@ class ModuleViewModel extends BaseModel {
     if (backgroundResult != null) {
       module.moduleBackground = new ModuleBackground(
           title: "background",
-          imageUrl: backgroundResult.mediaUrl!,
+          imageUrl: backgroundResult.mediaUrl,
           imageSize: backgroundResult.size);
     } else if (_editting && module.moduleBackground != null) {
       module.moduleBackground!.imageUrl =
@@ -204,14 +203,15 @@ class ModuleViewModel extends BaseModel {
     if (documentDetailResult != null) {
       module.moduleDetailDoc = new ModuleDetailDoc(
           title: "Module Document",
-          docUrl: documentDetailResult.mediaUrl!,
+          docUrl: documentDetailResult.mediaUrl,
           docSize: documentDetailResult.size);
     } else if (_editting && course.courseDetailDoc != null) {
-      module.moduleDetailDoc!.docSize = _edittingModule.moduleDetailDoc!.docSize;
+      module.moduleDetailDoc!.docSize =
+          _edittingModule.moduleDetailDoc!.docSize;
       module.moduleDetailDoc!.docUrl = _edittingModule.moduleDetailDoc!.docUrl;
     }
     await handleVideoUpload(_moduleVideo, module);
-  
+
     setBusy(false);
 
     if (result is String) {
@@ -277,16 +277,15 @@ class ModuleViewModel extends BaseModel {
           "/" +
           module.id +
           "/";
-      mediaService.uploadVideo(module.moduleVideo!, uploadPath,
+      mediaService.uploadVideoWithProgress(
           onComplete: () async {
         String downloadURL = uploadPath + '/' + module.moduleVideo!.title!;
-        module.moduleVideo! .videoUrl = downloadURL;
+        module.moduleVideo!.videoUrl = downloadURL;
         // module.moduleVideo.videoUrl = videofileResult.mediaUrl;
         _moduleService.updateModule(module.id, module);
-      });
+      }, videoInfo: module.moduleVideo!, uploadDir: uploadPath);
 
       //mediaService.uploadVideo(mediaInfo.file, uri + "?auth=" + userAuthToken);
-
     }
   }
 

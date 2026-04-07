@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:digiguru/app/auth/service/authentication_service.dart';
 import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/constants/media_types.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
@@ -26,7 +25,9 @@ import 'package:stacked/stacked.dart';
 class CourseView extends StatefulWidget {
   final Course editingCourse;
 
-  CourseView({Key key = const ValueKey('CourseView'), required this.editingCourse}) : super(key: key);
+  CourseView(
+      {Key key = const ValueKey('CourseView'), required this.editingCourse})
+      : super(key: key);
 
   @override
   _CourseViewState createState() => _CourseViewState();
@@ -48,8 +49,8 @@ class _CourseViewState extends State<CourseView> {
   String? _language = Language.english;
   String? _instructor;
   Course? editingCourse;
-  final AuthenticationService _authenticationService =
-      locator<AuthenticationService>();
+  //final AuthenticationService _authenticationService =
+  //   locator<AuthenticationService>();
   final BusinessService _businessService = locator<BusinessService>();
 
   List<String> instructors = List.empty(growable: true);
@@ -103,23 +104,23 @@ class _CourseViewState extends State<CourseView> {
           }
         },
         builder: (context, model, child) => SafeArea(
-              child: CommonScaffold(
-                  appTitle: Strings.courseViewTitle,
-                  showAppbar: true,
-                  showDrawer: false,
-                  model: model,
-                  showBottomNav: true,
-                  bottomNavBarIndex: 0,
-                  bodyData: SingleChildScrollView(
-                    padding: viewPadding,
-                    child: Form(
-                      key: _courseFormKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      child: _buildFields(context, model),
-                    ),
-                  ),
-                  body: Center(),)
-            ));
+                child: CommonScaffold(
+              appTitle: Strings.courseViewTitle,
+              showAppbar: true,
+              showDrawer: false,
+              model: model,
+              showBottomNav: true,
+              bottomNavBarIndex: 0,
+              bodyData: SingleChildScrollView(
+                padding: viewPadding,
+                child: Form(
+                  key: _courseFormKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: _buildFields(context, model),
+                ),
+              ),
+              body: Center(),
+            )));
   }
 
   Column _buildFields(BuildContext context, CourseViewModel model) {
@@ -263,7 +264,7 @@ class _CourseViewState extends State<CourseView> {
               MediaTile(
                 label: Strings.background,
                 mediaType: MediaTypes.IMAGE,
-                isEditing: model.isEditingCourse != null,
+                isEditing: model.isEditingCourse,
                 height: 100,
                 width: 100,
                 localFile: model.backgroundImage,
@@ -279,7 +280,8 @@ class _CourseViewState extends State<CourseView> {
                         editingCourse!.background?.imageUrl != null)
                       model.viewImage(editingCourse!.background!.imageUrl!);
                     if (editingCourse?.background?.imageUrl != null)
-                      print("viewing: " + (editingCourse!.background!.imageUrl ?? ""));
+                      print("viewing: " +
+                          (editingCourse!.background!.imageUrl ?? ""));
                   })
                 },
                 onDelete: () => {
@@ -293,7 +295,7 @@ class _CourseViewState extends State<CourseView> {
               MediaTile(
                 label: Strings.document,
                 mediaType: MediaTypes.DOCUMENT,
-                isEditing: model.isEditingCourse != null,
+                isEditing: model.isEditingCourse,
                 height: 100,
                 width: 100,
                 localFile: model.syllabusDocument,
@@ -308,7 +310,8 @@ class _CourseViewState extends State<CourseView> {
                     if (editingCourse != null &&
                         editingCourse!.courseDetailDoc?.docUrl != null)
                       model.viewPdf(editingCourse!.courseDetailDoc!.docUrl!);
-                    print("viewing: " + (editingCourse?.background?.imageUrl ?? ""));
+                    print("viewing: " +
+                        (editingCourse?.background?.imageUrl ?? ""));
                   })
                 },
                 onDelete: () => {
@@ -322,7 +325,7 @@ class _CourseViewState extends State<CourseView> {
               MediaTile(
                 label: Strings.video,
                 mediaType: MediaTypes.VIDEO,
-                isEditing: model.isEditingCourse != null,
+                isEditing: model.isEditingCourse,
                 height: 100,
                 width: 100,
                 localFile: model.videoFile,
@@ -337,7 +340,8 @@ class _CourseViewState extends State<CourseView> {
                     if (editingCourse != null &&
                         editingCourse!.courseVideo!.videoUrl != null)
                       model.viewVideo(editingCourse!.courseVideo!);
-                    print("viewing: " + (editingCourse!.courseVideo!.videoUrl ?? ""));
+                    print("viewing: " +
+                        (editingCourse!.courseVideo!.videoUrl ?? ""));
                   })
                 },
                 onDelete: () => {

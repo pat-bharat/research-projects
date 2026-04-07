@@ -1,12 +1,11 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/erors.dart';
 import 'package:digiguru/app/shared_services/supabase_data_service.dart';
 import 'package:digiguru/app/user/model/user.dart' as u;
-//import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 class BaseService {
   static u.User? currentUser;
   static String currentUserToken = "";
@@ -17,7 +16,6 @@ class BaseService {
 
   static bool isPreviewAsUser = false;
   static final supabaseDataService = SupabaseDataService();
-   
 
   String get baseUploadUrl => _baseUploadUrl;
   static late Business currentBusiness;

@@ -9,7 +9,6 @@ import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/model/base_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as p;
 
 class BusinessLegalListModel extends BaseModel {
@@ -33,7 +32,7 @@ class BusinessLegalListModel extends BaseModel {
         .listenToBusinessLegalRealTime(currentBusiness.id!)
         .listen((businessLegal) {
       List<BusinessLegal> businessLegals = businessLegal;
-      if (businessLegals != null && businessLegals.length > 0) {
+      if (businessLegals.length > 0) {
         _businessLegals = businessLegals;
         notifyListeners();
       }
@@ -106,15 +105,12 @@ class BusinessLegalListModel extends BaseModel {
 
       CloudStorageResult storageResult = await _cloudStorageService.uploadFile(
           fileToUpload: pdfFile,
-          title:
-              businessLegal.id + "/legals/" + p.basename(pdfFile.path));
+          title: businessLegal.id + "/legals/" + p.basename(pdfFile.path));
       //nowupdate collection
       var colResult;
-      if (storageResult != null) {
-        businessLegal.pdfDoc = storageResult.mediaUrl;
-        colResult = _businessService.updateBusinessLegal(
-            businessLegal.documentId ?? '', businessLegal);
-      }
+      businessLegal.pdfDoc = storageResult.mediaUrl;
+      colResult = _businessService.updateBusinessLegal(
+          businessLegal.documentId ?? '', businessLegal);
       if (colResult != null && colResult is String) {
         await _dialogService.showDialog(
           title: 'Failed to Create Business',
@@ -135,5 +131,6 @@ class BusinessLegalListModel extends BaseModel {
 class BusinessBusinessLegalArgs {
   final Business business;
   final BusinessLegal businessLegal;
-  BusinessBusinessLegalArgs({required this.business, required this.businessLegal});
+  BusinessBusinessLegalArgs(
+      {required this.business, required this.businessLegal});
 }

@@ -31,7 +31,8 @@ class Instructor {
       required this.documentId,
       this.deleted});
 
-  Instructor.fromJson({required String docId, required Map<String, dynamic> json}) {
+  Instructor.fromJson(
+      {required String docId, required Map<String, dynamic> json}) {
     this.documentId = docId;
     businessId = json['business_id'];
     fullName = json['full_name'];

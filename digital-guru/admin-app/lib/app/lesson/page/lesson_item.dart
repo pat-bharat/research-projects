@@ -1,9 +1,6 @@
-import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/util/general.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
-import 'package:digiguru/app/video/model/video_info.dart';
-import 'package:digiguru/app/video/page/download_queue_view.dart';
 import 'package:flutter/material.dart';
 
 class LessonItem extends StatelessWidget {
@@ -15,7 +12,7 @@ class LessonItem extends StatelessWidget {
   final Function? onPlayVideo;
   final bool isAdmin;
   const LessonItem(
-      { Key? key,
+      {Key? key,
       required this.lesson,
       this.onDeleteItem,
       this.onEditItem,
@@ -88,7 +85,8 @@ class LessonItem extends StatelessWidget {
                     children: [
                   buildWrappedText(context, lesson.title ?? '', lines: 2),
                   buildWrappedText(context, lesson.instructorNotes ?? '',
-                      lines: 2, style: Theme.of(context).textTheme.headlineSmall),
+                      lines: 2,
+                      style: Theme.of(context).textTheme.headlineSmall),
                 ])),
             isAdmin
                 ? _builldAdminActionButtons(context, lesson)
@@ -100,7 +98,9 @@ class LessonItem extends StatelessWidget {
   }
 
   _builldAdminActionButtons(BuildContext context, Lesson lesson) {
-    if (lesson.videoInfo != null && lesson.videoInfo!.youtube != null && lesson.videoInfo!.youtube!) {
+    if (lesson.videoInfo != null &&
+        lesson.videoInfo!.youtube != null &&
+        lesson.videoInfo!.youtube!) {
       return Container();
     }
     return Column(
@@ -134,7 +134,9 @@ class LessonItem extends StatelessWidget {
   }
 
   _builldUserActionButtons(BuildContext context, Lesson lesson) {
-    if (lesson.videoInfo != null && lesson.videoInfo!.youtube != null && lesson.videoInfo!.youtube!) {
+    if (lesson.videoInfo != null &&
+        lesson.videoInfo!.youtube != null &&
+        lesson.videoInfo!.youtube!) {
       return Container();
     }
     return Column(

@@ -21,8 +21,8 @@ class BlueTheme extends BaseTheme {
         labelStyle: TextStyle(fontSize: labelSize, color: primaryColor),
       ),
       textTheme: textTheme(primaryColor, accentColor!, backgroundColor),
-      appBarTheme:
-          AppBarTheme(backgroundColor: primaryColor, foregroundColor: backgroundColor),
+      appBarTheme: AppBarTheme(
+          backgroundColor: primaryColor, foregroundColor: backgroundColor),
       bottomAppBarTheme: BottomAppBarThemeData(color: primaryColor),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: primaryColor,
@@ -38,8 +38,10 @@ class BlueTheme extends BaseTheme {
       tooltipTheme: TooltipThemeData(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            gradient:
-                LinearGradient(colors: [const Color.fromARGB(255, 70, 198, 80), backgroundColor])),
+            gradient: LinearGradient(colors: [
+              const Color.fromARGB(255, 70, 198, 80),
+              backgroundColor
+            ])),
         showDuration: Duration(seconds: 2),
         waitDuration: Duration(seconds: 1),
         preferBelow: false,
@@ -53,7 +55,10 @@ class BlueTheme extends BaseTheme {
             fontSize: 15, fontWeight: FontWeight.normal, color: primaryColor),
         titleTextStyle: TextStyle(
             fontSize: 17, fontWeight: FontWeight.bold, color: primaryColor),
-      ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: accentColor).copyWith(background: backgroundColor),
+      ),
+      colorScheme: ColorScheme.fromSwatch()
+          .copyWith(secondary: accentColor)
+          .copyWith(background: backgroundColor),
     );
   }
 }

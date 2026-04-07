@@ -57,8 +57,7 @@ class MediaTile extends StatelessWidget {
               IconButton(
                 icon: Icon(Icons.delete),
                 onPressed: () {
-                  if ((mediaLink?.length ?? 0) > 0 &&
-                      onDelete != null) {
+                  if ((mediaLink?.length ?? 0) > 0 && onDelete != null) {
                     onDelete!();
                   }
                 },

@@ -259,15 +259,12 @@ bool _isDoubleWithExponential(String integer, String comma, String exponent) {
   final integerNumber = int.tryParse(integer) ?? 0;
   final exponentNumber = int.tryParse(exponent) ?? 0;
   final commaNumber = int.tryParse(comma) ?? 0;
-  if (exponentNumber != null) {
-    if (exponentNumber == 0) {
-      return commaNumber > 0;
-    }
-    if (exponentNumber > 0) {
-      return exponentNumber < comma.length && commaNumber > 0;
-    }
-    return commaNumber > 0 ||
-        ((integerNumber.toDouble() * pow(10, exponentNumber)).remainder(1) > 0);
+  if (exponentNumber == 0) {
+    return commaNumber > 0;
   }
-  return false;
-}
+  if (exponentNumber > 0) {
+    return exponentNumber < comma.length && commaNumber > 0;
+  }
+  return commaNumber > 0 ||
+      ((integerNumber.toDouble() * pow(10, exponentNumber)).remainder(1) > 0);
+  }

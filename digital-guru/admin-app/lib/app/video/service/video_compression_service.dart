@@ -9,7 +9,7 @@ class VideoCompressionService {
     final info = await VideoCompress.compressVideo(
       path,
       quality:
-          outputQuality != null ? outputQuality : VideoQuality.DefaultQuality,
+          outputQuality,
       deleteOrigin: false,
       includeAudio: true,
     );

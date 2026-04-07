@@ -1,23 +1,19 @@
 import 'dart:io';
 
+import 'package:digiguru/app/business/model/bisuness_view_model.dart';
 import 'package:digiguru/app/business/model/business.dart';
 import 'package:digiguru/app/common/constants/media_types.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/constants/tooltips.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/drawer.dart';
 import 'package:digiguru/app/common/widget/input_field.dart';
 import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/business/model/bisuness_view_model.dart';
 import 'package:digiguru/app/common/widget/text_link.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:stacked/stacked.dart';
@@ -63,7 +59,9 @@ class _BusinessViewState extends State<BusinessView> {
 
   Future getSystemBusinessLegals() async {
     List<SystemLegal> lgls = List.empty(growable: true);
-    await model?.getSystemBusinessOnlyLegals().then((value) => {lgls.addAll(value)});
+    await model
+        ?.getSystemBusinessOnlyLegals()
+        .then((value) => {lgls.addAll(value)});
 
     setState(() {
       _legals = lgls;
@@ -93,18 +91,20 @@ class _BusinessViewState extends State<BusinessView> {
         },
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
-                  appTitle: Strings.businessViewTtile,
-                  model: model,
-                  bottomNavBarIndex: 0,
-                  showDrawer: false,
-                  bodyData: SingleChildScrollView(
-                    padding: viewPadding,
-                    child: Form(
-                      key: _businessFormKey,
-                      child: _buildFields(context, model),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                    ),
-                  ), body: Center(),),
+                appTitle: Strings.businessViewTtile,
+                model: model,
+                bottomNavBarIndex: 0,
+                showDrawer: false,
+                bodyData: SingleChildScrollView(
+                  padding: viewPadding,
+                  child: Form(
+                    key: _businessFormKey,
+                    child: _buildFields(context, model),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ),
+                body: Center(),
+              ),
             ));
   }
 

@@ -6,8 +6,6 @@ import 'package:digiguru/app/common/locator.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/business/model/business_profille.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 class CourseService extends BaseService {
   //final CollectionReference _courseCollectionReference =
@@ -32,7 +30,8 @@ class CourseService extends BaseService {
 
   Future getCourse(String documentId) async {
     try {
-      var userData = await BaseService.supabaseDataService.fetchById('courses', documentId);
+      var userData = await BaseService.supabaseDataService
+          .fetchById('courses', documentId);
       return new Course.fromJson(userData as Map<String, dynamic>, documentId);
     } catch (e) {
       return handleException(e as Exception);
@@ -45,11 +44,13 @@ class CourseService extends BaseService {
       //update business lesson count
       BusinessProfile profile =
           await _businessService.getBusinessProfile(course.businessId!);
-      profile.publication!.courseCounts = (profile.publication!.courseCounts ?? 0) + 1;
-      
+      profile.publication!.courseCounts =
+          (profile.publication!.courseCounts ?? 0) + 1;
+
       await _businessService.updateBusinessProfileStats(profile);
 
-      return await BaseService.supabaseDataService.insert('courses', course.toJson());
+      return await BaseService.supabaseDataService
+          .insert('courses', course.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -57,10 +58,13 @@ class CourseService extends BaseService {
 
   Future getBusinessCourses(String businessId) async {
     try {
-      var courseDocumentSnapshot = await BaseService.supabaseDataService.fetchAllWithQuery('courses', where: {'business_id': businessId}, orderBy: 'display_order');
+      var courseDocumentSnapshot = await BaseService.supabaseDataService
+          .fetchAllWithQuery('courses',
+              where: {'business_id': businessId}, orderBy: 'display_order');
       if (courseDocumentSnapshot.isNotEmpty) {
         return courseDocumentSnapshot
-            .map((snapshot) => Course.fromJson(snapshot , snapshot['id'] as String))
+            .map((snapshot) =>
+                Course.fromJson(snapshot, snapshot['id'] as String))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
       }
@@ -78,14 +82,17 @@ class CourseService extends BaseService {
   // #1: Move the request posts into it's own function
   void _requestCoursees(String businessId) {
     // #2: split the query from the actual subscription
- 
-      var pageCourseesQuery = BaseService.supabaseDataService.fetchAllWithQuery('courses', where: {'business_id': businessId}, orderBy: 'display_order');
-     
+
+    var pageCourseesQuery = BaseService.supabaseDataService.fetchAllWithQuery(
+        'courses',
+        where: {'business_id': businessId},
+        orderBy: 'display_order');
 
     pageCourseesQuery.asStream().listen((snapshot) {
       if (snapshot.isNotEmpty) {
         var courses = snapshot
-            .map((snapshot) => Course.fromJson(snapshot, snapshot['id'] as String))
+            .map((snapshot) =>
+                Course.fromJson(snapshot, snapshot['id'] as String))
             .where((mappedItem) => mappedItem.title != null)
             .toList();
         _courseController.add(courses);
@@ -101,7 +108,8 @@ class CourseService extends BaseService {
   Future updateCourse(String courseId, Course course) async {
     try {
       super.populateCommonFields(object: course, created: false);
-      await BaseService.supabaseDataService.update('courses', courseId, course.toJson());
+      await BaseService.supabaseDataService
+          .update('courses', courseId, course.toJson());
     } catch (e) {
       return handleException(e as Exception);
     }
@@ -112,8 +120,13 @@ class CourseService extends BaseService {
   Future countLessonCount(Course c) async {
     try {
       int count = 0;
-      BaseService.supabaseDataService.fetchAllWithQuery('lessons', where: {'course_id': c.id}).asStream().listen((snap) {count = snap.length;});
-         
+      BaseService.supabaseDataService
+          .fetchAllWithQuery('lessons', where: {'course_id': c.id})
+          .asStream()
+          .listen((snap) {
+            count = snap.length;
+          });
+
       return count;
     } catch (e) {
       return handleException(e as Exception);
@@ -122,7 +135,12 @@ class CourseService extends BaseService {
 
   Future<int> courseCount() async {
     int count = 0;
-    await BaseService.supabaseDataService.fetchAllWithQuery('courses', where: {'deleted': false}).asStream().listen((snap) {count = snap.length;});
+    await BaseService.supabaseDataService
+        .fetchAllWithQuery('courses', where: {'deleted': false})
+        .asStream()
+        .listen((snap) {
+          count = snap.length;
+        });
     return count;
   }
 

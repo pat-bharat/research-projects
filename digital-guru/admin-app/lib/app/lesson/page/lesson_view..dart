@@ -3,7 +3,6 @@ import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/lesson/model/lesson.dart';
 import 'package:digiguru/app/module/model/module.dart';
@@ -20,7 +19,11 @@ class LessonView extends StatefulWidget {
   final Lesson editingLesson;
   final Module module;
   final Course course;
-  LessonView({Key? key, required this.course, required this.editingLesson, required this.module})
+  LessonView(
+      {Key? key,
+      required this.course,
+      required this.editingLesson,
+      required this.module})
       : super(key: key);
   @override
   _LessonViewState createState() => _LessonViewState();
@@ -55,34 +58,32 @@ class _LessonViewState extends State<LessonView> {
     portraitModeOnly();
     return ViewModelBuilder<LessonViewModel>.reactive(
         viewModelBuilder: () => LessonViewModel(_course, _module),
-        onModelReady: (model) {
-          if (editingLesson != null) {
-            // update the text in the controller
-            titleController.text = editingLesson?.title ?? '';
-            instructorNotesController.text =
-                editingLesson?.instructorNotes ?? '';
-            instructionDoc = editingLesson?.instructionDoc ?? InstructionDoc();
-            lessonVideo = editingLesson?.videoInfo ?? VideoInfo();
-            _freeTrial = editingLesson?.freeTrial ?? false;
-            model.setEditingLesson(editingLesson);
-          }
+        onViewModelReady: (model) {
+          // update the text in the controller
+          titleController.text = editingLesson.title ?? '';
+          instructorNotesController.text = editingLesson.instructorNotes ?? '';
+          instructionDoc = editingLesson.instructionDoc ?? InstructionDoc();
+          lessonVideo = editingLesson.videoInfo ?? VideoInfo();
+          _freeTrial = editingLesson.freeTrial ?? false;
+          model.setEditingLesson(editingLesson);
         },
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
-                  appTitle: Strings.lessonViewTitle,
-                  showDrawer: false,
-                  model: model,
-                  showBottomNav: true,
-                  bottomNavBarIndex: 0,
-                  bodyData: SingleChildScrollView(
-                    padding: viewPadding,
-                    child: Form(
-                      child: _buildFields(context, model),
-                      key: _lessonViewKey,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                    ),
+                appTitle: Strings.lessonViewTitle,
+                showDrawer: false,
+                model: model,
+                showBottomNav: true,
+                bottomNavBarIndex: 0,
+                bodyData: SingleChildScrollView(
+                  padding: viewPadding,
+                  child: Form(
+                    child: _buildFields(context, model),
+                    key: _lessonViewKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
-                  body: Center(),),
+                ),
+                body: Center(),
+              ),
             ));
   }
 

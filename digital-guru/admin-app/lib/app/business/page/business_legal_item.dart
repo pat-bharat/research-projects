@@ -1,16 +1,13 @@
 import 'dart:io';
 
 import 'package:digiguru/app/business/model/business_legal.dart';
-import 'package:digiguru/app/business/service/business_service.dart';
 import 'package:digiguru/app/common/constants/media_types.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:flutter/material.dart';
 
 class BusinessLegalItem extends StatefulWidget {
@@ -37,10 +34,10 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
   //SystemLegal _selectedLegal;
   File? pdfFile;
   final NavigationService _navigationService = locator<NavigationService>();
-  final CloudStorageService _cloudStorageService =
-      locator<CloudStorageService>();
-  final BusinessService _businessService = locator<BusinessService>();
-  final DialogService _dialogService = locator<DialogService>();
+  //final CloudStorageService _cloudStorageService =
+  //    locator<CloudStorageService>();
+  //final BusinessService _businessService = locator<BusinessService>();
+  //final DialogService _dialogService = locator<DialogService>();
 
   @override
   void initState() {
@@ -84,12 +81,10 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
                           (businessLegal.createdTimestamp ?? " "),
                       style: Theme.of(context).textTheme.bodySmall),
                   Text(
-                      Strings.updatedOn+
+                      Strings.updatedOn +
                           (businessLegal.updatedTimestamp ?? " "),
                       style: Theme.of(context).textTheme.bodySmall),
-                  Text(
-                      Strings.modifiedBy +
-                          (businessLegal.modifiedBy ?? " "),
+                  Text(Strings.modifiedBy + (businessLegal.modifiedBy ?? " "),
                       style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
@@ -124,10 +119,7 @@ class _BusinessLegalItemState extends State<BusinessLegalItem> {
                 ),
                 horizontalSpaceSmall,
                 buildToolTip(
-                    context,
-                    Strings.tapToadd +
-                        businessLegal.title +
-                        '"'),
+                    context, Strings.tapToadd + businessLegal.title + '"'),
               ]),
           verticalSpaceSmall,
           /* Text("Change :", style: textStyle_medium_b),

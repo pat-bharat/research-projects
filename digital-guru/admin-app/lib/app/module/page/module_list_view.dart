@@ -2,7 +2,6 @@ import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/service/base_service.dart';
 import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
 import 'package:digiguru/app/course/model/course.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
@@ -92,7 +91,9 @@ class _ModuleListViewState extends State<ModuleListView> {
                             : Center(
                                 child: Text(
                                   Strings.pleaseAddModules,
-                                  style: Theme.of(context).textTheme.headlineMedium,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium,
                                 ),
                               )),
                     model.isAdmin ? _buildBottomButtonsBar(model) : Container(),
@@ -101,7 +102,8 @@ class _ModuleListViewState extends State<ModuleListView> {
                 )
               : buildCircularLoader(context),
         ),
-      body: Center(),)),
+        body: Center(),
+      )),
     );
   }
 
@@ -148,8 +150,12 @@ class _ModuleListViewState extends State<ModuleListView> {
             onDeleteItem: () => model.deleteModule(module: item),
             onEditItem: () => model.editModule(item),
             onEditLessons: () => model.editLesons(item),
-            onViewDoc: () => item.moduleDetailDoc?.docUrl != null ? model.viewPdf(item.moduleDetailDoc!.docUrl!) : null,
-            onPlayVideo: () => item.moduleVideo != null ? model.viewVideo(item.moduleVideo!) : null,
+            onViewDoc: () => item.moduleDetailDoc?.docUrl != null
+                ? model.viewPdf(item.moduleDetailDoc!.docUrl!)
+                : null,
+            onPlayVideo: () => item.moduleVideo != null
+                ? model.viewVideo(item.moduleVideo!)
+                : null,
             onPurchase: () => purchaseModule(item),
           ),
         ),

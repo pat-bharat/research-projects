@@ -18,10 +18,10 @@ class UserCount {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['admin_users'] = this.adminUsers ??= 0;
-    data['consumer_users'] = this.consumerUsers ??= 0;
-    data['trial_users'] = this.trialUsers ??= 0;
-    data['purchased_users'] = this.purchasedUsers ??= 0;
+    data['admin_users'] = this.adminUsers;
+    data['consumer_users'] = this.consumerUsers;
+    data['trial_users'] = this.trialUsers;
+    data['purchased_users'] = this.purchasedUsers;
     return data;
   }
 }

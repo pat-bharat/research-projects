@@ -1,26 +1,24 @@
 import 'package:digiguru/app/billing/model/business_invoice.dart';
 import 'package:digiguru/app/billing/service/business_billing_service.dart';
 import 'package:digiguru/app/business/model/business.dart';
-import 'package:digiguru/app/business/model/business_legal.dart';
+import 'package:digiguru/app/business/model/business_profille.dart';
 import 'package:digiguru/app/common/constants/route_names.dart';
 import 'package:digiguru/app/common/locator.dart';
-import 'package:digiguru/app/shared_services/analytics_service.dart';
-import 'package:digiguru/app/business/service/business_service.dart';
-import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/common/service/dialog_service.dart';
 import 'package:digiguru/app/common/service/navigation_service.dart';
-import 'package:digiguru/app/business/model/business_profille.dart';
+import 'package:digiguru/app/shared_services/cloud_storage_service.dart';
 import 'package:digiguru/app/system/model/business_setting.dart';
 import 'package:digiguru/app/system/model/system_legal.dart';
 import 'package:digiguru/app/system/model/system_profile.dart';
 import 'package:digiguru/app/system/service/system_service.dart';
 import 'package:digiguru/app/user/model/user.dart';
+
 import '../../common/model/base_model.dart';
 
 class SystemDashBoardViewModel extends BaseModel {
   final DialogService _dialogService = locator<DialogService>();
   final NavigationService _navigationService = locator<NavigationService>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  //final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final SystemService _systemService = locator<SystemService>();
   final BusinessBillingService _businessBillingService =
       locator<BusinessBillingService>();

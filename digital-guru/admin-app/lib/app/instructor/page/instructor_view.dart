@@ -4,17 +4,14 @@ import 'package:digiguru/app/common/constants/media_types.dart';
 import 'package:digiguru/app/common/constants/shared_styles.dart';
 import 'package:digiguru/app/common/constants/strings.dart';
 import 'package:digiguru/app/common/constants/validation_pattern.dart';
-import 'package:digiguru/app/common/widget/bottom_nav_bar.dart';
-import 'package:digiguru/app/common/widget/common_scaffold.dart';
-import 'package:digiguru/app/common/widget/media_tile.dart';
-import 'package:digiguru/app/common/widget/top_navigation_bar.dart';
-import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/common/util/ui_helpers.dart';
 import 'package:digiguru/app/common/widget/busy_button.dart';
+import 'package:digiguru/app/common/widget/common_scaffold.dart';
 import 'package:digiguru/app/common/widget/input_field.dart';
+import 'package:digiguru/app/common/widget/media_tile.dart';
+import 'package:digiguru/app/instructor/model/instructor.dart';
 import 'package:digiguru/app/instructor/model/instructor_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 //import 'package:form_field_validator/form_field_validator.dart';
@@ -77,21 +74,21 @@ class _InstructorViewState extends State<InstructorView> {
         },
         builder: (context, model, child) => SafeArea(
               child: CommonScaffold(
-                  appTitle: Strings.instructorViewTitle,
-                  showAppbar: true,
-                  showDrawer: false,
-                  model: model,
-                  showBottomNav: true,
-                  bottomNavBarIndex: 0,
-                  bodyData: SingleChildScrollView(
-                    padding: viewPadding,
-                    child: Form(
-                        key: _instructorFormKey,
-                        autovalidateMode: AutovalidateMode.always,
-                        child: _buildFields(context, model)),
-                  )
-                  ,body: Center(),
-                  ),
+                appTitle: Strings.instructorViewTitle,
+                showAppbar: true,
+                showDrawer: false,
+                model: model,
+                showBottomNav: true,
+                bottomNavBarIndex: 0,
+                bodyData: SingleChildScrollView(
+                  padding: viewPadding,
+                  child: Form(
+                      key: _instructorFormKey,
+                      autovalidateMode: AutovalidateMode.always,
+                      child: _buildFields(context, model)),
+                ),
+                body: Center(),
+              ),
             ));
   }
 
@@ -106,14 +103,14 @@ class _InstructorViewState extends State<InstructorView> {
           label: Strings.instructorName,
           placeholder: Strings.instructorName,
           controller: instructorNameController,
-          validator:
-              RequiredValidator(errorText: Strings.required),
+          validator: RequiredValidator(errorText: Strings.required),
         ),
         InputField(
           label: Strings.websiteUrl,
           placeholder: Strings.websiteUrl,
           controller: urlController,
-          validator: PatternValidator(urlPattern, errorText: Strings.invalidUrl),
+          validator:
+              PatternValidator(urlPattern, errorText: Strings.invalidUrl),
         ),
         InputField(
           label: Strings.introduction,
@@ -128,7 +125,9 @@ class _InstructorViewState extends State<InstructorView> {
           label: Strings.email,
           placeholder: Strings.enterEmail,
           controller: emailController,
-          validator: EmailValidator(errorText: Strings.invalidUrl,),
+          validator: EmailValidator(
+            errorText: Strings.invalidUrl,
+          ),
         ),
         IntlPhoneField(
           initialValue: phoneController.text,
@@ -195,7 +194,8 @@ class _InstructorViewState extends State<InstructorView> {
   Container _mediaUploadPanel(BuildContext context, InstructorViewModel model) {
     return Container(
         decoration: boxDecoration(context),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center,
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             //mainAxisSize: MainAxisSize.max,
             children: [
               MediaTile(
