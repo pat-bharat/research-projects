@@ -130,7 +130,7 @@ class _UploadScreenState extends State<UploadScreen> {
 
 
   Future getMultiple() async {
-    final files = await FilePicker.platform.pickFiles(allowMultiple: true);
+    final files = await FilePicker.pickFiles(allowMultiple: true);
     if (files != null && files.count > 0) {
       _handleFileUpload(files.paths.whereType<String>().map((p) => File(p)).toList());
     }

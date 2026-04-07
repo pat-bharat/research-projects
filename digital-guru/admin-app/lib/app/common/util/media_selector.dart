@@ -8,14 +8,14 @@ class MediaSelector {
   }
 
   Future<FilePickerResult?> selectVideo() async {
-    return await FilePicker.platform.pickFiles(
+    return await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp4', 'avi', 'mpeg', 'mkv', 'wmv'],
     );
   }
 
   Future<FilePickerResult?> selectDocument() async {
-    return await FilePicker.platform.pickFiles(
+    return await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['mp3', 'pdf', 'txt'],
     );

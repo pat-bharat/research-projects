@@ -38,7 +38,7 @@ dependencies:
   image_picker: ^1.2.1
   cached_network_image: ^3.4.1
   #xml: ^4.2.0
-  file_picker: ^10.3.10
+  file_picker: ^11.0.2
   filesize: ^2.0.1
   # general purpose media Utils
   #media_utils: ^1.1.1
@@ -49,7 +49,7 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
   #video compression
-  light_compressor: ^2.2.0
+  #light_compressor: ^2.2.0
   video_compress: ^3.1.4
   #video player
   better_native_video_player: ^0.4.11
